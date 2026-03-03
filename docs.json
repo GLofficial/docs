@@ -69,7 +69,7 @@
       },
       {
         "tab": "SmartlyQ API",
-        "openapi": "api-reference/smartlyq-api.json"
+        "openapi": "https://raw.githubusercontent.com/GLofficial/docs/main/api-reference/smartlyq-api.json"
       }
     ],
     "global": {
