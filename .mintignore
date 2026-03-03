@@ -5,3 +5,7 @@
 # Draft content
 drafts/
 *.draft.mdx
+
+# Backup API spec copies (the canonical spec is openapi.json at root)
+api-reference/smartlyq-api.json
+api-reference/smartlyq-api.yaml

@@ -1,27 +1,51 @@
-# Mintlify one-time setup (so GitHub pushes auto-deploy)
+# Mintlify Setup (one-time)
 
-Mintlify only picks up from GitHub after you connect the repo in the dashboard. Do this once:
+## 1. Install the GitHub App
 
-1. **Install the GitHub App**  
-   Go to [Mintlify dashboard → GitHub App](https://dashboard.mintlify.com/settings/organization/github-app).  
-   Install the app and grant access to this repository (`GLofficial/docs`).
+Go to [Mintlify dashboard > GitHub App](https://dashboard.mintlify.com/settings/organization/github-app).
+Install the app and grant access to the `GLofficial/docs` repository.
 
-2. **Configure docs source**  
-   Go to [Git Settings](https://dashboard.mintlify.com/settings/deployment/git-settings).  
-   Set **Organization**, **Repository** (`docs`), and **Branch** (`main`) to this repo.  
-   Save.
+## 2. Configure Git Settings
 
-After that, every push to `main` will trigger a new deployment. No manual deploy needed per push.
+Go to [Git Settings](https://dashboard.mintlify.com/settings/deployment/git-settings).
+Set **Organization** to `GLofficial`, **Repository** to `docs`, **Branch** to `main`.
+Save.
 
-If deployments don't run: re-check the app is installed on this repo and Git Settings point to `GLofficial/docs`, branch `main`.
+Every push to `main` auto-deploys. No manual step needed.
 
----
+## Structure
 
-## "Failed to fetch OpenAPI file for anchor or tab"
+```
+docs-repo/
+├── docs.json              ← Mintlify config (nav, theme, branding)
+├── openapi.json           ← SmartlyQ API OpenAPI 3.1 spec (validated)
+├── introduction.mdx       ← Landing page
+├── quickstart.mdx         ← Getting started guide
+├── authentication.mdx     ← Auth reference
+├── guides/                ← Conceptual guides
+│   ├── billing-and-credits.mdx
+│   ├── rate-limiting.mdx
+│   ├── async-jobs.mdx
+│   ├── webhooks.mdx
+│   └── errors.mdx
+├── api-reference/         ← Backup copy of the spec + YAML source
+│   ├── smartlyq-api.json
+│   └── smartlyq-api.yaml
+├── logo/                  ← Light/dark logos
+├── favicon.svg
+└── .mintignore
+```
 
-If the build shows "Fetched 0 OpenApi file(s)" and then fails:
+## Validating locally
 
-1. **Use the JSON spec** — In `docs.json`, the SmartlyQ API tab should reference `api-reference/smartlyq-api.json` (not `.yaml`).
-2. **Validate locally:** `npx mint openapi-check api-reference/smartlyq-api.json` then `mint dev`.
-3. **Path** must be relative to repo root, no leading slash; file must exist at that path.
-4. See [OpenAPI setup](https://www.mintlify.com/docs/api-playground/openapi-setup) and [Troubleshooting](https://mintlify.com/docs/api-playground/troubleshooting).
+```bash
+npm i -g mint
+mint openapi-check openapi.json
+mint dev
+```
+
+## Troubleshooting
+
+- **"Failed to fetch OpenAPI file"** — Ensure `docs.json` references `openapi.json` (root-level, JSON format).
+- **"Unable to find docs.json"** — Check Git Settings in the dashboard point to the correct repo and branch.
+- **Blank pages** — Run `mint openapi-check openapi.json` to find spec validation errors.

@@ -1,0 +1,79 @@
+---
+title: "Billing & Credits"
+description: "How API credits work, pricing, and wallet management."
+---
+
+## Credit-based billing
+
+The SmartlyQ API uses a **prepaid credit** system called **SmartlyQ Credits (SQC)**. Every API call that consumes AI resources deducts credits from your Developer wallet.
+
+## Developer wallet
+
+Your wallet is separate from your SmartlyQ subscription. Top it up from the [Developer Dashboard](https://smartlyq.com/my/developer).
+
+| Package | Price (EUR) |
+|---------|-------------|
+| 250 SQC | 5 |
+| 750 SQC | 15 |
+| 3,000 SQC | 60 |
+| 7,500 SQC | 150 |
+
+<Tip>
+Enable **auto-recharge** to keep your wallet funded automatically.
+</Tip>
+
+## How pricing works
+
+Credit cost per request depends on:
+
+1. **AI model used** — larger models cost more
+2. **Token count** — input + output tokens consumed
+3. **Operation type** — text, image, video, audio
+
+The formula:
+
+```
+cost_sqc = (provider_cost_usd × markup × sqc_per_usd) + platform_fee
+```
+
+| Type | Markup | Minimum SQC |
+|------|--------|-------------|
+| Text generation | 4.0x | 1 |
+| Image generation | 3.5x | 2 |
+| Audio (TTS/STT) | 3.0x | 1 |
+| Video generation | 2.5x | varies |
+| Presentations | 3.0x | 1 |
+
+## Checking your balance
+
+```bash
+curl https://api.smartlyq.com/v1/wallet \
+  -H "Authorization: Bearer sqk_live_xxxxxxxxxxxx"
+```
+
+Response:
+
+```json
+{
+  "success": true,
+  "data": {
+    "balance_sqc": 4250,
+    "auto_recharge": true
+  }
+}
+```
+
+## Insufficient credits
+
+If your balance is too low, the API returns **402 Payment Required**:
+
+```json
+{
+  "success": false,
+  "error": {
+    "code": "INSUFFICIENT_CREDITS",
+    "message": "Not enough credits. Top up your wallet.",
+    "balance_sqc": 0
+  }
+}
+```
