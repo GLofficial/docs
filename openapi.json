@@ -1,4 +1,4 @@
-﻿{
+{
   "openapi": "3.1.0",
   "info": {
     "title": "SmartlyQ API",
@@ -414,6 +414,7 @@
         ],
         "responses": {
           "200": {
+            "description": "Image deleted successfully",
             "content": {
               "application/json": {
                 "schema": {
@@ -513,7 +514,8 @@
                   "$ref": "#/components/schemas/VideoListResponse"
                 }
               }
-            }
+            },
+            "description": "Success"
           },
           "401": {
             "$ref": "#/components/responses/Unauthorized"
@@ -547,7 +549,8 @@
                   "$ref": "#/components/schemas/VideoSingleResponse"
                 }
               }
-            }
+            },
+            "description": "Success"
           },
           "401": {
             "$ref": "#/components/responses/Unauthorized"
@@ -582,7 +585,8 @@
                   "$ref": "#/components/schemas/DeleteResponse"
                 }
               }
-            }
+            },
+            "description": "Success"
           },
           "401": {
             "$ref": "#/components/responses/Unauthorized"
@@ -622,7 +626,8 @@
                   "$ref": "#/components/schemas/SocialAccountListResponse"
                 }
               }
-            }
+            },
+            "description": "Success"
           },
           "401": {
             "$ref": "#/components/responses/Unauthorized"
@@ -661,7 +666,8 @@
                   "$ref": "#/components/schemas/SocialPostResponse"
                 }
               }
-            }
+            },
+            "description": "Success"
           },
           "400": {
             "$ref": "#/components/responses/BadRequest"
@@ -720,7 +726,8 @@
                   "$ref": "#/components/schemas/SocialPostListResponse"
                 }
               }
-            }
+            },
+            "description": "Success"
           },
           "401": {
             "$ref": "#/components/responses/Unauthorized"
@@ -753,6 +760,7 @@
         },
         "responses": {
           "201": {
+            "description": "Post scheduled",
             "content": {
               "application/json": {
                 "schema": {
@@ -805,7 +813,8 @@
                   "$ref": "#/components/schemas/SocialPostSingleResponse"
                 }
               }
-            }
+            },
+            "description": "Success"
           },
           "401": {
             "$ref": "#/components/responses/Unauthorized"
@@ -858,7 +867,8 @@
                   "$ref": "#/components/schemas/SocialPostSingleResponse"
                 }
               }
-            }
+            },
+            "description": "Success"
           },
           "400": {
             "$ref": "#/components/responses/BadRequest"
@@ -899,7 +909,8 @@
                   "$ref": "#/components/schemas/DeleteResponse"
                 }
               }
-            }
+            },
+            "description": "Success"
           },
           "401": {
             "$ref": "#/components/responses/Unauthorized"
@@ -935,6 +946,7 @@
         },
         "responses": {
           "200": {
+            "description": "Rewritten content",
             "content": {
               "application/json": {
                 "schema": {
@@ -986,6 +998,7 @@
         },
         "responses": {
           "201": {
+            "description": "Generated audio resource",
             "content": {
               "application/json": {
                 "schema": {
@@ -1037,6 +1050,7 @@
         },
         "responses": {
           "201": {
+            "description": "Transcription result",
             "content": {
               "application/json": {
                 "schema": {
@@ -1089,7 +1103,8 @@
                   "$ref": "#/components/schemas/AudioSingleResponse"
                 }
               }
-            }
+            },
+            "description": "Success"
           },
           "401": {
             "$ref": "#/components/responses/Unauthorized"
@@ -1125,6 +1140,7 @@
         },
         "responses": {
           "201": {
+            "description": "Short URL created",
             "content": {
               "application/json": {
                 "schema": {
@@ -1180,7 +1196,8 @@
                   "$ref": "#/components/schemas/UrlListResponse"
                 }
               }
-            }
+            },
+            "description": "Success"
           },
           "401": {
             "$ref": "#/components/responses/Unauthorized"
@@ -1214,7 +1231,8 @@
                   "$ref": "#/components/schemas/UrlSingleResponse"
                 }
               }
-            }
+            },
+            "description": "Success"
           },
           "401": {
             "$ref": "#/components/responses/Unauthorized"
@@ -1249,7 +1267,8 @@
                   "$ref": "#/components/schemas/DeleteResponse"
                 }
               }
-            }
+            },
+            "description": "Success"
           },
           "401": {
             "$ref": "#/components/responses/Unauthorized"
@@ -1286,7 +1305,8 @@
                   "$ref": "#/components/schemas/UrlStatsResponse"
                 }
               }
-            }
+            },
+            "description": "Success"
           },
           "401": {
             "$ref": "#/components/responses/Unauthorized"
@@ -1322,6 +1342,7 @@
         },
         "responses": {
           "200": {
+            "description": "AI Captain reply",
             "content": {
               "application/json": {
                 "schema": {
@@ -1377,7 +1398,8 @@
                   "$ref": "#/components/schemas/ConversationListResponse"
                 }
               }
-            }
+            },
+            "description": "Success"
           },
           "401": {
             "$ref": "#/components/responses/Unauthorized"
@@ -1411,7 +1433,8 @@
                   "$ref": "#/components/schemas/ConversationSingleResponse"
                 }
               }
-            }
+            },
+            "description": "Success"
           },
           "401": {
             "$ref": "#/components/responses/Unauthorized"
@@ -1461,7 +1484,8 @@
                   "$ref": "#/components/schemas/SuccessEnvelope"
                 }
               }
-            }
+            },
+            "description": "Success"
           },
           "400": {
             "$ref": "#/components/responses/BadRequest"
@@ -1502,7 +1526,8 @@
                   "$ref": "#/components/schemas/PaginatedList"
                 }
               }
-            }
+            },
+            "description": "Success"
           },
           "401": {
             "$ref": "#/components/responses/Unauthorized"
@@ -1536,7 +1561,8 @@
                   "$ref": "#/components/schemas/SuccessEnvelope"
                 }
               }
-            }
+            },
+            "description": "Success"
           },
           "401": {
             "$ref": "#/components/responses/Unauthorized"
@@ -1588,7 +1614,8 @@
                   "$ref": "#/components/schemas/SuccessEnvelope"
                 }
               }
-            }
+            },
+            "description": "Success"
           },
           "400": {
             "$ref": "#/components/responses/BadRequest"
@@ -1629,7 +1656,8 @@
                   "$ref": "#/components/schemas/DeleteResponse"
                 }
               }
-            }
+            },
+            "description": "Success"
           },
           "401": {
             "$ref": "#/components/responses/Unauthorized"
@@ -1677,6 +1705,7 @@
         },
         "responses": {
           "202": {
+            "description": "Training accepted; poll train-status for completion",
             "content": {
               "application/json": {
                 "schema": {
@@ -1723,7 +1752,8 @@
                   "$ref": "#/components/schemas/SuccessEnvelope"
                 }
               }
-            }
+            },
+            "description": "Success"
           },
           "401": {
             "$ref": "#/components/responses/Unauthorized"
@@ -1775,6 +1805,7 @@
         },
         "responses": {
           "200": {
+            "description": "Chatbot reply",
             "content": {
               "application/json": {
                 "schema": {
@@ -1836,7 +1867,8 @@
                   "$ref": "#/components/schemas/PaginatedList"
                 }
               }
-            }
+            },
+            "description": "Success"
           },
           "401": {
             "$ref": "#/components/responses/Unauthorized"
@@ -1882,7 +1914,8 @@
                   "$ref": "#/components/schemas/PaginatedList"
                 }
               }
-            }
+            },
+            "description": "Success"
           },
           "401": {
             "$ref": "#/components/responses/Unauthorized"
@@ -1916,6 +1949,7 @@
         ],
         "responses": {
           "200": {
+            "description": "Paginated list of media",
             "content": {
               "application/json": {
                 "schema": {
@@ -1950,6 +1984,7 @@
         ],
         "responses": {
           "200": {
+            "description": "Media record",
             "content": {
               "application/json": {
                 "schema": {
@@ -1985,6 +2020,7 @@
         ],
         "responses": {
           "200": {
+            "description": "Media deleted",
             "content": {
               "application/json": {
                 "schema": {
@@ -2027,6 +2063,7 @@
         },
         "responses": {
           "200": {
+            "description": "Presigned URL for upload",
             "content": {
               "application/json": {
                 "schema": {
@@ -2080,6 +2117,7 @@
         ],
         "responses": {
           "200": {
+            "description": "Analytics overview for the date range",
             "content": {
               "application/json": {
                 "schema": {
@@ -2133,6 +2171,7 @@
         ],
         "responses": {
           "200": {
+            "description": "Post analytics for the date range",
             "content": {
               "application/json": {
                 "schema": {
@@ -2167,6 +2206,7 @@
         ],
         "responses": {
           "200": {
+            "description": "Account analytics data",
             "content": {
               "application/json": {
                 "schema": {
@@ -2221,6 +2261,7 @@
         ],
         "responses": {
           "200": {
+            "description": "Paginated list of jobs",
             "content": {
               "application/json": {
                 "schema": {
@@ -2255,6 +2296,7 @@
         ],
         "responses": {
           "200": {
+            "description": "Job status and result",
             "content": {
               "application/json": {
                 "schema": {
@@ -2292,6 +2334,7 @@
         ],
         "responses": {
           "200": {
+            "description": "Job cancelled",
             "content": {
               "application/json": {
                 "schema": {
@@ -2330,6 +2373,7 @@
         ],
         "responses": {
           "200": {
+            "description": "Current user profile",
             "content": {
               "application/json": {
                 "schema": {
@@ -2374,6 +2418,7 @@
         ],
         "responses": {
           "200": {
+            "description": "Usage summary for the date range",
             "content": {
               "application/json": {
                 "schema": {
@@ -2400,6 +2445,7 @@
         ],
         "responses": {
           "200": {
+            "description": "Current wallet balance in SQC",
             "content": {
               "application/json": {
                 "schema": {
