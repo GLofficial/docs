@@ -63,7 +63,7 @@
       },
       {
         "tab": "SmartlyQ API",
-        "openapi": "api-reference/smartlyq-api.yaml"
+        "openapi": "api-reference/smartlyq-api.json"
       }
     ]
   },
