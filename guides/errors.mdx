@@ -1,0 +1,63 @@
+---
+title: "Errors"
+description: "Error codes, response format, and troubleshooting."
+---
+
+## Error response format
+
+All errors follow a consistent JSON structure:
+
+```json
+{
+  "success": false,
+  "error": {
+    "code": "ERROR_CODE",
+    "message": "Human-readable description."
+  }
+}
+```
+
+## HTTP status codes
+
+| Code | Meaning |
+|------|---------|
+| `200` | Success |
+| `201` | Created |
+| `202` | Accepted (async job queued) |
+| `400` | Bad Request — invalid parameters |
+| `401` | Unauthorized — missing or invalid API key |
+| `402` | Payment Required — insufficient credits |
+| `403` | Forbidden — valid key but insufficient scope |
+| `404` | Not Found — resource does not exist |
+| `409` | Conflict — duplicate request (idempotency) |
+| `422` | Unprocessable Entity — validation error |
+| `429` | Too Many Requests — rate limited |
+| `500` | Internal Server Error |
+
+## Common error codes
+
+| Code | Description |
+|------|-------------|
+| `UNAUTHORIZED` | API key is missing or invalid |
+| `FORBIDDEN` | Key lacks the required scope |
+| `INSUFFICIENT_CREDITS` | Wallet balance too low |
+| `RATE_LIMITED` | Too many requests |
+| `VALIDATION_ERROR` | Request body failed validation |
+| `RESOURCE_NOT_FOUND` | The requested resource does not exist |
+| `IDEMPOTENCY_CONFLICT` | A request with this idempotency key was already processed |
+| `MODEL_NOT_AVAILABLE` | The requested AI model is not available on your plan |
+| `JOB_FAILED` | An async job encountered an error |
+
+## Idempotency
+
+For POST requests, include an `Idempotency-Key` header to prevent duplicate operations:
+
+```bash
+curl -X POST https://api.smartlyq.com/v1/articles/generate \
+  -H "Authorization: Bearer sqk_live_xxxxxxxxxxxx" \
+  -H "Idempotency-Key: unique-request-id-123" \
+  -H "Content-Type: application/json" \
+  -d '{ "title": "My Article", "model": "gpt-4.1-nano" }'
+```
+
+Idempotency keys expire after **24 hours**.

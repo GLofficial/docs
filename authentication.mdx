@@ -1,0 +1,64 @@
+---
+title: "Authentication"
+description: "How to authenticate requests to the SmartlyQ API."
+---
+
+All API requests require a **Bearer token** in the `Authorization` header.
+
+## API keys
+
+Get your API key from the [Developer Dashboard](https://smartlyq.com/my/developer).
+
+| Key prefix | Environment |
+|------------|-------------|
+| `sqk_live_*` | Production — real credits, real data |
+| `sqk_test_*` | Sandbox — no credits charged |
+
+## Making authenticated requests
+
+Include your key in the `Authorization` header:
+
+```bash
+curl -X GET https://api.smartlyq.com/v1/me \
+  -H "Authorization: Bearer sqk_live_xxxxxxxxxxxx"
+```
+
+<Warning>
+Never expose your API key in client-side code, public repositories, or logs.
+</Warning>
+
+## Scopes
+
+Each key can be limited to specific scopes. Available scopes:
+
+| Scope | Access |
+|-------|--------|
+| `articles:read` | List and get articles |
+| `articles:write` | Generate and delete articles |
+| `images:read` / `images:write` | Image generation and listing |
+| `videos:read` / `videos:write` | Video generation and listing |
+| `social:read` / `social:write` | Social accounts and posts |
+| `audio:read` / `audio:write` | Text-to-speech, speech-to-text |
+| `urls:read` / `urls:write` | URL shortening |
+| `captain:use` | AI Captain conversations |
+| `chatbot:use` | Chatbot management and messaging |
+| `media:read` / `media:write` | Media library |
+| `analytics:read` | Analytics data |
+| `jobs:read` | Async job status |
+
+## Error responses
+
+If your key is missing or invalid, the API returns:
+
+- **401 Unauthorized** — missing or invalid key
+- **403 Forbidden** — valid key but insufficient scope
+
+```json
+{
+  "success": false,
+  "error": {
+    "code": "UNAUTHORIZED",
+    "message": "Missing or invalid API key."
+  }
+}
+```
