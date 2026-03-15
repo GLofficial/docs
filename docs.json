@@ -3,14 +3,14 @@
   "theme": "mint",
   "name": "SmartlyQ",
   "colors": {
-    "primary": "#377dee",
-    "light": "#07d1ff",
-    "dark": "#000000"
+    "primary": "#4D8BF5",
+    "light": "#6BA1FF",
+    "dark": "#3A6FD8"
   },
-  "favicon": "/favicon.svg",
+  "favicon": "/favicon.png",
   "logo": {
-    "light": "/logo/light.svg",
-    "dark": "/logo/dark.svg"
+    "light": "/logo/light.png",
+    "dark": "/logo/dark.png"
   },
   "navbar": {
     "links": [
