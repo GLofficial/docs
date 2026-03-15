@@ -24,6 +24,7 @@ All errors follow a consistent JSON structure:
 | `200` | Success |
 | `201` | Created |
 | `202` | Accepted (async job queued) |
+| `204` | No Content (resource deleted) |
 | `400` | Bad Request — invalid parameters |
 | `401` | Unauthorized — missing or invalid API key |
 | `402` | Payment Required — insufficient credits |
@@ -50,14 +51,14 @@ All errors follow a consistent JSON structure:
 
 ## Idempotency
 
-For POST requests, include an `Idempotency-Key` header to prevent duplicate operations:
+For POST requests, include an `X-Idempotency-Key` header to prevent duplicate operations:
 
 ```bash
 curl -X POST https://api.smartlyq.com/v1/articles/generate \
   -H "Authorization: Bearer sqk_live_xxxxxxxxxxxx" \
-  -H "Idempotency-Key: unique-request-id-123" \
+  -H "X-Idempotency-Key: unique-request-id-123" \
   -H "Content-Type: application/json" \
-  -d '{ "title": "My Article", "model": "gpt-4.1-nano" }'
+  -d '{ "topic": "My Article", "language": "en" }'
 ```
 
 Idempotency keys expire after **24 hours**.

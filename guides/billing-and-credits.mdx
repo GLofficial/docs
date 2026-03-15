@@ -47,7 +47,7 @@ cost_sqc = (provider_cost_usd × markup × sqc_per_usd) + platform_fee
 ## Checking your balance
 
 ```bash
-curl https://api.smartlyq.com/v1/wallet \
+curl https://api.smartlyq.com/v1/me/balance \
   -H "Authorization: Bearer sqk_live_xxxxxxxxxxxx"
 ```
 
@@ -57,8 +57,11 @@ Response:
 {
   "success": true,
   "data": {
-    "balance_sqc": 4250,
-    "auto_recharge": true
+    "balance": "100.0000",
+    "purchased_balance": "50.0000",
+    "monthly_balance": "50.0000",
+    "monthly_reset_at": "2026-04-15T00:00:00Z",
+    "currency": "USD"
   }
 }
 ```
