@@ -10,7 +10,7 @@ info:
 
     ## Quick Start
 
-    1. Get an API key from [smartlyq.com/my/developer](https://smartlyq.com/my/developer).
+    1. Get an API key from [app.smartlyq.com/my/developer](https://app.smartlyq.com/my/developer).
     2. Send your first request:
 
     ```bash
@@ -50,7 +50,7 @@ info:
     - **Prepaid wallet:** API usage is deducted from your Developer API wallet (credits in SQC).
     - **Pricing:** See the [pricing table](https://smartlyq.com/pricing) and in-app Developer dashboard for per-operation costs.
     - **How it works:** Each billable request (e.g. generate, post, chatbot message) consumes credits; response may include `usage` with `cost` and `balance_remaining`.
-    - **Top up:** Add credits via [smartlyq.com/my/developer](https://smartlyq.com/my/developer) (wallet / top-up).
+    - **Top up:** Add credits via [app.smartlyq.com/my/developer](https://app.smartlyq.com/my/developer) (wallet / top-up).
 
     ## Rate Limiting
 
