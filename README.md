@@ -31,5 +31,5 @@ Changes are deployed automatically on push to `main` via the Mintlify GitHub app
 ## Resources
 
 - [Mintlify docs](https://mintlify.com/docs)
-- [SmartlyQ Developer Dashboard](https://smartlyq.com/my/developer)
+- [SmartlyQ Developer Dashboard](https://app.smartlyq.com/my/developer)
 - [Support](mailto:support@smartlyq.com)
