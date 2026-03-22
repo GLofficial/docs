@@ -1,0 +1,67 @@
+---
+title: "Workspaces"
+description: "How workspace scoping works in the SmartlyQ API."
+---
+
+Every resource in SmartlyQ belongs to a **workspace**. Workspaces provide tenant isolation — data in one workspace is invisible to another.
+
+## Passing workspace_id
+
+Most endpoints accept an optional `workspace_id` parameter. When provided, the API:
+
+1. Verifies your API key's user is a **member** of that workspace
+2. Scopes all returned data to that workspace
+3. Returns **403 Forbidden** if you don't have access
+
+```bash
+curl -X GET "https://api.smartlyq.com/v1/social/accounts?workspace_id=42" \
+  -H "Authorization: Bearer sqk_live_xxxxxxxxxxxx"
+```
+
+<Warning>
+If you omit `workspace_id`, some endpoints may return data across all your workspaces or return empty results. Always pass `workspace_id` for consistent, scoped results.
+</Warning>
+
+## Finding your workspace ID
+
+Use the `/v1/me` endpoint to list your available workspaces:
+
+```bash
+curl -X GET https://api.smartlyq.com/v1/me \
+  -H "Authorization: Bearer sqk_live_xxxxxxxxxxxx"
+```
+
+The response includes a `workspaces` array with each workspace's `id` and `name`.
+
+## Workspace isolation guarantees
+
+- You can **only access workspaces** where your user is a member
+- All create, read, update, and delete operations are scoped by `workspace_id`
+- Passing another user's `workspace_id` returns **403 Forbidden**
+- Resources created without a `workspace_id` default to your primary workspace
+
+## Endpoints that require workspace_id
+
+| Endpoint | workspace_id | Notes |
+|----------|:----------:|-------|
+| `POST /v1/chatbots` | Required | Chatbot is created in the specified workspace |
+| `GET /v1/social/accounts` | Recommended | Returns only accounts for that workspace |
+| `POST /v1/social/posts` | Recommended | Post is associated with the workspace |
+| `GET /v1/urls` | Recommended | Returns only URLs for that workspace |
+| `GET /v1/articles` | Recommended | Returns only articles for that workspace |
+| `GET /v1/images` | Recommended | Returns only images for that workspace |
+| `GET /v1/media` | Recommended | Returns only media for that workspace |
+
+## Error response
+
+If you pass a `workspace_id` you don't have access to:
+
+```json
+{
+  "success": false,
+  "error": {
+    "code": "FORBIDDEN",
+    "message": "You do not have access to this workspace."
+  }
+}
+```
