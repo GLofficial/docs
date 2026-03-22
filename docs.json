@@ -41,6 +41,7 @@
           {
             "group": "Guides",
             "pages": [
+              "guides/workspaces",
               "guides/billing-and-credits",
               "guides/rate-limiting",
               "guides/async-jobs",
