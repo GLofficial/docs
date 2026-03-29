@@ -821,25 +821,10 @@
     "/chatbots/{id}/train": {
       "post": {
         "summary": "Start chatbot training",
+        "description": "Triggers training using the chatbot's existing training data (training_text, training_url, and FAQs). No request body required. Poll GET /chatbots/{id}/train-status for completion.",
         "operationId": "trainChatbot",
         "tags": ["Chatbot"],
         "parameters": [{ "$ref": "#/components/parameters/ChatbotIdParam" }],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "sources": {
-                    "type": "array",
-                    "items": { "type": "object" },
-                    "description": "Training data sources"
-                  }
-                }
-              }
-            }
-          }
-        },
         "responses": {
           "202": {
             "description": "Training accepted; poll train-status for completion",
@@ -1242,7 +1227,8 @@
       },
       "ArticleIdParam": {
         "name": "article_id", "in": "path", "required": true,
-        "schema": { "type": "integer", "format": "int64" }
+        "description": "Article ID (string UUID).",
+        "schema": { "type": "string" }
       },
       "ImageIdParam": {
         "name": "image_id", "in": "path", "required": true,
@@ -1280,7 +1266,8 @@
       },
       "MediaIdParam": {
         "name": "media_id", "in": "path", "required": true,
-        "schema": { "type": "integer", "format": "int64" }
+        "description": "Media ID (string UUID).",
+        "schema": { "type": "string" }
       },
       "AccountIdParam": {
         "name": "account_id", "in": "path", "required": true,
@@ -1575,7 +1562,7 @@
           "content": { "type": "string", "description": "Post text content" },
           "platforms": { "type": "array", "items": { "type": "string" }, "description": "Target platforms (e.g. facebook, twitter, instagram)" },
           "account_ids": { "type": "array", "items": { "type": "integer" }, "description": "IDs of connected social accounts to post to" },
-          "media_ids": { "type": "array", "items": { "type": "integer" }, "description": "Media library item IDs to attach" },
+          "media_urls": { "type": "array", "items": { "type": "string" }, "description": "Media URLs to attach to the post" },
           "link": { "type": "string", "description": "URL to include with the post" }
         }
       },
@@ -1587,7 +1574,7 @@
           "platforms": { "type": "array", "items": { "type": "string" }, "description": "Target platforms" },
           "account_ids": { "type": "array", "items": { "type": "integer" }, "description": "IDs of connected social accounts" },
           "scheduled_time": { "type": "string", "format": "date-time", "description": "When to publish (ISO 8601)" },
-          "media_ids": { "type": "array", "items": { "type": "integer" }, "description": "Media library item IDs to attach" },
+          "media_urls": { "type": "array", "items": { "type": "string" }, "description": "Media URLs to attach to the post" },
           "link": { "type": "string", "description": "URL to include with the post" }
         }
       },
@@ -1599,7 +1586,7 @@
           "platforms": { "type": "array", "items": { "type": "string" } },
           "account_ids": { "type": "array", "items": { "type": "integer" } },
           "scheduled_time": { "type": "string", "format": "date-time" },
-          "media_ids": { "type": "array", "items": { "type": "integer" } },
+          "media_urls": { "type": "array", "items": { "type": "string" } },
           "link": { "type": "string" }
         }
       },
