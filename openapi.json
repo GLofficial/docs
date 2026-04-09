@@ -1232,7 +1232,8 @@
       },
       "ImageIdParam": {
         "name": "image_id", "in": "path", "required": true,
-        "schema": { "type": "integer", "format": "int64" }
+        "description": "Image ID (hex string).",
+        "schema": { "type": "string" }
       },
       "VideoIdParam": {
         "name": "video_id", "in": "path", "required": true,
