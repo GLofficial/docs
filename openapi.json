@@ -1134,7 +1134,12 @@
         "summary": "Cancel job",
         "operationId": "cancelJob",
         "tags": ["Jobs"],
+        "description": "Cancels a queued or processing job. The request body may be empty, but `Content-Type: application/json` **must** still be set — omitting it returns a 400 error.",
         "parameters": [{ "$ref": "#/components/parameters/JobIdParam" }],
+        "requestBody": {
+          "required": false,
+          "content": { "application/json": { "schema": { "type": "object" } } }
+        },
         "responses": {
           "200": {
             "description": "Job cancelled",
