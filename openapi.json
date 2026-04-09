@@ -26,19 +26,58 @@
     }
   ],
   "tags": [
-    { "name": "Articles", "description": "Long-form article generation and management" },
-    { "name": "Images", "description": "AI image generation and listing" },
-    { "name": "Videos", "description": "AI video generation and listing" },
-    { "name": "Social", "description": "Social accounts and post scheduling" },
-    { "name": "Content", "description": "Content rewriting" },
-    { "name": "Audio", "description": "Text-to-speech and speech-to-text" },
-    { "name": "URLs", "description": "URL shortening and analytics" },
-    { "name": "AI Captain", "description": "AI Captain conversations" },
-    { "name": "Chatbot", "description": "Chatbots, training, and conversations" },
-    { "name": "Media", "description": "Media library and uploads" },
-    { "name": "Analytics", "description": "Analytics overview and reports" },
-    { "name": "Jobs", "description": "Async job status and cancellation" },
-    { "name": "Account", "description": "Current user, usage, and balance" }
+    {
+      "name": "Articles",
+      "description": "Long-form article generation and management"
+    },
+    {
+      "name": "Images",
+      "description": "AI image generation and listing"
+    },
+    {
+      "name": "Videos",
+      "description": "AI video generation and listing"
+    },
+    {
+      "name": "Social",
+      "description": "Social accounts and post scheduling"
+    },
+    {
+      "name": "Content",
+      "description": "Content rewriting"
+    },
+    {
+      "name": "Audio",
+      "description": "Text-to-speech and speech-to-text"
+    },
+    {
+      "name": "URLs",
+      "description": "URL shortening and analytics"
+    },
+    {
+      "name": "AI Captain",
+      "description": "AI Captain conversations"
+    },
+    {
+      "name": "Chatbot",
+      "description": "Chatbots, training, and conversations"
+    },
+    {
+      "name": "Media",
+      "description": "Media library and uploads"
+    },
+    {
+      "name": "Analytics",
+      "description": "Analytics overview and reports"
+    },
+    {
+      "name": "Jobs",
+      "description": "Async job status and cancellation"
+    },
+    {
+      "name": "Account",
+      "description": "Current user, usage, and balance"
+    }
   ],
   "paths": {
     "/articles/generate": {
@@ -46,27 +85,51 @@
         "summary": "Generate article",
         "description": "Start article generation. Returns 202 with job_id; poll GET /jobs/{job_id} for result. Either `topic` or `keywords` must be provided.",
         "operationId": "generateArticle",
-        "tags": ["Articles"],
+        "tags": [
+          "Articles"
+        ],
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
-              "schema": { "$ref": "#/components/schemas/ArticleGenerateRequest" }
+              "schema": {
+                "$ref": "#/components/schemas/ArticleGenerateRequest"
+              }
             }
           }
         },
         "responses": {
           "202": {
             "description": "Accepted; poll job for result",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/JobCreatedResponse" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JobCreatedResponse"
+                }
+              }
+            }
           },
-          "400": { "$ref": "#/components/responses/BadRequest" },
-          "401": { "$ref": "#/components/responses/Unauthorized" },
-          "402": { "$ref": "#/components/responses/InsufficientBalance" },
-          "403": { "$ref": "#/components/responses/Forbidden" },
-          "422": { "$ref": "#/components/responses/ValidationError" },
-          "429": { "$ref": "#/components/responses/RateLimited" },
-          "500": { "$ref": "#/components/responses/ServerError" }
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "402": {
+            "$ref": "#/components/responses/InsufficientBalance"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "429": {
+            "$ref": "#/components/responses/RateLimited"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
         }
       }
     },
@@ -74,21 +137,55 @@
       "get": {
         "summary": "List articles",
         "operationId": "listArticles",
-        "tags": ["Articles"],
+        "tags": [
+          "Articles"
+        ],
         "parameters": [
-          { "$ref": "#/components/parameters/PageParam" },
-          { "$ref": "#/components/parameters/PerPageParam" },
-          { "name": "status", "in": "query", "schema": { "type": "string", "enum": ["draft", "published"] } },
-          { "name": "search", "in": "query", "schema": { "type": "string" } }
+          {
+            "$ref": "#/components/parameters/PageParam"
+          },
+          {
+            "$ref": "#/components/parameters/PerPageParam"
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "draft",
+                "published"
+              ]
+            }
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
         ],
         "responses": {
           "200": {
             "description": "Paginated list of articles",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ArticleListResponse" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ArticleListResponse"
+                }
+              }
+            }
           },
-          "401": { "$ref": "#/components/responses/Unauthorized" },
-          "403": { "$ref": "#/components/responses/Forbidden" },
-          "500": { "$ref": "#/components/responses/ServerError" }
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
         }
       }
     },
@@ -96,30 +193,66 @@
       "get": {
         "summary": "Get article",
         "operationId": "getArticle",
-        "tags": ["Articles"],
-        "parameters": [{ "$ref": "#/components/parameters/ArticleIdParam" }],
+        "tags": [
+          "Articles"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ArticleIdParam"
+          }
+        ],
         "responses": {
           "200": {
             "description": "Single article",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ArticleSingleResponse" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ArticleSingleResponse"
+                }
+              }
+            }
           },
-          "401": { "$ref": "#/components/responses/Unauthorized" },
-          "403": { "$ref": "#/components/responses/Forbidden" },
-          "404": { "$ref": "#/components/responses/NotFound" },
-          "500": { "$ref": "#/components/responses/ServerError" }
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
         }
       },
       "delete": {
         "summary": "Delete article",
         "operationId": "deleteArticle",
-        "tags": ["Articles"],
-        "parameters": [{ "$ref": "#/components/parameters/ArticleIdParam" }],
+        "tags": [
+          "Articles"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ArticleIdParam"
+          }
+        ],
         "responses": {
-          "204": { "description": "Article deleted" },
-          "401": { "$ref": "#/components/responses/Unauthorized" },
-          "403": { "$ref": "#/components/responses/Forbidden" },
-          "404": { "$ref": "#/components/responses/NotFound" },
-          "500": { "$ref": "#/components/responses/ServerError" }
+          "204": {
+            "description": "Article deleted"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
         }
       }
     },
@@ -128,27 +261,51 @@
         "summary": "Generate image",
         "description": "Returns 202 with job_id for async generation. Either `prompt` or `description` must be provided.",
         "operationId": "generateImage",
-        "tags": ["Images"],
+        "tags": [
+          "Images"
+        ],
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
-              "schema": { "$ref": "#/components/schemas/ImageGenerateRequest" }
+              "schema": {
+                "$ref": "#/components/schemas/ImageGenerateRequest"
+              }
             }
           }
         },
         "responses": {
           "202": {
             "description": "Accepted; poll job for result",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/JobCreatedResponse" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JobCreatedResponse"
+                }
+              }
+            }
           },
-          "400": { "$ref": "#/components/responses/BadRequest" },
-          "401": { "$ref": "#/components/responses/Unauthorized" },
-          "402": { "$ref": "#/components/responses/InsufficientBalance" },
-          "403": { "$ref": "#/components/responses/Forbidden" },
-          "422": { "$ref": "#/components/responses/ValidationError" },
-          "429": { "$ref": "#/components/responses/RateLimited" },
-          "500": { "$ref": "#/components/responses/ServerError" }
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "402": {
+            "$ref": "#/components/responses/InsufficientBalance"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "429": {
+            "$ref": "#/components/responses/RateLimited"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
         }
       }
     },
@@ -156,21 +313,51 @@
       "get": {
         "summary": "List images",
         "operationId": "listImages",
-        "tags": ["Images"],
+        "tags": [
+          "Images"
+        ],
         "parameters": [
-          { "$ref": "#/components/parameters/PageParam" },
-          { "$ref": "#/components/parameters/PerPageParam" },
-          { "name": "status", "in": "query", "schema": { "type": "string" } },
-          { "name": "style", "in": "query", "schema": { "type": "string" } }
+          {
+            "$ref": "#/components/parameters/PageParam"
+          },
+          {
+            "$ref": "#/components/parameters/PerPageParam"
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "style",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
         ],
         "responses": {
           "200": {
             "description": "Paginated list of images",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ImageListResponse" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ImageListResponse"
+                }
+              }
+            }
           },
-          "401": { "$ref": "#/components/responses/Unauthorized" },
-          "403": { "$ref": "#/components/responses/Forbidden" },
-          "500": { "$ref": "#/components/responses/ServerError" }
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
         }
       }
     },
@@ -178,30 +365,66 @@
       "get": {
         "summary": "Get image",
         "operationId": "getImage",
-        "tags": ["Images"],
-        "parameters": [{ "$ref": "#/components/parameters/ImageIdParam" }],
+        "tags": [
+          "Images"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ImageIdParam"
+          }
+        ],
         "responses": {
           "200": {
             "description": "Single image",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ImageSingleResponse" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ImageSingleResponse"
+                }
+              }
+            }
           },
-          "401": { "$ref": "#/components/responses/Unauthorized" },
-          "403": { "$ref": "#/components/responses/Forbidden" },
-          "404": { "$ref": "#/components/responses/NotFound" },
-          "500": { "$ref": "#/components/responses/ServerError" }
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
         }
       },
       "delete": {
         "summary": "Delete image",
         "operationId": "deleteImage",
-        "tags": ["Images"],
-        "parameters": [{ "$ref": "#/components/parameters/ImageIdParam" }],
+        "tags": [
+          "Images"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ImageIdParam"
+          }
+        ],
         "responses": {
-          "204": { "description": "Image deleted" },
-          "401": { "$ref": "#/components/responses/Unauthorized" },
-          "403": { "$ref": "#/components/responses/Forbidden" },
-          "404": { "$ref": "#/components/responses/NotFound" },
-          "500": { "$ref": "#/components/responses/ServerError" }
+          "204": {
+            "description": "Image deleted"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
         }
       }
     },
@@ -210,27 +433,51 @@
         "summary": "Generate video",
         "description": "Returns 202 with job_id; poll GET /jobs/{job_id} for result.",
         "operationId": "generateVideo",
-        "tags": ["Videos"],
+        "tags": [
+          "Videos"
+        ],
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
-              "schema": { "$ref": "#/components/schemas/VideoGenerateRequest" }
+              "schema": {
+                "$ref": "#/components/schemas/VideoGenerateRequest"
+              }
             }
           }
         },
         "responses": {
           "202": {
             "description": "Accepted; poll job for result",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/JobCreatedResponse" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JobCreatedResponse"
+                }
+              }
+            }
           },
-          "400": { "$ref": "#/components/responses/BadRequest" },
-          "401": { "$ref": "#/components/responses/Unauthorized" },
-          "402": { "$ref": "#/components/responses/InsufficientBalance" },
-          "403": { "$ref": "#/components/responses/Forbidden" },
-          "422": { "$ref": "#/components/responses/ValidationError" },
-          "429": { "$ref": "#/components/responses/RateLimited" },
-          "500": { "$ref": "#/components/responses/ServerError" }
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "402": {
+            "$ref": "#/components/responses/InsufficientBalance"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "429": {
+            "$ref": "#/components/responses/RateLimited"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
         }
       }
     },
@@ -238,22 +485,58 @@
       "get": {
         "summary": "List videos",
         "operationId": "listVideos",
-        "tags": ["Videos"],
+        "tags": [
+          "Videos"
+        ],
         "parameters": [
-          { "$ref": "#/components/parameters/PageParam" },
-          { "$ref": "#/components/parameters/PerPageParam" },
-          { "name": "search", "in": "query", "schema": { "type": "string" } },
-          { "name": "style", "in": "query", "schema": { "type": "string" } },
-          { "name": "status", "in": "query", "schema": { "type": "string" } }
+          {
+            "$ref": "#/components/parameters/PageParam"
+          },
+          {
+            "$ref": "#/components/parameters/PerPageParam"
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "style",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
         ],
         "responses": {
           "200": {
             "description": "Paginated list of videos",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/VideoListResponse" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VideoListResponse"
+                }
+              }
+            }
           },
-          "401": { "$ref": "#/components/responses/Unauthorized" },
-          "403": { "$ref": "#/components/responses/Forbidden" },
-          "500": { "$ref": "#/components/responses/ServerError" }
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
         }
       }
     },
@@ -261,30 +544,66 @@
       "get": {
         "summary": "Get video",
         "operationId": "getVideo",
-        "tags": ["Videos"],
-        "parameters": [{ "$ref": "#/components/parameters/VideoIdParam" }],
+        "tags": [
+          "Videos"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/VideoIdParam"
+          }
+        ],
         "responses": {
           "200": {
             "description": "Single video",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/VideoSingleResponse" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VideoSingleResponse"
+                }
+              }
+            }
           },
-          "401": { "$ref": "#/components/responses/Unauthorized" },
-          "403": { "$ref": "#/components/responses/Forbidden" },
-          "404": { "$ref": "#/components/responses/NotFound" },
-          "500": { "$ref": "#/components/responses/ServerError" }
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
         }
       },
       "delete": {
         "summary": "Delete video",
         "operationId": "deleteVideo",
-        "tags": ["Videos"],
-        "parameters": [{ "$ref": "#/components/parameters/VideoIdParam" }],
+        "tags": [
+          "Videos"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/VideoIdParam"
+          }
+        ],
         "responses": {
-          "204": { "description": "Video deleted" },
-          "401": { "$ref": "#/components/responses/Unauthorized" },
-          "403": { "$ref": "#/components/responses/Forbidden" },
-          "404": { "$ref": "#/components/responses/NotFound" },
-          "500": { "$ref": "#/components/responses/ServerError" }
+          "204": {
+            "description": "Video deleted"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
         }
       }
     },
@@ -293,15 +612,29 @@
         "summary": "List social accounts",
         "description": "Returns all connected social media accounts for the authenticated user.",
         "operationId": "listSocialAccounts",
-        "tags": ["Social"],
+        "tags": [
+          "Social"
+        ],
         "responses": {
           "200": {
             "description": "List of social accounts",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/SocialAccountListResponse" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SocialAccountListResponse"
+                }
+              }
+            }
           },
-          "401": { "$ref": "#/components/responses/Unauthorized" },
-          "403": { "$ref": "#/components/responses/Forbidden" },
-          "500": { "$ref": "#/components/responses/ServerError" }
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
         }
       }
     },
@@ -309,47 +642,107 @@
       "post": {
         "summary": "Create post (publish immediately)",
         "operationId": "createSocialPost",
-        "tags": ["Social"],
+        "tags": [
+          "Social"
+        ],
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
-              "schema": { "$ref": "#/components/schemas/SocialPostCreateRequest" }
+              "schema": {
+                "$ref": "#/components/schemas/SocialPostCreateRequest"
+              }
             }
           }
         },
         "responses": {
           "201": {
             "description": "Post created",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/SocialPostResponse" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SocialPostResponse"
+                }
+              }
+            }
           },
-          "400": { "$ref": "#/components/responses/BadRequest" },
-          "401": { "$ref": "#/components/responses/Unauthorized" },
-          "402": { "$ref": "#/components/responses/InsufficientBalance" },
-          "403": { "$ref": "#/components/responses/Forbidden" },
-          "422": { "$ref": "#/components/responses/ValidationError" },
-          "429": { "$ref": "#/components/responses/RateLimited" },
-          "500": { "$ref": "#/components/responses/ServerError" }
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "402": {
+            "$ref": "#/components/responses/InsufficientBalance"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "429": {
+            "$ref": "#/components/responses/RateLimited"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
         }
       },
       "get": {
         "summary": "List social posts",
         "operationId": "listSocialPosts",
-        "tags": ["Social"],
+        "tags": [
+          "Social"
+        ],
         "parameters": [
-          { "$ref": "#/components/parameters/PageParam" },
-          { "$ref": "#/components/parameters/PerPageParam" },
-          { "name": "status", "in": "query", "schema": { "type": "string", "enum": ["scheduled", "published", "failed"] } },
-          { "name": "platform", "in": "query", "schema": { "type": "string" }, "description": "Filter by social platform" }
+          {
+            "$ref": "#/components/parameters/PageParam"
+          },
+          {
+            "$ref": "#/components/parameters/PerPageParam"
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "scheduled",
+                "published",
+                "failed"
+              ]
+            }
+          },
+          {
+            "name": "platform",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Filter by social platform"
+          }
         ],
         "responses": {
           "200": {
             "description": "Paginated list of posts",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/SocialPostListResponse" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SocialPostListResponse"
+                }
+              }
+            }
           },
-          "401": { "$ref": "#/components/responses/Unauthorized" },
-          "403": { "$ref": "#/components/responses/Forbidden" },
-          "500": { "$ref": "#/components/responses/ServerError" }
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
         }
       }
     },
@@ -357,27 +750,51 @@
       "post": {
         "summary": "Schedule post",
         "operationId": "scheduleSocialPost",
-        "tags": ["Social"],
+        "tags": [
+          "Social"
+        ],
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
-              "schema": { "$ref": "#/components/schemas/SocialPostScheduleRequest" }
+              "schema": {
+                "$ref": "#/components/schemas/SocialPostScheduleRequest"
+              }
             }
           }
         },
         "responses": {
           "201": {
             "description": "Post scheduled",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/SocialPostResponse" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SocialPostResponse"
+                }
+              }
+            }
           },
-          "400": { "$ref": "#/components/responses/BadRequest" },
-          "401": { "$ref": "#/components/responses/Unauthorized" },
-          "402": { "$ref": "#/components/responses/InsufficientBalance" },
-          "403": { "$ref": "#/components/responses/Forbidden" },
-          "422": { "$ref": "#/components/responses/ValidationError" },
-          "429": { "$ref": "#/components/responses/RateLimited" },
-          "500": { "$ref": "#/components/responses/ServerError" }
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "402": {
+            "$ref": "#/components/responses/InsufficientBalance"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "429": {
+            "$ref": "#/components/responses/RateLimited"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
         }
       }
     },
@@ -385,55 +802,117 @@
       "get": {
         "summary": "Get social post",
         "operationId": "getSocialPost",
-        "tags": ["Social"],
-        "parameters": [{ "$ref": "#/components/parameters/PostIdParam" }],
+        "tags": [
+          "Social"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/PostIdParam"
+          }
+        ],
         "responses": {
           "200": {
             "description": "Single post",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/SocialPostSingleResponse" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SocialPostSingleResponse"
+                }
+              }
+            }
           },
-          "401": { "$ref": "#/components/responses/Unauthorized" },
-          "403": { "$ref": "#/components/responses/Forbidden" },
-          "404": { "$ref": "#/components/responses/NotFound" },
-          "500": { "$ref": "#/components/responses/ServerError" }
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
         }
       },
       "patch": {
         "summary": "Update social post",
         "operationId": "updateSocialPost",
-        "tags": ["Social"],
-        "parameters": [{ "$ref": "#/components/parameters/PostIdParam" }],
+        "tags": [
+          "Social"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/PostIdParam"
+          }
+        ],
         "requestBody": {
           "content": {
             "application/json": {
-              "schema": { "$ref": "#/components/schemas/SocialPostUpdateRequest" }
+              "schema": {
+                "$ref": "#/components/schemas/SocialPostUpdateRequest"
+              }
             }
           }
         },
         "responses": {
           "200": {
             "description": "Updated post",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/SocialPostSingleResponse" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SocialPostSingleResponse"
+                }
+              }
+            }
           },
-          "400": { "$ref": "#/components/responses/BadRequest" },
-          "401": { "$ref": "#/components/responses/Unauthorized" },
-          "403": { "$ref": "#/components/responses/Forbidden" },
-          "404": { "$ref": "#/components/responses/NotFound" },
-          "422": { "$ref": "#/components/responses/ValidationError" },
-          "500": { "$ref": "#/components/responses/ServerError" }
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
         }
       },
       "delete": {
         "summary": "Delete social post",
         "operationId": "deleteSocialPost",
-        "tags": ["Social"],
-        "parameters": [{ "$ref": "#/components/parameters/PostIdParam" }],
+        "tags": [
+          "Social"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/PostIdParam"
+          }
+        ],
         "responses": {
-          "204": { "description": "Post deleted" },
-          "401": { "$ref": "#/components/responses/Unauthorized" },
-          "403": { "$ref": "#/components/responses/Forbidden" },
-          "404": { "$ref": "#/components/responses/NotFound" },
-          "500": { "$ref": "#/components/responses/ServerError" }
+          "204": {
+            "description": "Post deleted"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
         }
       }
     },
@@ -441,27 +920,51 @@
       "post": {
         "summary": "Rewrite content",
         "operationId": "rewriteContent",
-        "tags": ["Content"],
+        "tags": [
+          "Content"
+        ],
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
-              "schema": { "$ref": "#/components/schemas/ContentRewriteRequest" }
+              "schema": {
+                "$ref": "#/components/schemas/ContentRewriteRequest"
+              }
             }
           }
         },
         "responses": {
           "202": {
             "description": "Rewrite accepted",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ContentRewriteResponse" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContentRewriteResponse"
+                }
+              }
+            }
           },
-          "400": { "$ref": "#/components/responses/BadRequest" },
-          "401": { "$ref": "#/components/responses/Unauthorized" },
-          "402": { "$ref": "#/components/responses/InsufficientBalance" },
-          "403": { "$ref": "#/components/responses/Forbidden" },
-          "422": { "$ref": "#/components/responses/ValidationError" },
-          "429": { "$ref": "#/components/responses/RateLimited" },
-          "500": { "$ref": "#/components/responses/ServerError" }
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "402": {
+            "$ref": "#/components/responses/InsufficientBalance"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "429": {
+            "$ref": "#/components/responses/RateLimited"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
         }
       }
     },
@@ -469,27 +972,51 @@
       "post": {
         "summary": "Text to speech",
         "operationId": "textToSpeech",
-        "tags": ["Audio"],
+        "tags": [
+          "Audio"
+        ],
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
-              "schema": { "$ref": "#/components/schemas/TextToSpeechRequest" }
+              "schema": {
+                "$ref": "#/components/schemas/TextToSpeechRequest"
+              }
             }
           }
         },
         "responses": {
           "202": {
             "description": "TTS generation accepted",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/JobCreatedResponse" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JobCreatedResponse"
+                }
+              }
+            }
           },
-          "400": { "$ref": "#/components/responses/BadRequest" },
-          "401": { "$ref": "#/components/responses/Unauthorized" },
-          "402": { "$ref": "#/components/responses/InsufficientBalance" },
-          "403": { "$ref": "#/components/responses/Forbidden" },
-          "422": { "$ref": "#/components/responses/ValidationError" },
-          "429": { "$ref": "#/components/responses/RateLimited" },
-          "500": { "$ref": "#/components/responses/ServerError" }
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "402": {
+            "$ref": "#/components/responses/InsufficientBalance"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "429": {
+            "$ref": "#/components/responses/RateLimited"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
         }
       }
     },
@@ -497,27 +1024,51 @@
       "post": {
         "summary": "Speech to text",
         "operationId": "speechToText",
-        "tags": ["Audio"],
+        "tags": [
+          "Audio"
+        ],
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
-              "schema": { "$ref": "#/components/schemas/SpeechToTextRequest" }
+              "schema": {
+                "$ref": "#/components/schemas/SpeechToTextRequest"
+              }
             }
           }
         },
         "responses": {
           "202": {
             "description": "Transcription accepted",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/JobCreatedResponse" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JobCreatedResponse"
+                }
+              }
+            }
           },
-          "400": { "$ref": "#/components/responses/BadRequest" },
-          "401": { "$ref": "#/components/responses/Unauthorized" },
-          "402": { "$ref": "#/components/responses/InsufficientBalance" },
-          "403": { "$ref": "#/components/responses/Forbidden" },
-          "422": { "$ref": "#/components/responses/ValidationError" },
-          "429": { "$ref": "#/components/responses/RateLimited" },
-          "500": { "$ref": "#/components/responses/ServerError" }
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "402": {
+            "$ref": "#/components/responses/InsufficientBalance"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "429": {
+            "$ref": "#/components/responses/RateLimited"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
         }
       }
     },
@@ -525,17 +1076,37 @@
       "get": {
         "summary": "Get audio",
         "operationId": "getAudio",
-        "tags": ["Audio"],
-        "parameters": [{ "$ref": "#/components/parameters/AudioIdParam" }],
+        "tags": [
+          "Audio"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/AudioIdParam"
+          }
+        ],
         "responses": {
           "200": {
             "description": "Audio resource",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/AudioSingleResponse" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AudioSingleResponse"
+                }
+              }
+            }
           },
-          "401": { "$ref": "#/components/responses/Unauthorized" },
-          "403": { "$ref": "#/components/responses/Forbidden" },
-          "404": { "$ref": "#/components/responses/NotFound" },
-          "500": { "$ref": "#/components/responses/ServerError" }
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
         }
       }
     },
@@ -543,27 +1114,51 @@
       "post": {
         "summary": "Shorten URL",
         "operationId": "shortenUrl",
-        "tags": ["URLs"],
+        "tags": [
+          "URLs"
+        ],
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
-              "schema": { "$ref": "#/components/schemas/UrlShortenRequest" }
+              "schema": {
+                "$ref": "#/components/schemas/UrlShortenRequest"
+              }
             }
           }
         },
         "responses": {
           "201": {
             "description": "Short URL created",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/UrlSingleResponse" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UrlSingleResponse"
+                }
+              }
+            }
           },
-          "400": { "$ref": "#/components/responses/BadRequest" },
-          "401": { "$ref": "#/components/responses/Unauthorized" },
-          "402": { "$ref": "#/components/responses/InsufficientBalance" },
-          "403": { "$ref": "#/components/responses/Forbidden" },
-          "422": { "$ref": "#/components/responses/ValidationError" },
-          "429": { "$ref": "#/components/responses/RateLimited" },
-          "500": { "$ref": "#/components/responses/ServerError" }
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "402": {
+            "$ref": "#/components/responses/InsufficientBalance"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "429": {
+            "$ref": "#/components/responses/RateLimited"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
         }
       }
     },
@@ -571,20 +1166,44 @@
       "get": {
         "summary": "List short URLs",
         "operationId": "listUrls",
-        "tags": ["URLs"],
+        "tags": [
+          "URLs"
+        ],
         "parameters": [
-          { "$ref": "#/components/parameters/PageParam" },
-          { "$ref": "#/components/parameters/PerPageParam" },
-          { "name": "search", "in": "query", "schema": { "type": "string" } }
+          {
+            "$ref": "#/components/parameters/PageParam"
+          },
+          {
+            "$ref": "#/components/parameters/PerPageParam"
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
         ],
         "responses": {
           "200": {
             "description": "Paginated list of URLs",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/UrlListResponse" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UrlListResponse"
+                }
+              }
+            }
           },
-          "401": { "$ref": "#/components/responses/Unauthorized" },
-          "403": { "$ref": "#/components/responses/Forbidden" },
-          "500": { "$ref": "#/components/responses/ServerError" }
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
         }
       }
     },
@@ -592,30 +1211,66 @@
       "get": {
         "summary": "Get short URL",
         "operationId": "getUrl",
-        "tags": ["URLs"],
-        "parameters": [{ "$ref": "#/components/parameters/UrlIdParam" }],
+        "tags": [
+          "URLs"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/UrlIdParam"
+          }
+        ],
         "responses": {
           "200": {
             "description": "Short URL details",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/UrlSingleResponse" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UrlSingleResponse"
+                }
+              }
+            }
           },
-          "401": { "$ref": "#/components/responses/Unauthorized" },
-          "403": { "$ref": "#/components/responses/Forbidden" },
-          "404": { "$ref": "#/components/responses/NotFound" },
-          "500": { "$ref": "#/components/responses/ServerError" }
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
         }
       },
       "delete": {
         "summary": "Delete short URL",
         "operationId": "deleteUrl",
-        "tags": ["URLs"],
-        "parameters": [{ "$ref": "#/components/parameters/UrlIdParam" }],
+        "tags": [
+          "URLs"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/UrlIdParam"
+          }
+        ],
         "responses": {
-          "204": { "description": "URL deleted" },
-          "401": { "$ref": "#/components/responses/Unauthorized" },
-          "403": { "$ref": "#/components/responses/Forbidden" },
-          "404": { "$ref": "#/components/responses/NotFound" },
-          "500": { "$ref": "#/components/responses/ServerError" }
+          "204": {
+            "description": "URL deleted"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
         }
       }
     },
@@ -623,17 +1278,37 @@
       "get": {
         "summary": "Get short URL stats",
         "operationId": "getUrlStats",
-        "tags": ["URLs"],
-        "parameters": [{ "$ref": "#/components/parameters/UrlIdParam" }],
+        "tags": [
+          "URLs"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/UrlIdParam"
+          }
+        ],
         "responses": {
           "200": {
             "description": "Click statistics",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/UrlStatsResponse" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UrlStatsResponse"
+                }
+              }
+            }
           },
-          "401": { "$ref": "#/components/responses/Unauthorized" },
-          "403": { "$ref": "#/components/responses/Forbidden" },
-          "404": { "$ref": "#/components/responses/NotFound" },
-          "500": { "$ref": "#/components/responses/ServerError" }
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
         }
       }
     },
@@ -641,27 +1316,51 @@
       "post": {
         "summary": "Send AI Captain message",
         "operationId": "sendCaptainMessage",
-        "tags": ["AI Captain"],
+        "tags": [
+          "AI Captain"
+        ],
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
-              "schema": { "$ref": "#/components/schemas/CaptainMessageRequest" }
+              "schema": {
+                "$ref": "#/components/schemas/CaptainMessageRequest"
+              }
             }
           }
         },
         "responses": {
           "202": {
             "description": "Message accepted; AI Captain reply included",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/CaptainMessageResponse" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CaptainMessageResponse"
+                }
+              }
+            }
           },
-          "400": { "$ref": "#/components/responses/BadRequest" },
-          "401": { "$ref": "#/components/responses/Unauthorized" },
-          "402": { "$ref": "#/components/responses/InsufficientBalance" },
-          "403": { "$ref": "#/components/responses/Forbidden" },
-          "422": { "$ref": "#/components/responses/ValidationError" },
-          "429": { "$ref": "#/components/responses/RateLimited" },
-          "500": { "$ref": "#/components/responses/ServerError" }
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "402": {
+            "$ref": "#/components/responses/InsufficientBalance"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "429": {
+            "$ref": "#/components/responses/RateLimited"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
         }
       }
     },
@@ -669,19 +1368,37 @@
       "get": {
         "summary": "List AI Captain conversations",
         "operationId": "listCaptainConversations",
-        "tags": ["AI Captain"],
+        "tags": [
+          "AI Captain"
+        ],
         "parameters": [
-          { "$ref": "#/components/parameters/PageParam" },
-          { "$ref": "#/components/parameters/PerPageParam" }
+          {
+            "$ref": "#/components/parameters/PageParam"
+          },
+          {
+            "$ref": "#/components/parameters/PerPageParam"
+          }
         ],
         "responses": {
           "200": {
             "description": "Paginated list of conversations",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ConversationListResponse" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConversationListResponse"
+                }
+              }
+            }
           },
-          "401": { "$ref": "#/components/responses/Unauthorized" },
-          "403": { "$ref": "#/components/responses/Forbidden" },
-          "500": { "$ref": "#/components/responses/ServerError" }
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
         }
       }
     },
@@ -689,17 +1406,37 @@
       "get": {
         "summary": "Get AI Captain conversation",
         "operationId": "getCaptainConversation",
-        "tags": ["AI Captain"],
-        "parameters": [{ "$ref": "#/components/parameters/ConversationIdParam" }],
+        "tags": [
+          "AI Captain"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ConversationIdParam"
+          }
+        ],
         "responses": {
           "200": {
             "description": "Single conversation with messages",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ConversationSingleResponse" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConversationSingleResponse"
+                }
+              }
+            }
           },
-          "401": { "$ref": "#/components/responses/Unauthorized" },
-          "403": { "$ref": "#/components/responses/Forbidden" },
-          "404": { "$ref": "#/components/responses/NotFound" },
-          "500": { "$ref": "#/components/responses/ServerError" }
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
         }
       }
     },
@@ -707,17 +1444,27 @@
       "post": {
         "summary": "Create chatbot",
         "operationId": "createChatbot",
-        "tags": ["Chatbot"],
+        "tags": [
+          "Chatbot"
+        ],
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "type": "object",
-                "required": ["title"],
+                "required": [
+                  "title"
+                ],
                 "properties": {
-                  "title": { "type": "string", "description": "Chatbot display name" },
-                  "config": { "type": "object", "description": "Chatbot configuration (model, temperature, etc.)" }
+                  "title": {
+                    "type": "string",
+                    "description": "Chatbot display name"
+                  },
+                  "config": {
+                    "type": "object",
+                    "description": "Chatbot configuration (model, temperature, etc.)"
+                  }
                 }
               }
             }
@@ -726,33 +1473,79 @@
         "responses": {
           "201": {
             "description": "Chatbot created",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/SuccessEnvelope" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessEnvelope"
+                }
+              }
+            }
           },
-          "400": { "$ref": "#/components/responses/BadRequest" },
-          "401": { "$ref": "#/components/responses/Unauthorized" },
-          "403": { "$ref": "#/components/responses/Forbidden" },
-          "422": { "$ref": "#/components/responses/ValidationError" },
-          "500": { "$ref": "#/components/responses/ServerError" }
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
         }
       },
       "get": {
         "summary": "List chatbots",
         "operationId": "listChatbots",
-        "tags": ["Chatbot"],
+        "tags": [
+          "Chatbot"
+        ],
         "parameters": [
-          { "$ref": "#/components/parameters/PageParam" },
-          { "$ref": "#/components/parameters/PerPageParam" },
-          { "name": "status", "in": "query", "schema": { "type": "string" } },
-          { "name": "search", "in": "query", "schema": { "type": "string" } }
+          {
+            "$ref": "#/components/parameters/PageParam"
+          },
+          {
+            "$ref": "#/components/parameters/PerPageParam"
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
         ],
         "responses": {
           "200": {
             "description": "Paginated list of chatbots",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/PaginatedList" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedList"
+                }
+              }
+            }
           },
-          "401": { "$ref": "#/components/responses/Unauthorized" },
-          "403": { "$ref": "#/components/responses/Forbidden" },
-          "500": { "$ref": "#/components/responses/ServerError" }
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
         }
       }
     },
@@ -760,32 +1553,62 @@
       "get": {
         "summary": "Get chatbot",
         "operationId": "getChatbot",
-        "tags": ["Chatbot"],
-        "parameters": [{ "$ref": "#/components/parameters/ChatbotIdParam" }],
+        "tags": [
+          "Chatbot"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ChatbotIdParam"
+          }
+        ],
         "responses": {
           "200": {
             "description": "Chatbot details",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/SuccessEnvelope" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessEnvelope"
+                }
+              }
+            }
           },
-          "401": { "$ref": "#/components/responses/Unauthorized" },
-          "403": { "$ref": "#/components/responses/Forbidden" },
-          "404": { "$ref": "#/components/responses/NotFound" },
-          "500": { "$ref": "#/components/responses/ServerError" }
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
         }
       },
       "patch": {
         "summary": "Update chatbot",
         "operationId": "updateChatbot",
-        "tags": ["Chatbot"],
-        "parameters": [{ "$ref": "#/components/parameters/ChatbotIdParam" }],
+        "tags": [
+          "Chatbot"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ChatbotIdParam"
+          }
+        ],
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
                 "type": "object",
                 "properties": {
-                  "title": { "type": "string" },
-                  "config": { "type": "object" }
+                  "title": {
+                    "type": "string"
+                  },
+                  "config": {
+                    "type": "object"
+                  }
                 }
               }
             }
@@ -794,27 +1617,61 @@
         "responses": {
           "200": {
             "description": "Updated chatbot",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/SuccessEnvelope" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessEnvelope"
+                }
+              }
+            }
           },
-          "400": { "$ref": "#/components/responses/BadRequest" },
-          "401": { "$ref": "#/components/responses/Unauthorized" },
-          "403": { "$ref": "#/components/responses/Forbidden" },
-          "404": { "$ref": "#/components/responses/NotFound" },
-          "422": { "$ref": "#/components/responses/ValidationError" },
-          "500": { "$ref": "#/components/responses/ServerError" }
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
         }
       },
       "delete": {
         "summary": "Delete chatbot",
         "operationId": "deleteChatbot",
-        "tags": ["Chatbot"],
-        "parameters": [{ "$ref": "#/components/parameters/ChatbotIdParam" }],
+        "tags": [
+          "Chatbot"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ChatbotIdParam"
+          }
+        ],
         "responses": {
-          "204": { "description": "Chatbot deleted" },
-          "401": { "$ref": "#/components/responses/Unauthorized" },
-          "403": { "$ref": "#/components/responses/Forbidden" },
-          "404": { "$ref": "#/components/responses/NotFound" },
-          "500": { "$ref": "#/components/responses/ServerError" }
+          "204": {
+            "description": "Chatbot deleted"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
         }
       }
     },
@@ -823,18 +1680,40 @@
         "summary": "Start chatbot training",
         "description": "Triggers training using the chatbot's existing training data (training_text, training_url, and FAQs). No request body required. Poll GET /chatbots/{id}/train-status for completion.",
         "operationId": "trainChatbot",
-        "tags": ["Chatbot"],
-        "parameters": [{ "$ref": "#/components/parameters/ChatbotIdParam" }],
+        "tags": [
+          "Chatbot"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ChatbotIdParam"
+          }
+        ],
         "responses": {
           "202": {
             "description": "Training accepted; poll train-status for completion",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/SuccessEnvelope" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessEnvelope"
+                }
+              }
+            }
           },
-          "400": { "$ref": "#/components/responses/BadRequest" },
-          "401": { "$ref": "#/components/responses/Unauthorized" },
-          "403": { "$ref": "#/components/responses/Forbidden" },
-          "404": { "$ref": "#/components/responses/NotFound" },
-          "500": { "$ref": "#/components/responses/ServerError" }
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
         }
       }
     },
@@ -842,17 +1721,37 @@
       "get": {
         "summary": "Get chatbot training status",
         "operationId": "getChatbotTrainStatus",
-        "tags": ["Chatbot"],
-        "parameters": [{ "$ref": "#/components/parameters/ChatbotIdParam" }],
+        "tags": [
+          "Chatbot"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ChatbotIdParam"
+          }
+        ],
         "responses": {
           "200": {
             "description": "Training status",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/SuccessEnvelope" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessEnvelope"
+                }
+              }
+            }
           },
-          "401": { "$ref": "#/components/responses/Unauthorized" },
-          "403": { "$ref": "#/components/responses/Forbidden" },
-          "404": { "$ref": "#/components/responses/NotFound" },
-          "500": { "$ref": "#/components/responses/ServerError" }
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
         }
       }
     },
@@ -860,18 +1759,31 @@
       "post": {
         "summary": "Send chatbot message",
         "operationId": "sendChatbotMessage",
-        "tags": ["Chatbot"],
-        "parameters": [{ "$ref": "#/components/parameters/ChatbotIdParam" }],
+        "tags": [
+          "Chatbot"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ChatbotIdParam"
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "type": "object",
-                "required": ["message"],
+                "required": [
+                  "message"
+                ],
                 "properties": {
-                  "message": { "type": "string" },
-                  "conversation_id": { "type": "string", "description": "Continue an existing conversation" }
+                  "message": {
+                    "type": "string"
+                  },
+                  "conversation_id": {
+                    "type": "string",
+                    "description": "Continue an existing conversation"
+                  }
                 }
               }
             }
@@ -880,16 +1792,38 @@
         "responses": {
           "200": {
             "description": "Chatbot reply",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/SuccessEnvelope" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessEnvelope"
+                }
+              }
+            }
           },
-          "400": { "$ref": "#/components/responses/BadRequest" },
-          "401": { "$ref": "#/components/responses/Unauthorized" },
-          "402": { "$ref": "#/components/responses/InsufficientBalance" },
-          "403": { "$ref": "#/components/responses/Forbidden" },
-          "404": { "$ref": "#/components/responses/NotFound" },
-          "422": { "$ref": "#/components/responses/ValidationError" },
-          "429": { "$ref": "#/components/responses/RateLimited" },
-          "500": { "$ref": "#/components/responses/ServerError" }
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "402": {
+            "$ref": "#/components/responses/InsufficientBalance"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "429": {
+            "$ref": "#/components/responses/RateLimited"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
         }
       }
     },
@@ -897,21 +1831,43 @@
       "get": {
         "summary": "List chatbot conversations",
         "operationId": "listChatbotConversations",
-        "tags": ["Chatbot"],
+        "tags": [
+          "Chatbot"
+        ],
         "parameters": [
-          { "$ref": "#/components/parameters/ChatbotIdParam" },
-          { "$ref": "#/components/parameters/PageParam" },
-          { "$ref": "#/components/parameters/PerPageParam" }
+          {
+            "$ref": "#/components/parameters/ChatbotIdParam"
+          },
+          {
+            "$ref": "#/components/parameters/PageParam"
+          },
+          {
+            "$ref": "#/components/parameters/PerPageParam"
+          }
         ],
         "responses": {
           "200": {
             "description": "Paginated list of conversations",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/PaginatedList" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedList"
+                }
+              }
+            }
           },
-          "401": { "$ref": "#/components/responses/Unauthorized" },
-          "403": { "$ref": "#/components/responses/Forbidden" },
-          "404": { "$ref": "#/components/responses/NotFound" },
-          "500": { "$ref": "#/components/responses/ServerError" }
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
         }
       }
     },
@@ -919,20 +1875,40 @@
       "get": {
         "summary": "Get conversation messages",
         "operationId": "getChatbotConversationMessages",
-        "tags": ["Chatbot"],
+        "tags": [
+          "Chatbot"
+        ],
         "parameters": [
-          { "$ref": "#/components/parameters/ChatbotIdParam" },
-          { "$ref": "#/components/parameters/ConvIdParam" }
+          {
+            "$ref": "#/components/parameters/ChatbotIdParam"
+          },
+          {
+            "$ref": "#/components/parameters/ConvIdParam"
+          }
         ],
         "responses": {
           "200": {
             "description": "List of messages in the conversation",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/PaginatedList" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedList"
+                }
+              }
+            }
           },
-          "401": { "$ref": "#/components/responses/Unauthorized" },
-          "403": { "$ref": "#/components/responses/Forbidden" },
-          "404": { "$ref": "#/components/responses/NotFound" },
-          "500": { "$ref": "#/components/responses/ServerError" }
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
         }
       }
     },
@@ -940,22 +1916,60 @@
       "get": {
         "summary": "List media",
         "operationId": "listMedia",
-        "tags": ["Media"],
+        "tags": [
+          "Media"
+        ],
         "parameters": [
-          { "$ref": "#/components/parameters/PageParam" },
-          { "$ref": "#/components/parameters/PerPageParam" },
-          { "name": "search", "in": "query", "schema": { "type": "string" } },
-          { "name": "content_type", "in": "query", "schema": { "type": "string" }, "description": "Filter by MIME type" },
-          { "name": "type", "in": "query", "schema": { "type": "string" }, "description": "Filter by media type" }
+          {
+            "$ref": "#/components/parameters/PageParam"
+          },
+          {
+            "$ref": "#/components/parameters/PerPageParam"
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "content_type",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Filter by MIME type"
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Filter by media type"
+          }
         ],
         "responses": {
           "200": {
             "description": "Paginated list of media",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/MediaListResponse" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MediaListResponse"
+                }
+              }
+            }
           },
-          "401": { "$ref": "#/components/responses/Unauthorized" },
-          "403": { "$ref": "#/components/responses/Forbidden" },
-          "500": { "$ref": "#/components/responses/ServerError" }
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
         }
       }
     },
@@ -963,30 +1977,66 @@
       "get": {
         "summary": "Get media",
         "operationId": "getMedia",
-        "tags": ["Media"],
-        "parameters": [{ "$ref": "#/components/parameters/MediaIdParam" }],
+        "tags": [
+          "Media"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/MediaIdParam"
+          }
+        ],
         "responses": {
           "200": {
             "description": "Media record",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/MediaSingleResponse" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MediaSingleResponse"
+                }
+              }
+            }
           },
-          "401": { "$ref": "#/components/responses/Unauthorized" },
-          "403": { "$ref": "#/components/responses/Forbidden" },
-          "404": { "$ref": "#/components/responses/NotFound" },
-          "500": { "$ref": "#/components/responses/ServerError" }
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
         }
       },
       "delete": {
         "summary": "Delete media",
         "operationId": "deleteMedia",
-        "tags": ["Media"],
-        "parameters": [{ "$ref": "#/components/parameters/MediaIdParam" }],
+        "tags": [
+          "Media"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/MediaIdParam"
+          }
+        ],
         "responses": {
-          "204": { "description": "Media deleted" },
-          "401": { "$ref": "#/components/responses/Unauthorized" },
-          "403": { "$ref": "#/components/responses/Forbidden" },
-          "404": { "$ref": "#/components/responses/NotFound" },
-          "500": { "$ref": "#/components/responses/ServerError" }
+          "204": {
+            "description": "Media deleted"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
         }
       }
     },
@@ -994,25 +2044,45 @@
       "post": {
         "summary": "Get presigned upload URL",
         "operationId": "getMediaUploadUrl",
-        "tags": ["Media"],
+        "tags": [
+          "Media"
+        ],
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
-              "schema": { "$ref": "#/components/schemas/MediaUploadUrlRequest" }
+              "schema": {
+                "$ref": "#/components/schemas/MediaUploadUrlRequest"
+              }
             }
           }
         },
         "responses": {
           "200": {
             "description": "Presigned URL for upload",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/MediaUploadUrlResponse" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MediaUploadUrlResponse"
+                }
+              }
+            }
           },
-          "400": { "$ref": "#/components/responses/BadRequest" },
-          "401": { "$ref": "#/components/responses/Unauthorized" },
-          "403": { "$ref": "#/components/responses/Forbidden" },
-          "422": { "$ref": "#/components/responses/ValidationError" },
-          "500": { "$ref": "#/components/responses/ServerError" }
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
         }
       }
     },
@@ -1020,23 +2090,46 @@
       "get": {
         "summary": "Get analytics overview",
         "operationId": "getAnalyticsOverview",
-        "tags": ["Analytics"],
+        "tags": [
+          "Analytics"
+        ],
         "parameters": [
           {
             "name": "period",
             "in": "query",
             "description": "Time period for analytics",
-            "schema": { "type": "string", "enum": ["today", "7d", "30d", "90d"], "default": "30d" }
+            "schema": {
+              "type": "string",
+              "enum": [
+                "today",
+                "7d",
+                "30d",
+                "90d"
+              ],
+              "default": "30d"
+            }
           }
         ],
         "responses": {
           "200": {
             "description": "Analytics overview",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/SuccessEnvelope" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessEnvelope"
+                }
+              }
+            }
           },
-          "401": { "$ref": "#/components/responses/Unauthorized" },
-          "403": { "$ref": "#/components/responses/Forbidden" },
-          "500": { "$ref": "#/components/responses/ServerError" }
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
         }
       }
     },
@@ -1044,22 +2137,63 @@
       "get": {
         "summary": "Get post analytics",
         "operationId": "getAnalyticsPosts",
-        "tags": ["Analytics"],
+        "tags": [
+          "Analytics"
+        ],
         "parameters": [
-          { "$ref": "#/components/parameters/PageParam" },
-          { "$ref": "#/components/parameters/PerPageParam" },
-          { "name": "platform", "in": "query", "schema": { "type": "string" }, "description": "Filter by social platform" },
-          { "name": "date_from", "in": "query", "schema": { "type": "string", "format": "date" }, "description": "Start date (YYYY-MM-DD)" },
-          { "name": "date_to", "in": "query", "schema": { "type": "string", "format": "date" }, "description": "End date (YYYY-MM-DD)" }
+          {
+            "$ref": "#/components/parameters/PageParam"
+          },
+          {
+            "$ref": "#/components/parameters/PerPageParam"
+          },
+          {
+            "name": "platform",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Filter by social platform"
+          },
+          {
+            "name": "date_from",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date"
+            },
+            "description": "Start date (YYYY-MM-DD)"
+          },
+          {
+            "name": "date_to",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date"
+            },
+            "description": "End date (YYYY-MM-DD)"
+          }
         ],
         "responses": {
           "200": {
             "description": "Post analytics",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/SuccessEnvelope" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessEnvelope"
+                }
+              }
+            }
           },
-          "401": { "$ref": "#/components/responses/Unauthorized" },
-          "403": { "$ref": "#/components/responses/Forbidden" },
-          "500": { "$ref": "#/components/responses/ServerError" }
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
         }
       }
     },
@@ -1067,25 +2201,52 @@
       "get": {
         "summary": "Get account analytics",
         "operationId": "getAnalyticsAccount",
-        "tags": ["Analytics"],
+        "tags": [
+          "Analytics"
+        ],
         "parameters": [
-          { "$ref": "#/components/parameters/AccountIdParam" },
+          {
+            "$ref": "#/components/parameters/AccountIdParam"
+          },
           {
             "name": "period",
             "in": "query",
             "description": "Time period for analytics",
-            "schema": { "type": "string", "enum": ["today", "7d", "30d", "90d"], "default": "30d" }
+            "schema": {
+              "type": "string",
+              "enum": [
+                "today",
+                "7d",
+                "30d",
+                "90d"
+              ],
+              "default": "30d"
+            }
           }
         ],
         "responses": {
           "200": {
             "description": "Account analytics data",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/SuccessEnvelope" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessEnvelope"
+                }
+              }
+            }
           },
-          "401": { "$ref": "#/components/responses/Unauthorized" },
-          "403": { "$ref": "#/components/responses/Forbidden" },
-          "404": { "$ref": "#/components/responses/NotFound" },
-          "500": { "$ref": "#/components/responses/ServerError" }
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
         }
       }
     },
@@ -1093,21 +2254,59 @@
       "get": {
         "summary": "List jobs",
         "operationId": "listJobs",
-        "tags": ["Jobs"],
+        "tags": [
+          "Jobs"
+        ],
         "parameters": [
-          { "$ref": "#/components/parameters/PageParam" },
-          { "$ref": "#/components/parameters/PerPageParam" },
-          { "name": "status", "in": "query", "schema": { "type": "string", "enum": ["pending", "processing", "completed", "failed", "cancelled"] } },
-          { "name": "type", "in": "query", "schema": { "type": "string" }, "description": "Filter by job type" }
+          {
+            "$ref": "#/components/parameters/PageParam"
+          },
+          {
+            "$ref": "#/components/parameters/PerPageParam"
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "pending",
+                "processing",
+                "completed",
+                "failed",
+                "cancelled"
+              ]
+            }
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Filter by job type"
+          }
         ],
         "responses": {
           "200": {
             "description": "Paginated list of jobs",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/JobListResponse" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JobListResponse"
+                }
+              }
+            }
           },
-          "401": { "$ref": "#/components/responses/Unauthorized" },
-          "403": { "$ref": "#/components/responses/Forbidden" },
-          "500": { "$ref": "#/components/responses/ServerError" }
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
         }
       }
     },
@@ -1115,17 +2314,37 @@
       "get": {
         "summary": "Get job",
         "operationId": "getJob",
-        "tags": ["Jobs"],
-        "parameters": [{ "$ref": "#/components/parameters/JobIdParam" }],
+        "tags": [
+          "Jobs"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/JobIdParam"
+          }
+        ],
         "responses": {
           "200": {
             "description": "Job status and result",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/JobSingleResponse" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JobSingleResponse"
+                }
+              }
+            }
           },
-          "401": { "$ref": "#/components/responses/Unauthorized" },
-          "403": { "$ref": "#/components/responses/Forbidden" },
-          "404": { "$ref": "#/components/responses/NotFound" },
-          "500": { "$ref": "#/components/responses/ServerError" }
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
         }
       }
     },
@@ -1133,24 +2352,54 @@
       "post": {
         "summary": "Cancel job",
         "operationId": "cancelJob",
-        "tags": ["Jobs"],
+        "tags": [
+          "Jobs"
+        ],
         "description": "Cancels a queued or processing job. The request body may be empty, but `Content-Type: application/json` **must** still be set — omitting it returns a 400 error.",
-        "parameters": [{ "$ref": "#/components/parameters/JobIdParam" }],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/JobIdParam"
+          }
+        ],
         "requestBody": {
           "required": false,
-          "content": { "application/json": { "schema": { "type": "object" } } }
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          }
         },
         "responses": {
           "200": {
             "description": "Job cancelled",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/JobSingleResponse" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JobSingleResponse"
+                }
+              }
+            }
           },
-          "400": { "$ref": "#/components/responses/BadRequest" },
-          "401": { "$ref": "#/components/responses/Unauthorized" },
-          "403": { "$ref": "#/components/responses/Forbidden" },
-          "404": { "$ref": "#/components/responses/NotFound" },
-          "409": { "$ref": "#/components/responses/Conflict" },
-          "500": { "$ref": "#/components/responses/ServerError" }
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "409": {
+            "$ref": "#/components/responses/Conflict"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
         }
       }
     },
@@ -1158,14 +2407,26 @@
       "get": {
         "summary": "Get current user profile",
         "operationId": "getMe",
-        "tags": ["Account"],
+        "tags": [
+          "Account"
+        ],
         "responses": {
           "200": {
             "description": "Current user profile",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/UserProfileResponse" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserProfileResponse"
+                }
+              }
+            }
           },
-          "401": { "$ref": "#/components/responses/Unauthorized" },
-          "500": { "$ref": "#/components/responses/ServerError" }
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
         }
       }
     },
@@ -1173,22 +2434,44 @@
       "get": {
         "summary": "Get usage summary",
         "operationId": "getMeUsage",
-        "tags": ["Account"],
+        "tags": [
+          "Account"
+        ],
         "parameters": [
           {
             "name": "period",
             "in": "query",
             "description": "Time period for usage report",
-            "schema": { "type": "string", "enum": ["today", "7d", "30d", "90d", "all"], "default": "30d" }
+            "schema": {
+              "type": "string",
+              "enum": [
+                "today",
+                "7d",
+                "30d",
+                "90d",
+                "all"
+              ],
+              "default": "30d"
+            }
           }
         ],
         "responses": {
           "200": {
             "description": "Usage summary for the period",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/UsageSummaryResponse" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsageSummaryResponse"
+                }
+              }
+            }
           },
-          "401": { "$ref": "#/components/responses/Unauthorized" },
-          "500": { "$ref": "#/components/responses/ServerError" }
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
         }
       }
     },
@@ -1196,14 +2479,26 @@
       "get": {
         "summary": "Get wallet balance",
         "operationId": "getMeBalance",
-        "tags": ["Account"],
+        "tags": [
+          "Account"
+        ],
         "responses": {
           "200": {
             "description": "Current wallet balance",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/BalanceResponse" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BalanceResponse"
+                }
+              }
+            }
           },
-          "401": { "$ref": "#/components/responses/Unauthorized" },
-          "500": { "$ref": "#/components/responses/ServerError" }
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
         }
       }
     }
@@ -1222,685 +2517,1578 @@
         "name": "page",
         "in": "query",
         "description": "Page number (1-based).",
-        "schema": { "type": "integer", "minimum": 1, "default": 1 }
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 1
+        }
       },
       "PerPageParam": {
         "name": "per_page",
         "in": "query",
         "description": "Items per page.",
-        "schema": { "type": "integer", "minimum": 1, "maximum": 100, "default": 20 }
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100,
+          "default": 20
+        }
       },
       "ArticleIdParam": {
-        "name": "article_id", "in": "path", "required": true,
+        "name": "article_id",
+        "in": "path",
+        "required": true,
         "description": "Article ID (string UUID).",
-        "schema": { "type": "string" }
+        "schema": {
+          "type": "string"
+        }
       },
       "ImageIdParam": {
-        "name": "image_id", "in": "path", "required": true,
+        "name": "image_id",
+        "in": "path",
+        "required": true,
         "description": "Image ID (hex string).",
-        "schema": { "type": "string" }
+        "schema": {
+          "type": "string"
+        }
       },
       "VideoIdParam": {
-        "name": "video_id", "in": "path", "required": true,
-        "schema": { "type": "integer", "format": "int64" }
+        "name": "video_id",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "integer",
+          "format": "int64"
+        }
       },
       "PostIdParam": {
-        "name": "post_id", "in": "path", "required": true,
-        "schema": { "type": "integer", "format": "int64" }
+        "name": "post_id",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "integer",
+          "format": "int64"
+        }
       },
       "AudioIdParam": {
-        "name": "audio_id", "in": "path", "required": true,
-        "schema": { "type": "integer", "format": "int64" }
+        "name": "audio_id",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "integer",
+          "format": "int64"
+        }
       },
       "UrlIdParam": {
-        "name": "url_id", "in": "path", "required": true,
-        "schema": { "type": "integer", "format": "int64" }
+        "name": "url_id",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "integer",
+          "format": "int64"
+        }
       },
       "ConversationIdParam": {
-        "name": "conversation_id", "in": "path", "required": true,
-        "schema": { "type": "string" }
+        "name": "conversation_id",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
       },
       "ChatbotIdParam": {
-        "name": "id", "in": "path", "required": true,
+        "name": "id",
+        "in": "path",
+        "required": true,
         "description": "Chatbot ID.",
-        "schema": { "type": "integer", "format": "int64" }
+        "schema": {
+          "type": "integer",
+          "format": "int64"
+        }
       },
       "ConvIdParam": {
-        "name": "conv_id", "in": "path", "required": true,
+        "name": "conv_id",
+        "in": "path",
+        "required": true,
         "description": "Conversation ID.",
-        "schema": { "type": "integer", "format": "int64" }
+        "schema": {
+          "type": "integer",
+          "format": "int64"
+        }
       },
       "MediaIdParam": {
-        "name": "media_id", "in": "path", "required": true,
+        "name": "media_id",
+        "in": "path",
+        "required": true,
         "description": "Media ID (string UUID).",
-        "schema": { "type": "string" }
+        "schema": {
+          "type": "string"
+        }
       },
       "AccountIdParam": {
-        "name": "account_id", "in": "path", "required": true,
-        "schema": { "type": "integer", "format": "int64" }
+        "name": "account_id",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "integer",
+          "format": "int64"
+        }
       },
       "JobIdParam": {
-        "name": "job_id", "in": "path", "required": true,
-        "schema": { "type": "string" }
+        "name": "job_id",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
       }
     },
     "headers": {
-      "X-RateLimit-Limit": { "description": "Max requests per window.", "schema": { "type": "integer" } },
-      "X-RateLimit-Remaining": { "description": "Remaining requests in window.", "schema": { "type": "integer" } },
-      "X-RateLimit-Reset": { "description": "Unix timestamp when window resets.", "schema": { "type": "integer" } },
-      "X-Request-ID": { "description": "Request ID for support.", "schema": { "type": "string" } }
+      "X-RateLimit-Limit": {
+        "description": "Max requests per window.",
+        "schema": {
+          "type": "integer"
+        }
+      },
+      "X-RateLimit-Remaining": {
+        "description": "Remaining requests in window.",
+        "schema": {
+          "type": "integer"
+        }
+      },
+      "X-RateLimit-Reset": {
+        "description": "Unix timestamp when window resets.",
+        "schema": {
+          "type": "integer"
+        }
+      },
+      "X-Request-ID": {
+        "description": "Request ID for support.",
+        "schema": {
+          "type": "string"
+        }
+      }
     },
     "responses": {
       "BadRequest": {
         "description": "Bad request",
-        "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponse" } } }
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ErrorResponse"
+            }
+          }
+        }
       },
       "Unauthorized": {
         "description": "Missing or invalid API key",
-        "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponse" } } }
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ErrorResponse"
+            }
+          }
+        }
       },
       "InsufficientBalance": {
         "description": "Insufficient credits",
-        "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponse" } } }
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ErrorResponse"
+            }
+          }
+        }
       },
       "Forbidden": {
         "description": "Forbidden (scope or access)",
-        "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponse" } } }
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ErrorResponse"
+            }
+          }
+        }
       },
       "NotFound": {
         "description": "Resource not found",
-        "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponse" } } }
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ErrorResponse"
+            }
+          }
+        }
       },
       "Conflict": {
         "description": "Conflict (e.g. duplicate idempotency or already-finished job)",
-        "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponse" } } }
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ErrorResponse"
+            }
+          }
+        }
       },
       "ValidationError": {
         "description": "Validation error",
-        "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponse" } } }
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ErrorResponse"
+            }
+          }
+        }
       },
       "RateLimited": {
         "description": "Rate limit exceeded",
-        "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponse" } } }
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ErrorResponse"
+            }
+          }
+        }
       },
       "ServerError": {
         "description": "Internal server error",
-        "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponse" } } }
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ErrorResponse"
+            }
+          }
+        }
       }
     },
     "schemas": {
       "RequestMeta": {
         "type": "object",
         "properties": {
-          "request_id": { "type": "string" },
-          "timestamp": { "type": "string", "format": "date-time" }
+          "request_id": {
+            "type": "string"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
+          }
         }
       },
       "UsageMeta": {
         "type": "object",
         "properties": {
-          "units": { "type": "integer" },
-          "cost": { "type": "string", "example": "0.0150" },
-          "balance_remaining": { "type": "string", "example": "99.9850" }
+          "units": {
+            "type": "integer"
+          },
+          "cost": {
+            "type": "string",
+            "example": "0.0150"
+          },
+          "balance_remaining": {
+            "type": "string",
+            "example": "99.9850"
+          }
         }
       },
       "PaginationMeta": {
         "type": "object",
         "properties": {
-          "page": { "type": "integer" },
-          "per_page": { "type": "integer" },
-          "total": { "type": "integer" },
-          "pages": { "type": "integer" }
+          "page": {
+            "type": "integer"
+          },
+          "per_page": {
+            "type": "integer"
+          },
+          "total": {
+            "type": "integer"
+          },
+          "pages": {
+            "type": "integer"
+          }
         }
       },
       "ErrorResponse": {
         "type": "object",
         "properties": {
-          "success": { "type": "boolean", "enum": [false] },
+          "success": {
+            "type": "boolean",
+            "enum": [
+              false
+            ]
+          },
           "error": {
             "type": "object",
             "properties": {
-              "code": { "type": "string" },
-              "message": { "type": "string" },
-              "details": { "type": "object" }
+              "code": {
+                "type": "string"
+              },
+              "message": {
+                "type": "string"
+              },
+              "details": {
+                "type": "object"
+              }
             }
           },
-          "meta": { "$ref": "#/components/schemas/RequestMeta" }
+          "meta": {
+            "$ref": "#/components/schemas/RequestMeta"
+          }
         }
       },
       "SuccessEnvelope": {
         "type": "object",
         "properties": {
-          "success": { "type": "boolean", "enum": [true] },
+          "success": {
+            "type": "boolean",
+            "enum": [
+              true
+            ]
+          },
           "data": {},
-          "usage": { "$ref": "#/components/schemas/UsageMeta" },
-          "meta": { "$ref": "#/components/schemas/RequestMeta" }
+          "usage": {
+            "$ref": "#/components/schemas/UsageMeta"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/RequestMeta"
+          }
         }
       },
       "PaginatedList": {
         "type": "object",
         "properties": {
-          "success": { "type": "boolean", "enum": [true] },
-          "data": { "type": "array", "items": {} },
-          "pagination": { "$ref": "#/components/schemas/PaginationMeta" },
-          "meta": { "$ref": "#/components/schemas/RequestMeta" }
+          "success": {
+            "type": "boolean",
+            "enum": [
+              true
+            ]
+          },
+          "data": {
+            "type": "array",
+            "items": {}
+          },
+          "pagination": {
+            "$ref": "#/components/schemas/PaginationMeta"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/RequestMeta"
+          }
         }
       },
       "ArticleGenerateRequest": {
         "type": "object",
         "description": "Either `topic` or `keywords` must be provided.",
         "properties": {
-          "topic": { "type": "string", "description": "Article topic" },
-          "keywords": { "type": "string", "description": "Keywords to base the article on" },
-          "tone": { "type": "string", "description": "Writing tone (e.g. professional, casual, friendly)" },
-          "length": { "type": "string", "description": "Desired length (e.g. short, medium, long)" },
-          "language": { "type": "string", "description": "Output language (e.g. en, es, fr)" },
-          "format": { "type": "string", "description": "Output format (e.g. blog, essay, listicle)" },
-          "instructions": { "type": "string", "description": "Additional instructions for the AI" }
+          "topic": {
+            "type": "string",
+            "description": "Article topic"
+          },
+          "keywords": {
+            "type": "string",
+            "description": "Keywords to base the article on"
+          },
+          "tone": {
+            "type": "string",
+            "description": "Writing tone (e.g. professional, casual, friendly)"
+          },
+          "length": {
+            "type": "string",
+            "description": "Desired length (e.g. short, medium, long)"
+          },
+          "language": {
+            "type": "string",
+            "description": "Output language (e.g. en, es, fr)"
+          },
+          "format": {
+            "type": "string",
+            "description": "Output format (e.g. blog, essay, listicle)"
+          },
+          "instructions": {
+            "type": "string",
+            "description": "Additional instructions for the AI"
+          }
         }
       },
       "Article": {
         "type": "object",
         "properties": {
-          "id": { "type": "integer", "format": "int64" },
-          "title": { "type": "string" },
-          "content": { "type": "string" },
-          "status": { "type": "string" },
-          "created_at": { "type": "string", "format": "date-time" }
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "title": {
+            "type": "string"
+          },
+          "content": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          }
         }
       },
       "ArticleListResponse": {
         "type": "object",
         "properties": {
-          "success": { "type": "boolean", "enum": [true] },
-          "data": { "type": "array", "items": { "$ref": "#/components/schemas/Article" } },
-          "pagination": { "$ref": "#/components/schemas/PaginationMeta" },
-          "meta": { "$ref": "#/components/schemas/RequestMeta" }
+          "success": {
+            "type": "boolean",
+            "enum": [
+              true
+            ]
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Article"
+            }
+          },
+          "pagination": {
+            "$ref": "#/components/schemas/PaginationMeta"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/RequestMeta"
+          }
         }
       },
       "ArticleSingleResponse": {
         "type": "object",
         "properties": {
-          "success": { "type": "boolean", "enum": [true] },
-          "data": { "$ref": "#/components/schemas/Article" },
-          "meta": { "$ref": "#/components/schemas/RequestMeta" }
+          "success": {
+            "type": "boolean",
+            "enum": [
+              true
+            ]
+          },
+          "data": {
+            "$ref": "#/components/schemas/Article"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/RequestMeta"
+          }
         }
       },
       "ImageGenerateRequest": {
         "type": "object",
         "description": "Either `prompt` or `description` must be provided.",
         "properties": {
-          "prompt": { "type": "string", "description": "Short image generation prompt" },
-          "description": { "type": "string", "description": "Detailed image description" },
-          "style": { "type": "string", "description": "Visual style (e.g. photorealistic, illustration, watercolor)" },
-          "size": { "type": "string", "description": "Image dimensions (e.g. 1024x1024, 1792x1024)" },
-          "format": { "type": "string", "description": "Output format (e.g. png, jpg, webp)" },
-          "quality": { "type": "string", "description": "Quality level (e.g. standard, hd)" }
+          "prompt": {
+            "type": "string",
+            "description": "Short image generation prompt"
+          },
+          "description": {
+            "type": "string",
+            "description": "Detailed image description"
+          },
+          "style": {
+            "type": "string",
+            "description": "Visual style (e.g. photorealistic, illustration, watercolor)"
+          },
+          "size": {
+            "type": "string",
+            "description": "Image dimensions (e.g. 1024x1024, 1792x1024)"
+          },
+          "format": {
+            "type": "string",
+            "description": "Output format (e.g. png, jpg, webp)"
+          },
+          "quality": {
+            "type": "string",
+            "description": "Quality level (e.g. standard, hd)"
+          }
         }
       },
       "Image": {
         "type": "object",
         "properties": {
-          "id": { "type": "integer", "format": "int64" },
-          "url": { "type": "string" },
-          "prompt": { "type": "string" },
-          "style": { "type": "string" },
-          "created_at": { "type": "string", "format": "date-time" }
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "url": {
+            "type": "string"
+          },
+          "prompt": {
+            "type": "string"
+          },
+          "style": {
+            "type": "string"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          }
         }
       },
       "ImageListResponse": {
         "type": "object",
         "properties": {
-          "success": { "type": "boolean", "enum": [true] },
-          "data": { "type": "array", "items": { "$ref": "#/components/schemas/Image" } },
-          "pagination": { "$ref": "#/components/schemas/PaginationMeta" },
-          "meta": { "$ref": "#/components/schemas/RequestMeta" }
+          "success": {
+            "type": "boolean",
+            "enum": [
+              true
+            ]
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Image"
+            }
+          },
+          "pagination": {
+            "$ref": "#/components/schemas/PaginationMeta"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/RequestMeta"
+          }
         }
       },
       "ImageSingleResponse": {
         "type": "object",
         "properties": {
-          "success": { "type": "boolean", "enum": [true] },
-          "data": { "$ref": "#/components/schemas/Image" },
-          "meta": { "$ref": "#/components/schemas/RequestMeta" }
+          "success": {
+            "type": "boolean",
+            "enum": [
+              true
+            ]
+          },
+          "data": {
+            "$ref": "#/components/schemas/Image"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/RequestMeta"
+          }
         }
       },
       "VideoGenerateRequest": {
         "type": "object",
-        "required": ["prompt"],
+        "required": [
+          "prompt"
+        ],
         "properties": {
-          "prompt": { "type": "string", "description": "Video generation prompt" },
-          "style": { "type": "string", "description": "Visual style" },
-          "duration": { "type": "integer", "description": "Duration in seconds" },
-          "resolution": { "type": "string", "description": "Output resolution (e.g. 720p, 1080p)" }
+          "prompt": {
+            "type": "string",
+            "description": "Video generation prompt"
+          },
+          "style": {
+            "type": "string",
+            "description": "Visual style"
+          },
+          "duration": {
+            "type": "integer",
+            "description": "Duration in seconds"
+          },
+          "resolution": {
+            "type": "string",
+            "description": "Output resolution (e.g. 720p, 1080p)"
+          }
         }
       },
       "Video": {
         "type": "object",
         "properties": {
-          "id": { "type": "integer", "format": "int64" },
-          "url": { "type": "string" },
-          "status": { "type": "string" },
-          "duration": { "type": "integer" },
-          "created_at": { "type": "string", "format": "date-time" }
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "url": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "duration": {
+            "type": "integer"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          }
         }
       },
       "VideoListResponse": {
         "type": "object",
         "properties": {
-          "success": { "type": "boolean", "enum": [true] },
-          "data": { "type": "array", "items": { "$ref": "#/components/schemas/Video" } },
-          "pagination": { "$ref": "#/components/schemas/PaginationMeta" },
-          "meta": { "$ref": "#/components/schemas/RequestMeta" }
+          "success": {
+            "type": "boolean",
+            "enum": [
+              true
+            ]
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Video"
+            }
+          },
+          "pagination": {
+            "$ref": "#/components/schemas/PaginationMeta"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/RequestMeta"
+          }
         }
       },
       "VideoSingleResponse": {
         "type": "object",
         "properties": {
-          "success": { "type": "boolean", "enum": [true] },
-          "data": { "$ref": "#/components/schemas/Video" },
-          "meta": { "$ref": "#/components/schemas/RequestMeta" }
+          "success": {
+            "type": "boolean",
+            "enum": [
+              true
+            ]
+          },
+          "data": {
+            "$ref": "#/components/schemas/Video"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/RequestMeta"
+          }
         }
       },
       "JobCreatedResponse": {
         "type": "object",
         "properties": {
-          "success": { "type": "boolean", "enum": [true] },
+          "success": {
+            "type": "boolean",
+            "enum": [
+              true
+            ]
+          },
           "data": {
             "type": "object",
             "properties": {
-              "job_id": { "type": "string" }
+              "job_id": {
+                "type": "string"
+              }
             }
           },
-          "usage": { "$ref": "#/components/schemas/UsageMeta" },
-          "meta": { "$ref": "#/components/schemas/RequestMeta" }
+          "usage": {
+            "$ref": "#/components/schemas/UsageMeta"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/RequestMeta"
+          }
         }
       },
       "Job": {
         "type": "object",
         "properties": {
-          "id": { "type": "string" },
-          "type": { "type": "string" },
-          "status": { "type": "string", "enum": ["pending", "processing", "completed", "failed", "cancelled"] },
-          "result": { "type": "object" },
-          "error": { "type": "object" },
-          "created_at": { "type": "string", "format": "date-time" },
-          "updated_at": { "type": "string", "format": "date-time" }
+          "id": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "pending",
+              "processing",
+              "completed",
+              "failed",
+              "cancelled"
+            ]
+          },
+          "result": {
+            "type": "object"
+          },
+          "error": {
+            "type": "object"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
         }
       },
       "JobSingleResponse": {
         "type": "object",
         "properties": {
-          "success": { "type": "boolean", "enum": [true] },
-          "data": { "$ref": "#/components/schemas/Job" },
-          "meta": { "$ref": "#/components/schemas/RequestMeta" }
+          "success": {
+            "type": "boolean",
+            "enum": [
+              true
+            ]
+          },
+          "data": {
+            "$ref": "#/components/schemas/Job"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/RequestMeta"
+          }
         }
       },
       "JobListResponse": {
         "type": "object",
         "properties": {
-          "success": { "type": "boolean", "enum": [true] },
-          "data": { "type": "array", "items": { "$ref": "#/components/schemas/Job" } },
-          "pagination": { "$ref": "#/components/schemas/PaginationMeta" },
-          "meta": { "$ref": "#/components/schemas/RequestMeta" }
+          "success": {
+            "type": "boolean",
+            "enum": [
+              true
+            ]
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Job"
+            }
+          },
+          "pagination": {
+            "$ref": "#/components/schemas/PaginationMeta"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/RequestMeta"
+          }
         }
       },
       "SocialAccount": {
         "type": "object",
         "properties": {
-          "id": { "type": "integer", "format": "int64" },
-          "platform": { "type": "string" },
-          "name": { "type": "string" }
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "platform": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          }
         }
       },
       "SocialAccountListResponse": {
         "type": "object",
         "properties": {
-          "success": { "type": "boolean", "enum": [true] },
-          "data": { "type": "array", "items": { "$ref": "#/components/schemas/SocialAccount" } },
-          "meta": { "$ref": "#/components/schemas/RequestMeta" }
+          "success": {
+            "type": "boolean",
+            "enum": [
+              true
+            ]
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SocialAccount"
+            }
+          },
+          "meta": {
+            "$ref": "#/components/schemas/RequestMeta"
+          }
         }
       },
       "SocialPostCreateRequest": {
         "type": "object",
-        "required": ["content", "platforms", "account_ids"],
+        "required": [
+          "content",
+          "platforms",
+          "account_ids"
+        ],
         "properties": {
-          "content": { "type": "string", "description": "Post text content" },
-          "platforms": { "type": "array", "items": { "type": "string" }, "description": "Target platforms (e.g. facebook, twitter, instagram)" },
-          "account_ids": { "type": "array", "items": { "type": "integer" }, "description": "IDs of connected social accounts to post to" },
-          "media_urls": { "type": "array", "items": { "type": "string" }, "description": "Media URLs to attach to the post" },
-          "link": { "type": "string", "description": "URL to include with the post" }
+          "content": {
+            "type": "string",
+            "description": "Post text content"
+          },
+          "platforms": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Target platforms (e.g. facebook, twitter, instagram)"
+          },
+          "account_ids": {
+            "type": "array",
+            "items": {
+              "type": "integer"
+            },
+            "description": "IDs of connected social accounts to post to"
+          },
+          "media_urls": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Media URLs to attach to the post"
+          },
+          "link": {
+            "type": "string",
+            "description": "URL to include with the post"
+          }
         }
       },
       "SocialPostScheduleRequest": {
         "type": "object",
-        "required": ["content", "platforms", "account_ids", "scheduled_time"],
+        "required": [
+          "content",
+          "platforms",
+          "account_ids",
+          "scheduled_time"
+        ],
         "properties": {
-          "content": { "type": "string", "description": "Post text content" },
-          "platforms": { "type": "array", "items": { "type": "string" }, "description": "Target platforms" },
-          "account_ids": { "type": "array", "items": { "type": "integer" }, "description": "IDs of connected social accounts" },
-          "scheduled_time": { "type": "string", "format": "date-time", "description": "When to publish (ISO 8601)" },
-          "media_urls": { "type": "array", "items": { "type": "string" }, "description": "Media URLs to attach to the post" },
-          "link": { "type": "string", "description": "URL to include with the post" }
+          "content": {
+            "type": "string",
+            "description": "Post text content"
+          },
+          "platforms": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Target platforms"
+          },
+          "account_ids": {
+            "type": "array",
+            "items": {
+              "type": "integer"
+            },
+            "description": "IDs of connected social accounts"
+          },
+          "scheduled_time": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When to publish (ISO 8601)"
+          },
+          "media_urls": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Media URLs to attach to the post"
+          },
+          "link": {
+            "type": "string",
+            "description": "URL to include with the post"
+          }
         }
       },
       "SocialPostUpdateRequest": {
         "type": "object",
         "description": "At least one field must be provided.",
         "properties": {
-          "content": { "type": "string" },
-          "platforms": { "type": "array", "items": { "type": "string" } },
-          "account_ids": { "type": "array", "items": { "type": "integer" } },
-          "scheduled_time": { "type": "string", "format": "date-time" },
-          "media_urls": { "type": "array", "items": { "type": "string" } },
-          "link": { "type": "string" }
+          "content": {
+            "type": "string"
+          },
+          "platforms": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "account_ids": {
+            "type": "array",
+            "items": {
+              "type": "integer"
+            }
+          },
+          "scheduled_time": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "media_urls": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "link": {
+            "type": "string"
+          }
         }
       },
       "SocialPost": {
         "type": "object",
         "properties": {
-          "id": { "type": "integer" },
-          "content": { "type": "string" },
-          "platforms": { "type": "array", "items": { "type": "string" } },
-          "status": { "type": "string" },
-          "scheduled_time": { "type": "string", "format": "date-time" },
-          "published_at": { "type": "string", "format": "date-time" },
-          "created_at": { "type": "string", "format": "date-time" }
+          "id": {
+            "type": "integer"
+          },
+          "content": {
+            "type": "string"
+          },
+          "platforms": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "status": {
+            "type": "string"
+          },
+          "scheduled_time": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "published_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          }
         }
       },
       "SocialPostResponse": {
         "type": "object",
         "properties": {
-          "success": { "type": "boolean", "enum": [true] },
-          "data": { "$ref": "#/components/schemas/SocialPost" },
-          "usage": { "$ref": "#/components/schemas/UsageMeta" },
-          "meta": { "$ref": "#/components/schemas/RequestMeta" }
+          "success": {
+            "type": "boolean",
+            "enum": [
+              true
+            ]
+          },
+          "data": {
+            "$ref": "#/components/schemas/SocialPost"
+          },
+          "usage": {
+            "$ref": "#/components/schemas/UsageMeta"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/RequestMeta"
+          }
         }
       },
       "SocialPostListResponse": {
         "type": "object",
         "properties": {
-          "success": { "type": "boolean", "enum": [true] },
-          "data": { "type": "array", "items": { "$ref": "#/components/schemas/SocialPost" } },
-          "pagination": { "$ref": "#/components/schemas/PaginationMeta" },
-          "meta": { "$ref": "#/components/schemas/RequestMeta" }
+          "success": {
+            "type": "boolean",
+            "enum": [
+              true
+            ]
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SocialPost"
+            }
+          },
+          "pagination": {
+            "$ref": "#/components/schemas/PaginationMeta"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/RequestMeta"
+          }
         }
       },
       "SocialPostSingleResponse": {
         "type": "object",
         "properties": {
-          "success": { "type": "boolean", "enum": [true] },
-          "data": { "$ref": "#/components/schemas/SocialPost" },
-          "meta": { "$ref": "#/components/schemas/RequestMeta" }
+          "success": {
+            "type": "boolean",
+            "enum": [
+              true
+            ]
+          },
+          "data": {
+            "$ref": "#/components/schemas/SocialPost"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/RequestMeta"
+          }
         }
       },
       "ContentRewriteRequest": {
         "type": "object",
-        "required": ["text"],
+        "required": [
+          "text"
+        ],
         "properties": {
-          "text": { "type": "string", "description": "Text to rewrite" },
-          "tone": { "type": "string", "description": "Desired tone (e.g. professional, casual)" },
-          "style": { "type": "string", "description": "Writing style (e.g. concise, elaborate)" },
-          "language": { "type": "string", "description": "Output language (e.g. en, es)" },
-          "instructions": { "type": "string", "description": "Additional rewriting instructions" }
+          "text": {
+            "type": "string",
+            "description": "Text to rewrite"
+          },
+          "tone": {
+            "type": "string",
+            "description": "Desired tone (e.g. professional, casual)"
+          },
+          "style": {
+            "type": "string",
+            "description": "Writing style (e.g. concise, elaborate)"
+          },
+          "language": {
+            "type": "string",
+            "description": "Output language (e.g. en, es)"
+          },
+          "instructions": {
+            "type": "string",
+            "description": "Additional rewriting instructions"
+          }
         }
       },
       "ContentRewriteResponse": {
         "type": "object",
         "properties": {
-          "success": { "type": "boolean", "enum": [true] },
+          "success": {
+            "type": "boolean",
+            "enum": [
+              true
+            ]
+          },
           "data": {
             "type": "object",
             "properties": {
-              "text": { "type": "string" }
+              "text": {
+                "type": "string"
+              }
             }
           },
-          "usage": { "$ref": "#/components/schemas/UsageMeta" },
-          "meta": { "$ref": "#/components/schemas/RequestMeta" }
+          "usage": {
+            "$ref": "#/components/schemas/UsageMeta"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/RequestMeta"
+          }
         }
       },
       "TextToSpeechRequest": {
         "type": "object",
-        "required": ["text"],
+        "required": [
+          "text"
+        ],
         "properties": {
-          "text": { "type": "string", "description": "Text to convert to speech" },
-          "voice": { "type": "string", "description": "Voice to use for synthesis. Defaults to alloy if omitted or invalid.", "enum": ["alloy", "echo", "fable", "onyx", "nova", "shimmer"], "default": "alloy" },
-          "speed": { "type": "number", "description": "Playback speed multiplier (e.g. 0.5, 1.0, 2.0)" }
+          "text": {
+            "type": "string",
+            "description": "Text to convert to speech"
+          },
+          "voice": {
+            "type": "string",
+            "description": "Voice to use for synthesis. Defaults to alloy if omitted or invalid.",
+            "enum": [
+              "alloy",
+              "echo",
+              "fable",
+              "onyx",
+              "nova",
+              "shimmer"
+            ],
+            "default": "alloy"
+          },
+          "speed": {
+            "type": "number",
+            "description": "Playback speed multiplier (e.g. 0.5, 1.0, 2.0)"
+          }
         }
       },
       "SpeechToTextRequest": {
         "type": "object",
-        "required": ["audio_url"],
+        "required": [
+          "audio_url"
+        ],
         "properties": {
-          "audio_url": { "type": "string", "format": "uri", "description": "URL of the audio file to transcribe" },
-          "language": { "type": "string", "description": "Audio language (e.g. en, es)" }
+          "audio_url": {
+            "type": "string",
+            "format": "uri",
+            "description": "Publicly accessible direct URL to the audio file (mp3, mp4, mpeg, mpga, m4a, wav, or webm). Must return raw audio bytes — Google Drive, Dropbox, OneDrive, and iCloud share links will not work as they return HTML instead of the file. The URL must be reachable without authentication."
+          },
+          "language": {
+            "type": "string",
+            "description": "Audio language (e.g. en, es)"
+          }
         }
       },
       "AudioFile": {
         "type": "object",
         "properties": {
-          "id": { "type": "integer" },
-          "url": { "type": "string" },
-          "duration_seconds": { "type": "number" },
-          "created_at": { "type": "string", "format": "date-time" }
+          "id": {
+            "type": "integer"
+          },
+          "url": {
+            "type": "string"
+          },
+          "duration_seconds": {
+            "type": "number"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          }
         }
       },
       "AudioSingleResponse": {
         "type": "object",
         "properties": {
-          "success": { "type": "boolean", "enum": [true] },
-          "data": { "$ref": "#/components/schemas/AudioFile" },
-          "usage": { "$ref": "#/components/schemas/UsageMeta" },
-          "meta": { "$ref": "#/components/schemas/RequestMeta" }
+          "success": {
+            "type": "boolean",
+            "enum": [
+              true
+            ]
+          },
+          "data": {
+            "$ref": "#/components/schemas/AudioFile"
+          },
+          "usage": {
+            "$ref": "#/components/schemas/UsageMeta"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/RequestMeta"
+          }
         }
       },
       "UrlShortenRequest": {
         "type": "object",
-        "required": ["url"],
+        "required": [
+          "url"
+        ],
         "properties": {
-          "url": { "type": "string", "format": "uri", "description": "The long URL to shorten" },
-          "custom_code": { "type": "string", "description": "Custom short code (optional)" },
-          "title": { "type": "string", "description": "Display title for the link" },
-          "expires_at": { "type": "string", "format": "date-time", "description": "Expiration date (ISO 8601)" }
+          "url": {
+            "type": "string",
+            "format": "uri",
+            "description": "The long URL to shorten"
+          },
+          "custom_code": {
+            "type": "string",
+            "description": "Custom short code (optional)"
+          },
+          "title": {
+            "type": "string",
+            "description": "Display title for the link"
+          },
+          "expires_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Expiration date (ISO 8601)"
+          }
         }
       },
       "ShortUrl": {
         "type": "object",
         "properties": {
-          "id": { "type": "integer" },
-          "short_url": { "type": "string" },
-          "long_url": { "type": "string" },
-          "code": { "type": "string" },
-          "title": { "type": "string" },
-          "expires_at": { "type": "string", "format": "date-time" },
-          "created_at": { "type": "string", "format": "date-time" }
+          "id": {
+            "type": "integer"
+          },
+          "short_url": {
+            "type": "string"
+          },
+          "long_url": {
+            "type": "string"
+          },
+          "code": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "expires_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          }
         }
       },
       "UrlSingleResponse": {
         "type": "object",
         "properties": {
-          "success": { "type": "boolean", "enum": [true] },
-          "data": { "$ref": "#/components/schemas/ShortUrl" },
-          "usage": { "$ref": "#/components/schemas/UsageMeta" },
-          "meta": { "$ref": "#/components/schemas/RequestMeta" }
+          "success": {
+            "type": "boolean",
+            "enum": [
+              true
+            ]
+          },
+          "data": {
+            "$ref": "#/components/schemas/ShortUrl"
+          },
+          "usage": {
+            "$ref": "#/components/schemas/UsageMeta"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/RequestMeta"
+          }
         }
       },
       "UrlListResponse": {
         "type": "object",
         "properties": {
-          "success": { "type": "boolean", "enum": [true] },
-          "data": { "type": "array", "items": { "$ref": "#/components/schemas/ShortUrl" } },
-          "pagination": { "$ref": "#/components/schemas/PaginationMeta" },
-          "meta": { "$ref": "#/components/schemas/RequestMeta" }
+          "success": {
+            "type": "boolean",
+            "enum": [
+              true
+            ]
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ShortUrl"
+            }
+          },
+          "pagination": {
+            "$ref": "#/components/schemas/PaginationMeta"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/RequestMeta"
+          }
         }
       },
       "UrlStatsResponse": {
         "type": "object",
         "properties": {
-          "success": { "type": "boolean", "enum": [true] },
+          "success": {
+            "type": "boolean",
+            "enum": [
+              true
+            ]
+          },
           "data": {
             "type": "object",
             "properties": {
-              "clicks": { "type": "integer" },
-              "last_click_at": { "type": "string", "format": "date-time" }
+              "clicks": {
+                "type": "integer"
+              },
+              "last_click_at": {
+                "type": "string",
+                "format": "date-time"
+              }
             }
           },
-          "meta": { "$ref": "#/components/schemas/RequestMeta" }
+          "meta": {
+            "$ref": "#/components/schemas/RequestMeta"
+          }
         }
       },
       "CaptainMessageRequest": {
         "type": "object",
-        "required": ["message"],
+        "required": [
+          "message"
+        ],
         "properties": {
-          "message": { "type": "string", "description": "User message to the AI Captain" },
-          "conversation_id": { "type": "string", "description": "Continue an existing conversation" }
+          "message": {
+            "type": "string",
+            "description": "User message to the AI Captain"
+          },
+          "conversation_id": {
+            "type": "string",
+            "description": "Continue an existing conversation"
+          }
         }
       },
       "CaptainMessage": {
         "type": "object",
         "properties": {
-          "id": { "type": "string" },
-          "role": { "type": "string", "enum": ["user", "assistant"] },
-          "content": { "type": "string" },
-          "created_at": { "type": "string", "format": "date-time" }
+          "id": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "user",
+              "assistant"
+            ]
+          },
+          "content": {
+            "type": "string"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          }
         }
       },
       "CaptainMessageResponse": {
         "type": "object",
         "properties": {
-          "success": { "type": "boolean", "enum": [true] },
+          "success": {
+            "type": "boolean",
+            "enum": [
+              true
+            ]
+          },
           "data": {
             "type": "object",
             "properties": {
-              "message": { "$ref": "#/components/schemas/CaptainMessage" },
-              "conversation_id": { "type": "string" }
+              "message": {
+                "$ref": "#/components/schemas/CaptainMessage"
+              },
+              "conversation_id": {
+                "type": "string"
+              }
             }
           },
-          "usage": { "$ref": "#/components/schemas/UsageMeta" },
-          "meta": { "$ref": "#/components/schemas/RequestMeta" }
+          "usage": {
+            "$ref": "#/components/schemas/UsageMeta"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/RequestMeta"
+          }
         }
       },
       "Conversation": {
         "type": "object",
         "properties": {
-          "id": { "type": "string" },
-          "messages": { "type": "array", "items": { "$ref": "#/components/schemas/CaptainMessage" } },
-          "created_at": { "type": "string", "format": "date-time" }
+          "id": {
+            "type": "string"
+          },
+          "messages": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CaptainMessage"
+            }
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          }
         }
       },
       "ConversationListResponse": {
         "type": "object",
         "properties": {
-          "success": { "type": "boolean", "enum": [true] },
-          "data": { "type": "array", "items": { "$ref": "#/components/schemas/Conversation" } },
-          "pagination": { "$ref": "#/components/schemas/PaginationMeta" },
-          "meta": { "$ref": "#/components/schemas/RequestMeta" }
+          "success": {
+            "type": "boolean",
+            "enum": [
+              true
+            ]
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Conversation"
+            }
+          },
+          "pagination": {
+            "$ref": "#/components/schemas/PaginationMeta"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/RequestMeta"
+          }
         }
       },
       "ConversationSingleResponse": {
         "type": "object",
         "properties": {
-          "success": { "type": "boolean", "enum": [true] },
-          "data": { "$ref": "#/components/schemas/Conversation" },
-          "meta": { "$ref": "#/components/schemas/RequestMeta" }
+          "success": {
+            "type": "boolean",
+            "enum": [
+              true
+            ]
+          },
+          "data": {
+            "$ref": "#/components/schemas/Conversation"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/RequestMeta"
+          }
         }
       },
       "MediaItem": {
         "type": "object",
         "properties": {
-          "id": { "type": "integer", "format": "int64" },
-          "url": { "type": "string" },
-          "filename": { "type": "string" },
-          "size_bytes": { "type": "integer" },
-          "mime_type": { "type": "string" },
-          "created_at": { "type": "string", "format": "date-time" }
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "url": {
+            "type": "string"
+          },
+          "filename": {
+            "type": "string"
+          },
+          "size_bytes": {
+            "type": "integer"
+          },
+          "mime_type": {
+            "type": "string"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          }
         }
       },
       "MediaListResponse": {
         "type": "object",
         "properties": {
-          "success": { "type": "boolean", "enum": [true] },
-          "data": { "type": "array", "items": { "$ref": "#/components/schemas/MediaItem" } },
-          "pagination": { "$ref": "#/components/schemas/PaginationMeta" },
-          "meta": { "$ref": "#/components/schemas/RequestMeta" }
+          "success": {
+            "type": "boolean",
+            "enum": [
+              true
+            ]
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MediaItem"
+            }
+          },
+          "pagination": {
+            "$ref": "#/components/schemas/PaginationMeta"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/RequestMeta"
+          }
         }
       },
       "MediaSingleResponse": {
         "type": "object",
         "properties": {
-          "success": { "type": "boolean", "enum": [true] },
-          "data": { "$ref": "#/components/schemas/MediaItem" },
-          "meta": { "$ref": "#/components/schemas/RequestMeta" }
+          "success": {
+            "type": "boolean",
+            "enum": [
+              true
+            ]
+          },
+          "data": {
+            "$ref": "#/components/schemas/MediaItem"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/RequestMeta"
+          }
         }
       },
       "MediaUploadUrlRequest": {
         "type": "object",
-        "required": ["filename", "content_type"],
+        "required": [
+          "filename",
+          "content_type"
+        ],
         "properties": {
-          "filename": { "type": "string", "description": "Name of the file to upload" },
-          "content_type": { "type": "string", "description": "MIME type (e.g. image/png, video/mp4)" }
+          "filename": {
+            "type": "string",
+            "description": "Name of the file to upload"
+          },
+          "content_type": {
+            "type": "string",
+            "description": "MIME type (e.g. image/png, video/mp4)"
+          }
         }
       },
       "MediaUploadUrlResponse": {
         "type": "object",
         "properties": {
-          "success": { "type": "boolean", "enum": [true] },
+          "success": {
+            "type": "boolean",
+            "enum": [
+              true
+            ]
+          },
           "data": {
             "type": "object",
             "properties": {
-              "upload_url": { "type": "string", "description": "Presigned URL to PUT your file to" },
-              "media_id": { "type": "integer", "format": "int64", "description": "ID of the created media record" }
+              "upload_url": {
+                "type": "string",
+                "description": "Presigned URL to PUT your file to"
+              },
+              "media_id": {
+                "type": "integer",
+                "format": "int64",
+                "description": "ID of the created media record"
+              }
             }
           },
-          "meta": { "$ref": "#/components/schemas/RequestMeta" }
+          "meta": {
+            "$ref": "#/components/schemas/RequestMeta"
+          }
         }
       },
       "UserProfileResponse": {
         "type": "object",
         "properties": {
-          "success": { "type": "boolean", "enum": [true] },
+          "success": {
+            "type": "boolean",
+            "enum": [
+              true
+            ]
+          },
           "data": {
             "type": "object",
             "properties": {
-              "id": { "type": "integer" },
-              "name": { "type": "string" },
-              "email": { "type": "string" },
-              "plan": { "type": "string", "description": "Current subscription plan" },
-              "created_at": { "type": "string", "format": "date-time" }
+              "id": {
+                "type": "integer"
+              },
+              "name": {
+                "type": "string"
+              },
+              "email": {
+                "type": "string"
+              },
+              "plan": {
+                "type": "string",
+                "description": "Current subscription plan"
+              },
+              "created_at": {
+                "type": "string",
+                "format": "date-time"
+              }
             }
           },
-          "meta": { "$ref": "#/components/schemas/RequestMeta" }
+          "meta": {
+            "$ref": "#/components/schemas/RequestMeta"
+          }
         }
       },
       "UsageSummaryResponse": {
         "type": "object",
         "properties": {
-          "success": { "type": "boolean", "enum": [true] },
+          "success": {
+            "type": "boolean",
+            "enum": [
+              true
+            ]
+          },
           "data": {
             "type": "object",
             "properties": {
-              "total_requests": { "type": "integer" },
-              "total_credits_used": { "type": "number" }
+              "total_requests": {
+                "type": "integer"
+              },
+              "total_credits_used": {
+                "type": "number"
+              }
             }
           },
-          "meta": { "$ref": "#/components/schemas/RequestMeta" }
+          "meta": {
+            "$ref": "#/components/schemas/RequestMeta"
+          }
         }
       },
       "BalanceResponse": {
         "type": "object",
         "properties": {
-          "success": { "type": "boolean", "enum": [true] },
+          "success": {
+            "type": "boolean",
+            "enum": [
+              true
+            ]
+          },
           "data": {
             "type": "object",
             "properties": {
-              "balance": { "type": "string", "description": "Total available balance", "example": "100.0000" },
-              "purchased_balance": { "type": "string", "description": "Credits purchased via top-up", "example": "50.0000" },
-              "monthly_balance": { "type": "string", "description": "Credits from subscription plan", "example": "50.0000" },
-              "monthly_reset_at": { "type": "string", "format": "date-time", "description": "When monthly credits reset" },
-              "currency": { "type": "string", "example": "USD" }
+              "balance": {
+                "type": "string",
+                "description": "Total available balance",
+                "example": "100.0000"
+              },
+              "purchased_balance": {
+                "type": "string",
+                "description": "Credits purchased via top-up",
+                "example": "50.0000"
+              },
+              "monthly_balance": {
+                "type": "string",
+                "description": "Credits from subscription plan",
+                "example": "50.0000"
+              },
+              "monthly_reset_at": {
+                "type": "string",
+                "format": "date-time",
+                "description": "When monthly credits reset"
+              },
+              "currency": {
+                "type": "string",
+                "example": "USD"
+              }
             }
           },
-          "meta": { "$ref": "#/components/schemas/RequestMeta" }
+          "meta": {
+            "$ref": "#/components/schemas/RequestMeta"
+          }
         }
       }
     }
