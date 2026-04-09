@@ -1664,7 +1664,7 @@
         "required": ["text"],
         "properties": {
           "text": { "type": "string", "description": "Text to convert to speech" },
-          "voice": { "type": "string", "description": "Voice ID or name" },
+          "voice": { "type": "string", "description": "Voice to use for synthesis. Defaults to alloy if omitted or invalid.", "enum": ["alloy", "echo", "fable", "onyx", "nova", "shimmer"], "default": "alloy" },
           "speed": { "type": "number", "description": "Playback speed multiplier (e.g. 0.5, 1.0, 2.0)" }
         }
       },
