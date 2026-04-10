@@ -2556,9 +2556,9 @@
         "name": "video_id",
         "in": "path",
         "required": true,
+        "description": "The unique video ID (hex string, e.g. 8a3621ff57d6587c4dbb68f6d803f6cc69d8a42b6ae84)",
         "schema": {
-          "type": "integer",
-          "format": "int64"
+          "type": "string"
         }
       },
       "PostIdParam": {
