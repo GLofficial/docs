@@ -379,25 +379,122 @@ paths:
         '500':
           $ref: '#/components/responses/ServerError'
 
+  /videos/models:
+    get:
+      summary: List available video models
+      description: |
+        Returns every model currently available for video generation, including the valid
+        parameter values for each model and generation type. Call this endpoint before
+        submitting a generation request to discover what options a specific model supports.
+
+        Empty arrays (`[]`) indicate that the parameter is not applicable for that model/type
+        combination. Boolean `supports_*` flags indicate optional feature availability.
+      operationId: listVideoModels
+      tags: [Videos]
+      security:
+        - BearerAuth: [videos:read]
+      responses:
+        '200':
+          description: List of available models with their capabilities
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VideoModelsResponse'
+              example:
+                success: true
+                data:
+                  - model: kling-v2-1
+                    type: text_to_video
+                    params:
+                      duration: [5, 10]
+                      resolution: []
+                      mode: [Standard, Professional]
+                      aspect_ratio: ["16:9", "9:16", "1:1"]
+                      style: []
+                      movement: []
+                      supports_negative_prompt: true
+                      supports_seed: false
+                      supports_generate_audio: false
+                      supports_camera_fixed: false
+                      prompt_max_length: 2500
+                  - model: pixverse-v4-5
+                    type: text_to_video
+                    params:
+                      duration: [5, 8]
+                      resolution: [360p, 540p, 720p, 1080p]
+                      mode: [Normal, Fast]
+                      aspect_ratio: ["16:9", "9:16", "1:1", "4:3", "3:4"]
+                      style: [Auto, Anime, 3D Animation, Comic, Clay, Cyberpunk]
+                      movement: []
+                      supports_negative_prompt: false
+                      supports_seed: true
+                      supports_generate_audio: false
+                      supports_camera_fixed: false
+                      prompt_max_length: 2000
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
   /videos/generate:
     post:
       summary: Generate video
-      description: Returns 202 with job_id; poll GET /jobs/{job_id} for result.
+      description: |
+        Submits a video generation request. Returns `202 Accepted` immediately with a
+        `job_uid`; poll `GET /v1/jobs/{job_uid}` for status and the final video URL.
+
+        **Before submitting:** call `GET /v1/videos/models` to retrieve the valid
+        parameter values (`duration`, `resolution`, `mode`, `aspect_ratio`, etc.) for
+        your chosen model. Passing an unsupported value returns a `422` validation error.
+
+        **Billing:** the cost is deducted from your API wallet when the job is accepted.
+        If video generation fails on the provider side the charge is automatically refunded.
       operationId: generateVideo
       tags: [Videos]
+      security:
+        - BearerAuth: [videos:write]
       requestBody:
         required: true
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/VideoGenerateRequest'
+            examples:
+              text_to_video:
+                summary: Text-to-video (Kling v2.1)
+                value:
+                  model: kling-v2-1
+                  type: text_to_video
+                  prompt: "A lone astronaut walks across a crimson desert at sunset"
+                  duration: 10
+                  mode: Professional
+                  aspect_ratio: "16:9"
+              image_to_video:
+                summary: Image-to-video (Pixverse v4.5)
+                value:
+                  model: pixverse-v4-5
+                  type: image_to_video
+                  image_url: "https://example.com/my-image.jpg"
+                  prompt: "Camera slowly pulls back to reveal the full scene"
+                  duration: 5
+                  resolution: 1080p
+                  style: Anime
       responses:
         '202':
-          description: Accepted; poll job for result
+          description: Accepted — poll `GET /v1/jobs/{job_uid}` for result
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/JobCreatedResponse'
+                $ref: '#/components/schemas/VideoJobCreatedResponse'
+              example:
+                success: true
+                data:
+                  job_uid: job_a1b2c3d4e5f6
+                  status: queued
+                usage:
+                  units: 1
+                  cost: "0.2800"
+                  balance_remaining: "14.7200"
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
@@ -1619,8 +1716,7 @@ components:
       in: path
       required: true
       schema:
-        type: integer
-        format: int64
+        type: string
     PostIdParam:
       name: post_id
       in: path
@@ -1949,24 +2045,182 @@ components:
 
     VideoGenerateRequest:
       type: object
+      required: [model, type]
       properties:
-        prompt:
-          type: string
         model:
           type: string
+          description: Model identifier. See `GET /v1/videos/models` for available values.
+          example: kling-v2-1
+        type:
+          type: string
+          enum: [text_to_video, image_to_video]
+          description: |
+            Generation mode.
+            - `text_to_video` — requires `prompt`.
+            - `image_to_video` — requires `image_url`; `prompt` is optional (used as motion guidance).
+          example: text_to_video
+        prompt:
+          type: string
+          description: Text description of the video to generate. Required for `text_to_video`. Optional motion-guidance for `image_to_video`. Max length varies per model — see `prompt_max_length` in `/v1/videos/models`.
+          example: "A lone astronaut walks across a crimson desert at sunset"
+        image_url:
+          type: string
+          format: uri
+          description: Source image URL for `image_to_video`. Must be a publicly accessible JPEG or PNG.
+          example: "https://example.com/my-image.jpg"
         duration:
           type: integer
+          description: Video length in seconds. Valid values vary per model — see `duration` in `/v1/videos/models`. Defaults to the shortest valid duration for the model.
+          example: 10
+        resolution:
+          type: string
+          description: Output resolution (e.g. `720p`, `1080p`). Valid values vary per model — see `resolution` in `/v1/videos/models`. Defaults to the first valid resolution.
+          example: 1080p
+        mode:
+          type: string
+          description: Generation quality mode (e.g. `Standard`, `Professional`, `Fast`). Valid values vary per model — see `mode` in `/v1/videos/models`.
+          example: Professional
+        aspect_ratio:
+          type: string
+          description: Output aspect ratio (e.g. `16:9`, `9:16`, `1:1`). Valid values vary per model — see `aspect_ratio` in `/v1/videos/models`.
+          example: "16:9"
+        style:
+          type: string
+          description: Visual style preset (e.g. `Anime`, `Cyberpunk`). Only supported by some models — see `style` in `/v1/videos/models`.
+          example: Anime
+        movement:
+          type: string
+          description: Camera/subject movement amplitude (`Auto`, `Small`, `Medium`, `Large`). Only supported by some models — see `movement` in `/v1/videos/models`.
+          example: Medium
+        negative_prompt:
+          type: string
+          description: Elements to suppress in the output. Only supported by some models — see `supports_negative_prompt` in `/v1/videos/models`.
+          example: "blurry, low quality, watermark"
+        seed:
+          type: integer
+          description: Reproducibility seed. Only supported by some models — see `supports_seed` in `/v1/videos/models`.
+          example: 42
+        generate_audio:
+          type: boolean
+          description: Generate ambient audio alongside the video. Only supported by some models — see `supports_generate_audio` in `/v1/videos/models`.
+          example: false
+        camera_fixed:
+          type: boolean
+          description: Lock the camera position (no camera movement). Only supported by some models — see `supports_camera_fixed` in `/v1/videos/models`.
+          example: false
+
+    VideoModelParams:
+      type: object
+      properties:
+        duration:
+          type: array
+          items:
+            type: integer
+          description: Valid duration values in seconds. Empty array means duration is not configurable.
+        resolution:
+          type: array
+          items:
+            type: string
+          description: Valid resolution values. Empty array means resolution is not configurable.
+        mode:
+          type: array
+          items:
+            type: string
+          description: Valid mode values. Empty array means mode is not applicable.
+        aspect_ratio:
+          type: array
+          items:
+            type: string
+          description: Valid aspect ratio values. Empty array means aspect ratio is not configurable.
+        style:
+          type: array
+          items:
+            type: string
+          description: Valid style preset values. Empty array means style is not supported.
+        movement:
+          type: array
+          items:
+            type: string
+          description: Valid movement values. Empty array means movement is not supported.
+        supports_negative_prompt:
+          type: boolean
+        supports_seed:
+          type: boolean
+        supports_generate_audio:
+          type: boolean
+        supports_camera_fixed:
+          type: boolean
+        prompt_max_length:
+          type: integer
+          description: Maximum prompt length in characters. 0 means no enforced limit.
+
+    VideoModel:
+      type: object
+      properties:
+        model:
+          type: string
+          example: kling-v2-1
+        type:
+          type: string
+          enum: [text_to_video, image_to_video]
+          example: text_to_video
+        params:
+          $ref: '#/components/schemas/VideoModelParams'
+
+    VideoModelsResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          enum: [true]
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/VideoModel'
+        meta:
+          $ref: '#/components/schemas/RequestMeta'
+
+    VideoJobCreatedResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          enum: [true]
+        data:
+          type: object
+          properties:
+            job_uid:
+              type: string
+              description: Use this with `GET /v1/jobs/{job_uid}` to poll for status.
+              example: job_a1b2c3d4e5f6
+            status:
+              type: string
+              enum: [queued]
+        usage:
+          $ref: '#/components/schemas/UsageMeta'
+        meta:
+          $ref: '#/components/schemas/RequestMeta'
+
     Video:
       type: object
       properties:
         id:
-          type: integer
-          format: int64
+          type: string
+          example: a1b2c3d4e5f6
+        model:
+          type: string
+          example: kling-v2-1
+        prompt:
+          type: string
         url:
           type: string
+          format: uri
+          description: CDN URL of the generated video (available once completed).
         status:
-          type: string
-        created_at:
+          type: integer
+          description: "`1` = completed, `2` = processing, `0` = failed"
+          example: 1
+        created:
           type: string
           format: date-time
     VideoListResponse:
