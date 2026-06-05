@@ -67,6 +67,9 @@ Once connected, try a prompt like:
 | `list_messages` | List messages in a conversation | `social:read` |
 | `send_direct_message` | Send a DM (within platform window) | `social:write` |
 | `mark_conversation_read` | Mark a conversation read | `social:write` |
+| `list_webhooks` | List webhook subscriptions + available events | `webhooks:read` |
+| `create_webhook` | Subscribe an HTTPS URL to events | `webhooks:write` |
+| `delete_webhook` | Delete a webhook subscription | `webhooks:write` |
 | `get_analytics_overview` | Likes/impressions/clicks/views overview | `analytics:read` |
 | `rewrite_content` | Rewrite/rephrase text | `articles:write` |
 | `generate_article` | Generate a long-form article | `articles:write` |
@@ -88,6 +91,25 @@ SmartlyQ API error (HTTP 403) — code: INSUFFICIENT_SCOPE — API key lacks req
 ## Async generation
 
 Content generation tools (`generate_article`, `generate_image`, `generate_video`, `text_to_speech`) run asynchronously and return a **job id**. The agent should poll `get_job` until the job's status is `completed` to retrieve the result. See [Async jobs](/guides/async-jobs).
+
+## Webhooks
+
+Subscribe an HTTPS endpoint to events with `create_webhook` (or `POST /webhooks`). Deliveries are an HMAC-SHA256 signed POST of the JSON payload, with the signature in the `X-SmartlyQ-Signature: t=<timestamp>,v1=<hex>` header and the event name in `X-SmartlyQ-Event`. Failed deliveries retry with exponential backoff and are dead-lettered after several attempts.
+
+Available events:
+
+| Event | Fires when |
+|-------|-----------|
+| `post.published` | A post published successfully to all targets |
+| `post.partial` | A post published to some targets but failed on others |
+| `post.failed` | A post failed on all targets |
+| `account.connected` / `account.disconnected` | An account is connected / removed |
+| `account.token_expired` | An account's token expired and needs reconnect |
+| `comment.received` | A new comment arrived on a post |
+| `message.received` | A new direct message arrived |
+| `job.completed` / `job.failed` | An async generation job finished |
+
+Webhooks are workspace-scoped (max 10 per workspace) and the URL must be a public HTTPS endpoint. The signing `secret` is returned once, at creation.
 
 ## Billing
 
