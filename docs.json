@@ -39,6 +39,12 @@
             ]
           },
           {
+            "group": "AI Agents (MCP)",
+            "pages": [
+              "mcp"
+            ]
+          },
+          {
             "group": "Guides",
             "pages": [
               "guides/workspaces",
