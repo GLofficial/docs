@@ -12,8 +12,33 @@
     "light": "/logo/light.png",
     "dark": "/logo/dark.png"
   },
+  "contextual": {
+    "options": [
+      "copy",
+      "view",
+      "chatgpt",
+      "claude",
+      "download-spec",
+      {
+        "title": "llms.txt",
+        "description": "Full documentation index for LLMs and AI agents",
+        "icon": "file-lines",
+        "href": "/llms.txt"
+      }
+    ]
+  },
   "navbar": {
     "links": [
+      {
+        "label": "llms.txt",
+        "icon": "file-lines",
+        "href": "/llms.txt"
+      },
+      {
+        "label": "OpenAPI",
+        "icon": "download",
+        "href": "/openapi.json"
+      },
       {
         "label": "Support",
         "href": "mailto:support@smartlyq.com"
