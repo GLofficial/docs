@@ -24,25 +24,23 @@ Enable **auto-recharge** to keep your wallet funded automatically.
 
 ## How pricing works
 
-Credit cost per request depends on:
+The credits a request costs depend on:
 
-1. **AI model used** — larger models cost more
-2. **Token count** — input + output tokens consumed
-3. **Operation type** — text, image, video, audio
+1. **AI model used** — larger, more capable models cost more
+2. **Token count** — the input + output tokens the request consumes
+3. **Operation type** — text, image, video, audio, or presentations
 
-The formula:
+Each request is charged for the AI resources it actually uses. Lighter requests cost less; heavier ones — bigger models, more tokens, or video — cost more. A small minimum charge applies per operation type so even tiny requests are billed consistently:
 
-```
-cost_sqc = (provider_cost_usd × markup × sqc_per_usd) + platform_fee
-```
+| Operation type | Minimum SQC |
+|----------------|-------------|
+| Text generation | 1 |
+| Image generation | 2 |
+| Audio (TTS/STT) | 1 |
+| Video generation | varies |
+| Presentations | 1 |
 
-| Type | Markup | Minimum SQC |
-|------|--------|-------------|
-| Text generation | 4.0x | 1 |
-| Image generation | 3.5x | 2 |
-| Audio (TTS/STT) | 3.0x | 1 |
-| Video generation | 2.5x | varies |
-| Presentations | 3.0x | 1 |
+To see exactly what you're spending, check your wallet balance — with the endpoint below or in the [Developer Dashboard](https://app.smartlyq.com/my/developer).
 
 ## Checking your balance
 
