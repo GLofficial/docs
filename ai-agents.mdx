@@ -9,7 +9,7 @@ SmartlyQ ships a hosted **MCP (Model Context Protocol) server**. MCP is the open
 **Server URL**
 
 ```
-https://smartlyq-mcp-production.up.railway.app/mcp
+https://mcp.smartlyq.com/mcp
 ```
 </Info>
 
@@ -29,7 +29,7 @@ The server authenticates with your SmartlyQ API key, passed as a Bearer token.
   "mcpServers": {
     "smartlyq": {
       "type": "http",
-      "url": "https://smartlyq-mcp-production.up.railway.app/mcp",
+      "url": "https://mcp.smartlyq.com/mcp",
       "headers": { "Authorization": "Bearer sqk_live_xxxxxxxxxxxx" }
     }
   }
@@ -38,7 +38,7 @@ The server authenticates with your SmartlyQ API key, passed as a Bearer token.
 
 ```bash Claude Code (CLI)
 claude mcp add smartlyq \
-  --transport http https://smartlyq-mcp-production.up.railway.app/mcp \
+  --transport http https://mcp.smartlyq.com/mcp \
   --header "Authorization: Bearer sqk_live_xxxxxxxxxxxx"
 ```
 </CodeGroup>
