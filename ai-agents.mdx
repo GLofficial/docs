@@ -55,6 +55,18 @@ Once connected, try a prompt like:
 | `create_social_post` | Publish a post immediately | `social:write` |
 | `schedule_social_post` | Schedule a post for later | `social:write` |
 | `list_social_posts` | List posts (filter by status/platform) | `social:read` |
+| `retry_social_post` | Re-attempt publishing on given platforms | `social:write` |
+| `disconnect_social_account` | Disconnect a connected account | `social:write` |
+| `get_account_health` | Token validity/status of an account | `social:read` |
+| `get_account_reconnect_url` | URL to re-authenticate an account | `social:read` |
+| `pause_social_account` / `resume_social_account` | Pause/resume posting to an account | `social:write` |
+| `list_comments` | List comments on your posts | `social:read` |
+| `reply_to_comment` | Reply to a comment (posts to platform) | `social:write` |
+| `hide_comment` / `delete_comment` | Hide or delete a comment | `social:write` |
+| `list_conversations` | List DM conversations | `social:read` |
+| `list_messages` | List messages in a conversation | `social:read` |
+| `send_direct_message` | Send a DM (within platform window) | `social:write` |
+| `mark_conversation_read` | Mark a conversation read | `social:write` |
 | `get_analytics_overview` | Likes/impressions/clicks/views overview | `analytics:read` |
 | `rewrite_content` | Rewrite/rephrase text | `articles:write` |
 | `generate_article` | Generate a long-form article | `articles:write` |

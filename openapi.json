@@ -77,6 +77,14 @@
     {
       "name": "Account",
       "description": "Current user, usage, and balance"
+    },
+    {
+      "name": "Comments",
+      "description": "Comments endpoints"
+    },
+    {
+      "name": "Direct Messages",
+      "description": "Direct Messages endpoints"
     }
   ],
   "paths": {
@@ -451,10 +459,20 @@
                       "model": "kling-v2-1",
                       "type": "text_to_video",
                       "params": {
-                        "duration": [5, 10],
+                        "duration": [
+                          5,
+                          10
+                        ],
                         "resolution": [],
-                        "mode": ["Standard", "Professional"],
-                        "aspect_ratio": ["16:9", "9:16", "1:1"],
+                        "mode": [
+                          "Standard",
+                          "Professional"
+                        ],
+                        "aspect_ratio": [
+                          "16:9",
+                          "9:16",
+                          "1:1"
+                        ],
                         "style": [],
                         "movement": [],
                         "supports_negative_prompt": true,
@@ -468,11 +486,35 @@
                       "model": "pixverse-v4-5",
                       "type": "text_to_video",
                       "params": {
-                        "duration": [5, 8],
-                        "resolution": ["360p", "540p", "720p", "1080p"],
-                        "mode": ["Normal", "Fast"],
-                        "aspect_ratio": ["16:9", "9:16", "1:1", "4:3", "3:4"],
-                        "style": ["Auto", "Anime", "3D Animation", "Comic", "Clay", "Cyberpunk"],
+                        "duration": [
+                          5,
+                          8
+                        ],
+                        "resolution": [
+                          "360p",
+                          "540p",
+                          "720p",
+                          "1080p"
+                        ],
+                        "mode": [
+                          "Normal",
+                          "Fast"
+                        ],
+                        "aspect_ratio": [
+                          "16:9",
+                          "9:16",
+                          "1:1",
+                          "4:3",
+                          "3:4"
+                        ],
+                        "style": [
+                          "Auto",
+                          "Anime",
+                          "3D Animation",
+                          "Comic",
+                          "Clay",
+                          "Cyberpunk"
+                        ],
                         "movement": [],
                         "supports_negative_prompt": false,
                         "supports_seed": true,
@@ -2605,6 +2647,798 @@
           }
         }
       }
+    },
+    "/social/accounts/{account_id}": {
+      "delete": {
+        "summary": "Disconnect a social account",
+        "operationId": "disconnectSocialAccount",
+        "tags": [
+          "Social"
+        ],
+        "parameters": [
+          {
+            "name": "account_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Connected account id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
+      }
+    },
+    "/social/accounts/{account_id}/health": {
+      "get": {
+        "summary": "Account health",
+        "operationId": "getAccountHealth",
+        "tags": [
+          "Social"
+        ],
+        "parameters": [
+          {
+            "name": "account_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Connected account id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
+      }
+    },
+    "/social/accounts/{account_id}/reconnect-url": {
+      "get": {
+        "summary": "Account reconnect URL",
+        "operationId": "getAccountReconnectUrl",
+        "tags": [
+          "Social"
+        ],
+        "parameters": [
+          {
+            "name": "account_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Connected account id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
+      }
+    },
+    "/social/accounts/{account_id}/pause": {
+      "post": {
+        "summary": "Pause posting to an account",
+        "operationId": "pauseSocialAccount",
+        "tags": [
+          "Social"
+        ],
+        "parameters": [
+          {
+            "name": "account_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Connected account id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
+      }
+    },
+    "/social/accounts/{account_id}/resume": {
+      "post": {
+        "summary": "Resume posting to an account",
+        "operationId": "resumeSocialAccount",
+        "tags": [
+          "Social"
+        ],
+        "parameters": [
+          {
+            "name": "account_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Connected account id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
+      }
+    },
+    "/social/posts/{post_id}/retry": {
+      "post": {
+        "summary": "Retry publishing a post",
+        "operationId": "retrySocialPost",
+        "tags": [
+          "Social"
+        ],
+        "parameters": [
+          {
+            "name": "post_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Post id"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "platforms": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "Platforms to retry, e.g. ['facebook']"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
+      }
+    },
+    "/social/comments": {
+      "get": {
+        "summary": "List comments",
+        "operationId": "listComments",
+        "tags": [
+          "Comments"
+        ],
+        "parameters": [
+          {
+            "name": "platform",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": ""
+          },
+          {
+            "name": "social_account_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": ""
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": ""
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": ""
+          },
+          {
+            "name": "per_page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": ""
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
+      }
+    },
+    "/social/comments/{comment_id}/reply": {
+      "post": {
+        "summary": "Reply to a comment",
+        "operationId": "replyToComment",
+        "tags": [
+          "Comments"
+        ],
+        "parameters": [
+          {
+            "name": "comment_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Comment id"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "text": {
+                    "type": "string",
+                    "description": "Reply text"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
+      }
+    },
+    "/social/comments/{comment_id}/hide": {
+      "post": {
+        "summary": "Hide or unhide a comment",
+        "operationId": "hideComment",
+        "tags": [
+          "Comments"
+        ],
+        "parameters": [
+          {
+            "name": "comment_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Comment id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
+      }
+    },
+    "/social/comments/{comment_id}": {
+      "delete": {
+        "summary": "Delete a comment",
+        "operationId": "deleteComment",
+        "tags": [
+          "Comments"
+        ],
+        "parameters": [
+          {
+            "name": "comment_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Comment id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
+      }
+    },
+    "/social/conversations": {
+      "get": {
+        "summary": "List DM conversations",
+        "operationId": "listConversations",
+        "tags": [
+          "Direct Messages"
+        ],
+        "parameters": [
+          {
+            "name": "platform",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": ""
+          },
+          {
+            "name": "social_account_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": ""
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": ""
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": ""
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": ""
+          },
+          {
+            "name": "per_page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": ""
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
+      }
+    },
+    "/social/conversations/{conversation_id}/messages": {
+      "get": {
+        "summary": "List messages in a conversation",
+        "operationId": "listMessages",
+        "tags": [
+          "Direct Messages"
+        ],
+        "parameters": [
+          {
+            "name": "conversation_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Conversation id"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": ""
+          },
+          {
+            "name": "per_page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": ""
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
+      },
+      "post": {
+        "summary": "Send a direct message",
+        "operationId": "sendDirectMessage",
+        "tags": [
+          "Direct Messages"
+        ],
+        "parameters": [
+          {
+            "name": "conversation_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Conversation id"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "text": {
+                    "type": "string",
+                    "description": "Message text"
+                  },
+                  "image_url": {
+                    "type": "string",
+                    "description": "Optional image URL"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
+      }
+    },
+    "/social/conversations/{conversation_id}/read": {
+      "post": {
+        "summary": "Mark a conversation read",
+        "operationId": "markConversationRead",
+        "tags": [
+          "Direct Messages"
+        ],
+        "parameters": [
+          {
+            "name": "conversation_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Conversation id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -3168,7 +4002,10 @@
       },
       "VideoGenerateRequest": {
         "type": "object",
-        "required": ["model", "type"],
+        "required": [
+          "model",
+          "type"
+        ],
         "properties": {
           "model": {
             "type": "string",
@@ -3177,7 +4014,10 @@
           },
           "type": {
             "type": "string",
-            "enum": ["text_to_video", "image_to_video"],
+            "enum": [
+              "text_to_video",
+              "image_to_video"
+            ],
             "description": "Generation mode. `text_to_video` requires `prompt`. `image_to_video` requires `image_url`; `prompt` is optional motion guidance.",
             "example": "text_to_video"
           },
@@ -3249,38 +4089,58 @@
         "properties": {
           "duration": {
             "type": "array",
-            "items": { "type": "integer" },
+            "items": {
+              "type": "integer"
+            },
             "description": "Valid duration values in seconds. Empty array means duration is not configurable."
           },
           "resolution": {
             "type": "array",
-            "items": { "type": "string" },
+            "items": {
+              "type": "string"
+            },
             "description": "Valid resolution values. Empty array means resolution is not configurable."
           },
           "mode": {
             "type": "array",
-            "items": { "type": "string" },
+            "items": {
+              "type": "string"
+            },
             "description": "Valid mode values. Empty array means mode is not applicable."
           },
           "aspect_ratio": {
             "type": "array",
-            "items": { "type": "string" },
+            "items": {
+              "type": "string"
+            },
             "description": "Valid aspect ratio values. Empty array means aspect ratio is not configurable."
           },
           "style": {
             "type": "array",
-            "items": { "type": "string" },
+            "items": {
+              "type": "string"
+            },
             "description": "Valid style preset values. Empty array means style is not supported."
           },
           "movement": {
             "type": "array",
-            "items": { "type": "string" },
+            "items": {
+              "type": "string"
+            },
             "description": "Valid movement values. Empty array means movement is not supported."
           },
-          "supports_negative_prompt": { "type": "boolean" },
-          "supports_seed": { "type": "boolean" },
-          "supports_generate_audio": { "type": "boolean" },
-          "supports_camera_fixed": { "type": "boolean" },
+          "supports_negative_prompt": {
+            "type": "boolean"
+          },
+          "supports_seed": {
+            "type": "boolean"
+          },
+          "supports_generate_audio": {
+            "type": "boolean"
+          },
+          "supports_camera_fixed": {
+            "type": "boolean"
+          },
           "prompt_max_length": {
             "type": "integer",
             "description": "Maximum prompt length in characters. 0 means no enforced limit."
@@ -3290,30 +4150,52 @@
       "VideoModel": {
         "type": "object",
         "properties": {
-          "model": { "type": "string", "example": "kling-v2-1" },
+          "model": {
+            "type": "string",
+            "example": "kling-v2-1"
+          },
           "type": {
             "type": "string",
-            "enum": ["text_to_video", "image_to_video"],
+            "enum": [
+              "text_to_video",
+              "image_to_video"
+            ],
             "example": "text_to_video"
           },
-          "params": { "$ref": "#/components/schemas/VideoModelParams" }
+          "params": {
+            "$ref": "#/components/schemas/VideoModelParams"
+          }
         }
       },
       "VideoModelsResponse": {
         "type": "object",
         "properties": {
-          "success": { "type": "boolean", "enum": [true] },
+          "success": {
+            "type": "boolean",
+            "enum": [
+              true
+            ]
+          },
           "data": {
             "type": "array",
-            "items": { "$ref": "#/components/schemas/VideoModel" }
+            "items": {
+              "$ref": "#/components/schemas/VideoModel"
+            }
           },
-          "meta": { "$ref": "#/components/schemas/RequestMeta" }
+          "meta": {
+            "$ref": "#/components/schemas/RequestMeta"
+          }
         }
       },
       "VideoJobCreatedResponse": {
         "type": "object",
         "properties": {
-          "success": { "type": "boolean", "enum": [true] },
+          "success": {
+            "type": "boolean",
+            "enum": [
+              true
+            ]
+          },
           "data": {
             "type": "object",
             "properties": {
@@ -3322,22 +4204,50 @@
                 "description": "Use with GET /v1/jobs/{job_uid} to poll for status.",
                 "example": "job_a1b2c3d4e5f6"
               },
-              "status": { "type": "string", "enum": ["queued"] }
+              "status": {
+                "type": "string",
+                "enum": [
+                  "queued"
+                ]
+              }
             }
           },
-          "usage": { "$ref": "#/components/schemas/UsageMeta" },
-          "meta": { "$ref": "#/components/schemas/RequestMeta" }
+          "usage": {
+            "$ref": "#/components/schemas/UsageMeta"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/RequestMeta"
+          }
         }
       },
       "Video": {
         "type": "object",
         "properties": {
-          "id": { "type": "string", "example": "a1b2c3d4e5f6" },
-          "model": { "type": "string", "example": "kling-v2-1" },
-          "prompt": { "type": "string" },
-          "url": { "type": "string", "format": "uri", "description": "CDN URL of the generated video (available once completed)." },
-          "status": { "type": "integer", "description": "1 = completed, 2 = processing, 0 = failed", "example": 1 },
-          "created": { "type": "string", "format": "date-time" }
+          "id": {
+            "type": "string",
+            "example": "a1b2c3d4e5f6"
+          },
+          "model": {
+            "type": "string",
+            "example": "kling-v2-1"
+          },
+          "prompt": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string",
+            "format": "uri",
+            "description": "CDN URL of the generated video (available once completed)."
+          },
+          "status": {
+            "type": "integer",
+            "description": "1 = completed, 2 = processing, 0 = failed",
+            "example": 1
+          },
+          "created": {
+            "type": "string",
+            "format": "date-time"
+          }
         }
       },
       "VideoListResponse": {
