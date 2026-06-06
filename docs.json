@@ -190,6 +190,7 @@
                 "pages": [
                   "GET /social/accounts",
                   "POST /social/connect/{platform}",
+                  "GET /social/connect/{platform}",
                   "GET /social/accounts/{account_id}/health",
                   "GET /social/accounts/{account_id}/reconnect-url",
                   "POST /social/accounts/{account_id}/pause",
