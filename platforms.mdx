@@ -186,13 +186,32 @@ Publishing only — no comments or DM inbox. Per-post analytics were deprecated 
 
 Attach media to a post with `media_urls` (publicly reachable HTTPS URLs), or upload to SmartlyQ storage first via `POST /v1/media/upload-url`.
 
-| | |
-|---|---|
-| **Images** | `jpg` · `jpeg` · `png` · `gif` · `webp` — up to **10 MB** |
-| **Video** | `mp4` · `mov` · `m4v` · `webm` — up to **100 MB** |
+**Formats** — images `jpg` · `jpeg` · `png` · `gif` · `webp`; video `mp4` · `mov` · `m4v` · `webm`.
+
+### Per-platform media rules
+
+Each platform enforces its own limits on how many items you can attach, whether images and video can be mixed, and file size / duration. SmartlyQ validates these before publishing where it can, so you get an actionable error up front instead of a downstream failure.
+
+| Platform | Images | Videos | Mix image + video | Size / duration |
+|----------|:------:|:------:|:-----------------:|-----------------|
+| X (Twitter) | up to 4 | 1 | No | Image ≤ 5 MB · GIF ≤ 15 MB · video ≤ 100 MB, ≤ 140 s |
+| Facebook | up to 10 | 1 | No | — |
+| Instagram | up to 10 (carousel) | 1 | — | Requires media · feed ratio 0.8–1.91 · oversize auto-compressed |
+| LinkedIn | up to 20 | 1 | — | Single video per post |
+| TikTok | up to 35¹ | 1 | — | Photo carousels are **JPEG / WebP only** |
+| Bluesky | up to 4 | 1 | — | Images over ~1 MB auto-recompressed |
+| Snapchat | 1 item | 1 item | — | Image ≤ 20 MB · video ≤ 500 MB, 5–60 s · 9:16 |
+| Google Business | 1 | — | — | Single image; **video not supported** |
+| YouTube | — | 1 | — | Videos ≤ 3 min publish as Shorts |
+| Threads · Pinterest · Reddit · Tumblr | per post | per post | — | Standard platform limits |
+
+<Info>
+¹ TikTok photo carousels accept up to **35** images and must be JPEG or WebP (PNG/GIF are rejected). A single video post is unaffected.
+</Info>
 
 - **Instagram requires media** — a text-only post will be rejected.
 - Stories / Reels / Shorts and carousels are detected automatically from the media you attach (see each platform above).
+- **Aspect ratio** is advisory: media well outside a platform's supported range (e.g. a banner on an Instagram feed post) returns a non-blocking `warnings` entry on the create response rather than failing the post.
 
 ## Keeping accounts healthy
 
