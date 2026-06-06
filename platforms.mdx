@@ -1,11 +1,11 @@
 ---
 title: "Platforms"
-description: "Which social platforms SmartlyQ supports, and what each one can do through the API."
+description: "Which social platforms SmartlyQ supports, and exactly what each one can do through the API."
 ---
 
-## Supported platforms
+SmartlyQ publishes to and manages every platform below through a single API. One `POST /v1/social/posts` call fans a post out to any combination of them — you reference connected accounts by `account_ids` and list the target `platforms`.
 
-SmartlyQ publishes to and manages the platforms below through a single API. The same `POST /v1/social/posts` call fans a post out to any combination of them — you reference connected accounts by `account_ids` and list the target `platforms`.
+## At a glance
 
 | Platform | Publish | Analytics | Comments | Direct messages | Headless connect |
 |----------|:------:|:---------:|:--------:|:---------------:|:---------------:|
@@ -17,35 +17,170 @@ SmartlyQ publishes to and manages the platforms below through a single API. The 
 | TikTok | ✅ | ✅ | ✅ | — | ✅ |
 | Threads | ✅ | ✅ | ✅ | — | ✅ |
 | Bluesky | ✅ | — | ✅ | — | — |
-| Pinterest | ✅ | — | ✅ ¹ | — | — |
-| Reddit | ✅ | — | ✅ | — | ✅ |
+| Pinterest | ✅ | — | ✅¹ | — | — |
+| Reddit | ✅ | — | ✅ | ✅ | ✅ |
 | Snapchat | ✅ | — | — | — | — |
 | Tumblr | ✅ | — | — | — | — |
 | Google Business | ✅ | ² | — | — | — |
 
 <Info>
-**Legend** — ✅ supported · — not available through the API. <br />
+✅ supported · — not available through the API. <br />
 ¹ Pinterest comments support fetch + reply, but **not** hide or delete. <br />
-² Google Business per-post analytics were deprecated by Google; location-level metrics are not exposed here.
+² Google Business per-post analytics were deprecated by Google; location-level metrics aren't exposed here.
 </Info>
 
-- **Headless connect** means you can connect a *new* account from your own UI via `POST /v1/social/connect/{platform}`. Every other platform is connected from the [Developer Dashboard](https://app.smartlyq.com/my/developer). See [Connecting accounts](/guides/connecting-accounts).
-- **Direct messages** are actively synced for Facebook, Instagram, and X. Meta platforms (Facebook/Instagram) enforce a **24-hour reply window** — you can only message a user within 24 hours of their last message.
+- **Headless connect** lets you connect a *new* account from your own UI via `POST /v1/social/connect/{platform}` (Facebook, Threads, TikTok, Reddit). Every other platform connects from the [Developer Dashboard](https://app.smartlyq.com/my/developer). See [Connecting accounts](/guides/connecting-accounts).
+- **Direct messages** are actively synced for Facebook, Instagram, and X. Meta platforms enforce a **24-hour reply window** — you can only message a user within 24 hours of their last message.
 
-## Content limits to keep in mind
+## Platform details
 
-These are the platforms' own caption/text limits. Posts that exceed them are rejected by the platform at publish time, so trim before you send:
+<AccordionGroup>
 
-| Platform | Text / caption limit |
-|----------|----------------------|
-| X (Twitter) | 280 characters |
-| Instagram | 2,200 characters |
-| TikTok | 2,200 characters |
-| LinkedIn | 3,000 characters |
-| YouTube | 5,000 characters (description) |
-| Facebook | 63,206 characters |
+<Accordion title="Facebook" icon="facebook">
+| | |
+|---|---|
+| **Caption limit** | 63,206 characters |
+| **Post types** | Feed posts (text, link, image, video) |
+| **Capabilities** | Publish · Analytics · Comments · Direct messages |
+| **Connect** | Headless (`POST /v1/social/connect/facebook`) or dashboard |
+| **Tokens** | Page tokens are effectively permanent — no refresh needed |
 
-Platforms not listed (Bluesky, Threads, Pinterest, Reddit, Snapchat, Tumblr, Google Business) have no fixed text limit enforced by SmartlyQ — follow the platform's own guidance.
+DMs use Meta's **24-hour messaging window**. Comments support full fetch / reply / hide / delete.
+</Accordion>
+
+<Accordion title="Instagram" icon="instagram">
+| | |
+|---|---|
+| **Caption limit** | 2,200 characters |
+| **Post types** | Feed, Carousel, Reels, Stories |
+| **Capabilities** | Publish · Analytics · Comments · Direct messages |
+| **Connect** | Dashboard |
+| **Tokens** | ~60 days, auto-refreshed |
+
+**Requires media** — a text-only post is rejected. DMs use Meta's **24-hour messaging window**.
+</Accordion>
+
+<Accordion title="X (Twitter)" icon="x-twitter">
+| | |
+|---|---|
+| **Caption limit** | 280 characters |
+| **Post types** | Text, image, video |
+| **Capabilities** | Publish · Comments · Direct messages |
+| **Connect** | Dashboard |
+| **Tokens** | ~2 hours, auto-refreshed — reconnect if an account turns unhealthy |
+
+No analytics via the API. Comments (replies) support full fetch / reply / hide / delete.
+</Accordion>
+
+<Accordion title="LinkedIn" icon="linkedin">
+| | |
+|---|---|
+| **Caption limit** | 3,000 characters |
+| **Post types** | Text, image, video, carousel, document (PDF), GIF |
+| **Capabilities** | Publish · Comments |
+| **Connect** | Dashboard |
+| **Tokens** | ~60 days |
+
+Both **personal profiles and organization pages** are supported. Some analytics require organization-admin scope; if it's missing the account still connects and posts normally.
+</Accordion>
+
+<Accordion title="YouTube" icon="youtube">
+| | |
+|---|---|
+| **Caption limit** | 5,000 characters (description) |
+| **Post types** | Standard video, Shorts, Community posts |
+| **Capabilities** | Publish · Analytics · Comments |
+| **Connect** | Dashboard |
+| **Tokens** | ~1 hour, auto-refreshed |
+</Accordion>
+
+<Accordion title="TikTok" icon="tiktok">
+| | |
+|---|---|
+| **Caption limit** | 2,200 characters |
+| **Post types** | Video, photo carousel |
+| **Capabilities** | Publish · Analytics · Comments |
+| **Connect** | Headless (`POST /v1/social/connect/tiktok`) or dashboard |
+| **Tokens** | ~24 hours, auto-refreshed |
+</Accordion>
+
+<Accordion title="Threads" icon="threads">
+| | |
+|---|---|
+| **Caption limit** | 500 characters |
+| **Post types** | Text, image, video, carousel |
+| **Capabilities** | Publish · Analytics · Comments |
+| **Connect** | Headless (`POST /v1/social/connect/threads`) or dashboard |
+| **Tokens** | ~60 days |
+</Accordion>
+
+<Accordion title="Bluesky" icon="bluesky">
+| | |
+|---|---|
+| **Caption limit** | 300 characters |
+| **Post types** | Text, image, video |
+| **Capabilities** | Publish · Comments |
+| **Connect** | Dashboard (app password) |
+| **Tokens** | Very short-lived (~15 min), auto-refreshed |
+</Accordion>
+
+<Accordion title="Pinterest" icon="pinterest">
+| | |
+|---|---|
+| **Caption limit** | 800 characters (description) |
+| **Post types** | Pins, video pins |
+| **Capabilities** | Publish · Comments (fetch + reply only) |
+| **Connect** | Dashboard |
+| **Tokens** | ~30 days |
+
+Pinterest comments **cannot be hidden or deleted** via the API — those operations return `not_supported`.
+</Accordion>
+
+<Accordion title="Reddit" icon="reddit">
+| | |
+|---|---|
+| **Caption limit** | 40,000 characters (self-text) |
+| **Post types** | Text posts, link posts |
+| **Capabilities** | Publish · Comments · Direct messages |
+| **Connect** | Headless (`POST /v1/social/connect/reddit`) or dashboard |
+| **Tokens** | ~1 hour, auto-refreshed |
+</Accordion>
+
+<Accordion title="Snapchat" icon="snapchat">
+| | |
+|---|---|
+| **Caption limit** | Not length-checked (Stories carry no caption) |
+| **Post types** | Stories, Spotlight |
+| **Capabilities** | Publish |
+| **Connect** | Dashboard |
+| **Tokens** | ~1 hour, auto-refreshed |
+
+Requires a Snapchat Public Profile. No comments or DM inbox.
+</Accordion>
+
+<Accordion title="Tumblr" icon="tumblr">
+| | |
+|---|---|
+| **Caption limit** | No fixed limit |
+| **Post types** | Text, image |
+| **Capabilities** | Publish |
+| **Connect** | Dashboard |
+| **Tokens** | ~42 min, auto-refreshed |
+</Accordion>
+
+<Accordion title="Google Business" icon="google">
+| | |
+|---|---|
+| **Caption limit** | 1,500 characters |
+| **Post types** | Location posts (text + single image) |
+| **Capabilities** | Publish |
+| **Connect** | Dashboard |
+| **Tokens** | ~1 hour, auto-refreshed |
+
+Publishing only — no comments or DM inbox. Per-post analytics were deprecated by Google.
+</Accordion>
+
+</AccordionGroup>
 
 ## Media
 
@@ -57,12 +192,8 @@ Attach media to a post with `media_urls` (publicly reachable HTTPS URLs), or upl
 | **Video** | `mp4` · `mov` · `m4v` · `webm` — up to **100 MB** |
 
 - **Instagram requires media** — a text-only post will be rejected.
-- Stories / Reels / Shorts: Instagram (feed, carousel, Reels, Stories), YouTube (Shorts + standard), TikTok (photo + video), Snapchat (Stories + Spotlight), LinkedIn (image, video, carousel, document) are detected automatically from the media you attach.
+- Stories / Reels / Shorts and carousels are detected automatically from the media you attach (see each platform above).
 
-## Per-platform notes
+## Keeping accounts healthy
 
-- **LinkedIn** — both personal profiles and organization pages are supported. Some analytics require organization-admin scope; if it's missing, the account still connects and posts normally.
-- **X (Twitter)** — tokens are short-lived (~2 hours); SmartlyQ refreshes them automatically. If an account shows unhealthy, use its [reconnect URL](/guides/connecting-accounts#reconnecting-an-account).
-- **Bluesky** — connected with an app password; tokens are very short-lived and refreshed for you.
-- **Google Business & Tumblr** — publishing only (no comments or DM inbox).
-- Token lifetimes vary widely by platform; SmartlyQ keeps them refreshed. Check any account's status with `GET /v1/social/accounts/{id}/health`.
+Token lifetimes vary widely — SmartlyQ refreshes them for you. Check any account's status with `GET /v1/social/accounts/{id}/health`, and if one turns unhealthy, send the user through its [reconnect URL](/guides/connecting-accounts#reconnecting-an-account).
