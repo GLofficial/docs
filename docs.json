@@ -57,15 +57,12 @@
       {
         "tab": "Documentation",
         "icon": "rocket",
-        "groups": [
-          {
-            "group": "Getting Started",
-            "pages": [
-              "introduction",
-              "quickstart",
-              "authentication"
-            ]
-          },
+        "pages": [
+          "introduction",
+          "quickstart",
+          "authentication",
+          "ai-agents",
+          "guides/webhooks",
           {
             "group": "Guides",
             "pages": [
@@ -74,14 +71,7 @@
               "guides/billing-and-credits",
               "guides/rate-limiting",
               "guides/async-jobs",
-              "guides/webhooks",
               "guides/errors"
-            ]
-          },
-          {
-            "group": "AI Agents (MCP)",
-            "pages": [
-              "ai-agents"
             ]
           }
         ]
