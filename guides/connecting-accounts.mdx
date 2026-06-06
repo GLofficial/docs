@@ -12,7 +12,7 @@ The simplest path — and the only one for most platforms — is the [Developer 
 
 ## 2. Headless connect (your own UI)
 
-For **Facebook, Threads, TikTok, and Reddit**, you can start the connection from your own app without sending the user through the SmartlyQ dashboard.
+**Every supported platform** can be connected from your own app — Facebook, Instagram, X (Twitter), LinkedIn, YouTube, TikTok, Threads, Bluesky, Pinterest, Reddit, Snapchat, Tumblr, and Google Business — without sending the user through the SmartlyQ dashboard.
 
 <Steps>
 <Step title="Request a connect link">
@@ -42,12 +42,23 @@ Open `connect_url` in a browser (redirect, popup, or new tab). The link is **sin
 </Step>
 
 <Step title="The account connects automatically">
-When the user approves, the platform's OAuth callback completes the connection on SmartlyQ's side and — if you supplied `return_url` — redirects the user back to your app. The new account now shows up in `GET /v1/social/accounts`.
+When the user approves, the platform's OAuth callback completes the connection on SmartlyQ's side and — if you supplied `return_url` — redirects the user back to your app with `?connected=<count>&platform=<name>`. The new account now shows up in `GET /v1/social/accounts`. Platforms that expose multiple targets (YouTube channels, Google Business locations, Tumblr blogs, a member's LinkedIn pages) connect them all automatically — there's no in-flow picker.
+</Step>
+
+<Step title="(Optional) Poll for completion">
+If your app can't observe the `return_url` redirect (e.g. a server-to-server flow, or the user closed the tab), poll with the `state_token` from the `connect_url`:
+
+```bash
+curl https://api.smartlyq.com/v1/social/connect/{state_token} \
+  -H "Authorization: Bearer sqk_live_xxxxxxxxxxxx"
+```
+
+Returns `status` of `pending`, `connected` (with the new `account`), or `expired`.
 </Step>
 </Steps>
 
 <Warning>
-Other platforms (Instagram, LinkedIn, YouTube, etc.) are connected from the dashboard only. Calling `POST /v1/social/connect/{platform}` with an unsupported platform returns **422 `UNSUPPORTED_PLATFORM`** (the response lists the supported ones). A platform whose OAuth app isn't configured returns **422 `PROVIDER_NOT_CONFIGURED`**.
+Calling `POST /v1/social/connect/{platform}` with an unrecognized platform returns **422 `UNSUPPORTED_PLATFORM`** (the response lists the supported ones). A platform whose OAuth app isn't configured on your SmartlyQ instance returns **422 `PROVIDER_NOT_CONFIGURED`**. If headless connect is disabled, the endpoint returns **404 `NOT_ENABLED`**.
 </Warning>
 
 ## Managing connected accounts

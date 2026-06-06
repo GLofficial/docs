@@ -4521,7 +4521,7 @@
     "/social/connect/{platform}": {
       "post": {
         "summary": "Start headless account connection",
-        "description": "Begin connecting a NEW social account from your own UI (no SmartlyQ dashboard session needed). Returns a one-time `connect_url` (valid 15 minutes) — open it in a browser so the user can authorize. After they approve, the platform's OAuth callback completes the connection and (if provided) redirects to `return_url`. Headless connect currently supports facebook, threads, tiktok, and reddit; other platforms are connected from the Developer Dashboard. Requires scope `social:write`.",
+        "description": "Begin connecting a NEW social account from your own UI (no SmartlyQ dashboard session needed). Returns a one-time `connect_url` (valid 15 minutes) — open it in a browser so the user can authorize. After they approve, the platform's OAuth callback completes the connection and (if provided) redirects to `return_url` with `?connected=<count>&platform=<name>`. Supported on all platforms. Platforms that expose multiple targets (YouTube channels, Google Business locations, Tumblr blogs, LinkedIn pages) connect them all automatically. Poll completion with `GET /social/connect/{state_token}`. Requires scope `social:write`.",
         "operationId": "connectSocialAccount",
         "tags": [
           "Social"
@@ -4535,12 +4535,21 @@
               "type": "string",
               "enum": [
                 "facebook",
-                "threads",
+                "instagram",
+                "twitter",
+                "linkedin",
+                "youtube",
                 "tiktok",
-                "reddit"
+                "threads",
+                "bluesky",
+                "pinterest",
+                "reddit",
+                "snapchat",
+                "tumblr",
+                "gmb"
               ]
             },
-            "description": "Platform to connect. Headless connect supports facebook, threads, tiktok, reddit."
+            "description": "Platform to connect. All 13 platforms are supported (use `twitter` for X, `gmb` for Google Business)."
           }
         ],
         "requestBody": {
@@ -4613,6 +4622,97 @@
           },
           "500": {
             "$ref": "#/components/responses/ServerError"
+          }
+        }
+      },
+      "get": {
+        "summary": "Poll headless connection status",
+        "description": "Poll whether a headless connection finished, using the `state_token` embedded in the `connect_url` returned by `POST /social/connect/{platform}`. Useful when your app can't observe the `return_url` redirect (server-to-server, or the user closed the tab). Verifies the signed token and reports `connected` (with the new account), `pending`, or `expired`. Requires scope `social:read`.",
+        "operationId": "connectSocialAccountStatus",
+        "tags": [
+          "Social"
+        ],
+        "parameters": [
+          {
+            "name": "platform",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "For this GET, pass the `state_token` from the `connect_url` (NOT a platform name)."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Connection status",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [
+                        true
+                      ]
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "platform": {
+                          "type": "string"
+                        },
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "pending",
+                            "connected",
+                            "expired"
+                          ]
+                        },
+                        "expires_at": {
+                          "type": "string",
+                          "format": "date-time",
+                          "nullable": true
+                        },
+                        "account": {
+                          "type": "object",
+                          "nullable": true,
+                          "description": "Present when status is `connected`.",
+                          "properties": {
+                            "account_id": {
+                              "type": "integer"
+                            },
+                            "name": {
+                              "type": "string"
+                            },
+                            "username": {
+                              "type": "string"
+                            },
+                            "platform": {
+                              "type": "string"
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/RequestMeta"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
           }
         }
       }
