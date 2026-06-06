@@ -65,6 +65,7 @@
           "quickstart",
           "authentication",
           "ai-agents",
+          "mcp-server",
           "guides/webhooks",
           {
             "group": "Guides",

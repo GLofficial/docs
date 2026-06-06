@@ -1,0 +1,107 @@
+---
+title: "MCP"
+icon: "plug"
+description: "Connect SmartlyQ to Claude, Cursor, ChatGPT, and any MCP client — manage social media and generate content with natural language."
+---
+
+SmartlyQ ships a hosted **MCP (Model Context Protocol) server**. MCP is the open standard that lets AI assistants use external tools. With it, an AI agent can post to your socials, generate content, and read analytics on your SmartlyQ account — just by asking.
+
+<Info>
+**Server URL**
+
+```
+https://mcp.smartlyq.com/mcp
+```
+</Info>
+
+## Prerequisites
+
+- A SmartlyQ account on a **Pro plan or higher** (API access requires Pro+).
+- An API key (`sqk_live_...`) from the [Developer Dashboard](https://app.smartlyq.com/my/developer), with the scopes you need enabled (see [Scopes](#tool-scopes) below).
+- An MCP-capable client: **Claude Desktop, Claude Code, Cursor, ChatGPT, Windsurf**, or any MCP client.
+
+## Connect
+
+The server authenticates with your SmartlyQ API key, passed as a Bearer token.
+
+<CodeGroup>
+```jsonc Claude Desktop / Cursor (mcp config)
+{
+  "mcpServers": {
+    "smartlyq": {
+      "type": "http",
+      "url": "https://mcp.smartlyq.com/mcp",
+      "headers": { "Authorization": "Bearer sqk_live_xxxxxxxxxxxx" }
+    }
+  }
+}
+```
+
+```bash Claude Code (CLI)
+claude mcp add smartlyq \
+  --transport http https://mcp.smartlyq.com/mcp \
+  --header "Authorization: Bearer sqk_live_xxxxxxxxxxxx"
+```
+</CodeGroup>
+
+Once connected, try a prompt like:
+
+> "List my connected social accounts, then draft and schedule a launch post across all of them for tomorrow at 9am."
+
+## Available tools
+
+| Tool | What it does | Scope |
+|------|--------------|-------|
+| `list_social_accounts` | List connected social accounts | `social:read` |
+| `create_social_post` | Publish a post immediately | `social:write` |
+| `schedule_social_post` | Schedule a post for later | `social:write` |
+| `list_social_posts` | List posts (filter by status/platform) | `social:read` |
+| `retry_social_post` | Re-attempt publishing on given platforms | `social:write` |
+| `disconnect_social_account` | Disconnect a connected account | `social:write` |
+| `get_account_health` | Token validity/status of an account | `social:read` |
+| `get_account_reconnect_url` | URL to re-authenticate an account | `social:read` |
+| `pause_social_account` / `resume_social_account` | Pause/resume posting to an account | `social:write` |
+| `list_comments` | List comments on your posts | `social:read` |
+| `reply_to_comment` | Reply to a comment (posts to platform) | `social:write` |
+| `hide_comment` / `delete_comment` | Hide or delete a comment | `social:write` |
+| `list_conversations` | List DM conversations | `social:read` |
+| `list_messages` | List messages in a conversation | `social:read` |
+| `send_direct_message` | Send a DM (within platform window) | `social:write` |
+| `mark_conversation_read` | Mark a conversation read | `social:write` |
+| `list_webhooks` | List webhook subscriptions + available events | `webhooks:read` |
+| `create_webhook` | Subscribe an HTTPS URL to events | `webhooks:write` |
+| `delete_webhook` | Delete a webhook subscription | `webhooks:write` |
+| `get_analytics_overview` | Likes/impressions/clicks/views overview | `analytics:read` |
+| `rewrite_content` | Rewrite/rephrase text | `articles:write` |
+| `generate_article` | Generate a long-form article | `articles:write` |
+| `generate_image` | Generate an image | `images:write` |
+| `list_video_models` | List video models + options | `videos:read` |
+| `generate_video` | Generate a video | `videos:write` |
+| `text_to_speech` | Convert text to speech | `audio:write` |
+| `get_job` | Get an async job's status/result | `jobs:read` |
+| `list_jobs` | List async jobs | `jobs:read` |
+
+## Tool scopes
+
+Each tool requires the matching scope on your API key. Enable them in the [Developer Dashboard](https://app.smartlyq.com/my/developer). If a key lacks a scope, the tool returns:
+
+```
+SmartlyQ API error (HTTP 403) — code: INSUFFICIENT_SCOPE — API key lacks required scope: social:read
+```
+
+## Async generation
+
+Content generation tools (`generate_article`, `generate_image`, `generate_video`, `text_to_speech`) run asynchronously and return a **job id**. The agent should poll `get_job` until the job's status is `completed` to retrieve the result. See [Async jobs](/guides/async-jobs).
+
+## Webhooks
+
+Subscribe an HTTPS endpoint to events with `create_webhook` (or `POST /webhooks`) so your agent reacts to posts publishing, comments arriving, or jobs finishing. Deliveries are HMAC-signed and retried with backoff — see the full [Webhooks guide](/guides/webhooks) for the event list, signature verification, and retry policy.
+
+## Billing
+
+MCP calls are ordinary API calls under the hood, so the same [billing and credits](/guides/billing-and-credits) and [rate limits](/guides/rate-limiting) apply. The MCP layer adds no extra charges and grants no extra access — everything is governed by your API key.
+
+## Security
+
+- Treat your API key like a password. If it leaks, rotate it in the Developer Dashboard.
+- The server forwards your key to the SmartlyQ API per request and stores nothing.
