@@ -1,35 +1,34 @@
 # SmartlyQ API Documentation
 
-Official API documentation for [SmartlyQ](https://smartlyq.com) — built with [Mintlify](https://mintlify.com).
+The official developer documentation for the [SmartlyQ](https://smartlyq.com) API —
+one API to publish, manage, and analyze social media across every major platform,
+generate AI content, and drive it all from your own app or an AI agent.
 
-## Development
+📖 **Read the docs:** [docs.smartlyq.com](https://docs.smartlyq.com)
 
-Install the [Mintlify CLI](https://www.npmjs.com/package/mint) to preview locally:
+## What's here
 
-```bash
-npm i -g mint
-```
+- **Quickstart & Authentication** — get an API key and make your first call
+- **Platforms** — every supported social platform and exactly what the API can do on each
+- **Guides** — connecting accounts, workspaces, billing & credits, rate limits, async jobs, webhooks, errors
+- **API Reference** — all endpoints, generated from [`openapi.json`](openapi.json)
+- **MCP & AI Agents** — drive SmartlyQ from Claude, Cursor, ChatGPT, or any MCP client
+- **Pricing** — pay-as-you-go SmartlyQ Credits
 
-Run at the root of the docs directory:
+## Get started
 
-```bash
-mint dev
-```
+1. Create an account at [smartlyq.com](https://smartlyq.com)
+2. Grab an API key from the [Developer Dashboard](https://app.smartlyq.com/my/developer)
+3. Follow the [Quickstart](https://docs.smartlyq.com/quickstart)
 
-View your local preview at `http://localhost:3000`.
+## The spec
 
-## Publishing
-
-Changes are deployed automatically on push to `main` via the Mintlify GitHub app.
-
-## Troubleshooting
-
-- Dev environment not running: `mint update`
-- Page loads as 404: Ensure you're in a folder with a valid `docs.json`
-- OpenAPI issues: `mint openapi-check openapi.json`
+[`openapi.json`](openapi.json) is the single source of truth for the API surface.
+For machine/LLM consumption, the full docs index is also available at
+[docs.smartlyq.com/llms.txt](https://docs.smartlyq.com/llms.txt).
 
 ## Resources
 
-- [Mintlify docs](https://mintlify.com/docs)
 - [SmartlyQ Developer Dashboard](https://app.smartlyq.com/my/developer)
+- [MCP server](https://mcp.smartlyq.com/mcp)
 - [Support](mailto:support@smartlyq.com)
