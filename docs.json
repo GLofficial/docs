@@ -1,6 +1,6 @@
 {
   "$schema": "https://mintlify.com/docs.json",
-  "theme": "mint",
+  "theme": "maple",
   "name": "SmartlyQ",
   "colors": {
     "primary": "#4D8BF5",
@@ -90,7 +90,20 @@
         "tab": "Platforms",
         "icon": "globe",
         "pages": [
-          "platforms"
+          "platforms",
+          "platforms/facebook",
+          "platforms/instagram",
+          "platforms/twitter",
+          "platforms/linkedin",
+          "platforms/youtube",
+          "platforms/tiktok",
+          "platforms/threads",
+          "platforms/bluesky",
+          "platforms/pinterest",
+          "platforms/reddit",
+          "platforms/snapchat",
+          "platforms/tumblr",
+          "platforms/google-business"
         ]
       },
       {
