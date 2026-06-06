@@ -18,9 +18,11 @@
       "view",
       "chatgpt",
       "claude",
+      "perplexity",
+      "grok",
       "download-spec",
       {
-        "title": "llms.txt",
+        "title": "Full docs (llms.txt)",
         "description": "Full documentation index for LLMs and AI agents",
         "icon": "file-lines",
         "href": "/llms.txt"
@@ -54,6 +56,7 @@
     "tabs": [
       {
         "tab": "Documentation",
+        "icon": "rocket",
         "groups": [
           {
             "group": "Getting Started",
@@ -61,18 +64,6 @@
               "introduction",
               "quickstart",
               "authentication"
-            ]
-          },
-          {
-            "group": "Platforms",
-            "pages": [
-              "platforms"
-            ]
-          },
-          {
-            "group": "AI Agents (MCP)",
-            "pages": [
-              "ai-agents"
             ]
           },
           {
@@ -86,12 +77,211 @@
               "guides/webhooks",
               "guides/errors"
             ]
+          },
+          {
+            "group": "AI Agents (MCP)",
+            "pages": [
+              "ai-agents"
+            ]
           }
         ]
       },
       {
+        "tab": "Platforms",
+        "icon": "globe",
+        "pages": [
+          "platforms"
+        ]
+      },
+      {
         "tab": "API Reference",
-        "openapi": "openapi.json"
+        "icon": "code",
+        "openapi": "openapi.json",
+        "groups": [
+          {
+            "group": "Core",
+            "pages": [
+              {
+                "group": "Account",
+                "pages": [
+                  "GET /me",
+                  "GET /me/usage",
+                  "GET /me/balance"
+                ]
+              },
+              {
+                "group": "Jobs",
+                "pages": [
+                  "GET /jobs",
+                  "GET /jobs/{job_id}",
+                  "POST /jobs/{job_id}/cancel"
+                ]
+              },
+              {
+                "group": "Webhooks",
+                "pages": [
+                  "GET /webhooks",
+                  "POST /webhooks",
+                  "DELETE /webhooks/{id}"
+                ]
+              }
+            ]
+          },
+          {
+            "group": "AI Generation",
+            "pages": [
+              {
+                "group": "Articles",
+                "pages": [
+                  "POST /articles/generate",
+                  "GET /articles",
+                  "GET /articles/{article_id}",
+                  "DELETE /articles/{article_id}"
+                ]
+              },
+              {
+                "group": "Images",
+                "pages": [
+                  "POST /images/generate",
+                  "GET /images",
+                  "GET /images/{image_id}",
+                  "DELETE /images/{image_id}"
+                ]
+              },
+              {
+                "group": "Videos",
+                "pages": [
+                  "GET /videos/models",
+                  "POST /videos/generate",
+                  "GET /videos",
+                  "GET /videos/{video_id}",
+                  "DELETE /videos/{video_id}"
+                ]
+              },
+              {
+                "group": "Audio",
+                "pages": [
+                  "POST /audio/text-to-speech",
+                  "POST /audio/speech-to-text",
+                  "GET /audio/{audio_id}"
+                ]
+              },
+              {
+                "group": "Content",
+                "pages": [
+                  "POST /content/rewrite"
+                ]
+              }
+            ]
+          },
+          {
+            "group": "Social",
+            "pages": [
+              {
+                "group": "Accounts",
+                "pages": [
+                  "GET /social/accounts",
+                  "POST /social/connect/{platform}",
+                  "GET /social/accounts/{account_id}/health",
+                  "GET /social/accounts/{account_id}/reconnect-url",
+                  "POST /social/accounts/{account_id}/pause",
+                  "POST /social/accounts/{account_id}/resume",
+                  "DELETE /social/accounts/{account_id}"
+                ]
+              },
+              {
+                "group": "Posts",
+                "pages": [
+                  "POST /social/posts",
+                  "POST /social/posts/schedule",
+                  "GET /social/posts",
+                  "GET /social/posts/{post_id}",
+                  "PATCH /social/posts/{post_id}",
+                  "POST /social/posts/{post_id}/retry",
+                  "DELETE /social/posts/{post_id}"
+                ]
+              },
+              {
+                "group": "Analytics",
+                "pages": [
+                  "GET /analytics/overview",
+                  "GET /analytics/posts",
+                  "GET /analytics/accounts/{account_id}"
+                ]
+              },
+              {
+                "group": "Media",
+                "pages": [
+                  "POST /media/upload-url",
+                  "GET /media",
+                  "GET /media/{media_id}",
+                  "DELETE /media/{media_id}"
+                ]
+              },
+              {
+                "group": "Short URLs",
+                "pages": [
+                  "POST /urls/shorten",
+                  "GET /urls",
+                  "GET /urls/{url_id}",
+                  "GET /urls/{url_id}/stats",
+                  "DELETE /urls/{url_id}"
+                ]
+              }
+            ]
+          },
+          {
+            "group": "Inbox",
+            "pages": [
+              {
+                "group": "Comments",
+                "pages": [
+                  "GET /social/comments",
+                  "POST /social/comments/{comment_id}/reply",
+                  "POST /social/comments/{comment_id}/hide",
+                  "DELETE /social/comments/{comment_id}"
+                ]
+              },
+              {
+                "group": "Direct Messages",
+                "pages": [
+                  "GET /social/conversations",
+                  "GET /social/conversations/{conversation_id}/messages",
+                  "POST /social/conversations/{conversation_id}/messages",
+                  "POST /social/conversations/{conversation_id}/read"
+                ]
+              }
+            ]
+          },
+          {
+            "group": "AI Assistants",
+            "pages": [
+              {
+                "group": "AI Captain",
+                "pages": [
+                  "POST /captain/messages",
+                  "GET /captain/conversations",
+                  "GET /captain/conversations/{conversation_id}"
+                ]
+              },
+              {
+                "group": "Chatbots",
+                "pages": [
+                  "POST /chatbots",
+                  "GET /chatbots",
+                  "GET /chatbots/{id}",
+                  "PATCH /chatbots/{id}",
+                  "DELETE /chatbots/{id}",
+                  "POST /chatbots/{id}/train",
+                  "GET /chatbots/{id}/train-status",
+                  "POST /chatbots/{id}/messages",
+                  "GET /chatbots/{id}/conversations",
+                  "GET /chatbots/{id}/conversations/{conv_id}/messages"
+                ]
+              }
+            ]
+          }
+        ]
       }
     ]
   },
