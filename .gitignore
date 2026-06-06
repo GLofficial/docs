@@ -1,0 +1,18 @@
+# Never commit secrets or local env to this public repo
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+id_rsa*
+*.secret
+secrets.*
+credentials.*
+
+# Local tooling
+.DS_Store
+node_modules/
+.idea/
+.vscode/
