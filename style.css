@@ -1,0 +1,7 @@
+/* SmartlyQ docs — custom styles (auto-loaded by Mintlify). */
+
+/* Capability matrix: keep brand + status icons tidy and vertically centered. */
+table td .icon,
+table th .icon {
+  vertical-align: middle;
+}

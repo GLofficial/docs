@@ -8,23 +8,23 @@ SmartlyQ publishes to and manages every platform below through a single API. One
 ## At a glance
 
 | Platform | Publish | Analytics | Comments | Direct messages | Headless connect |
-|----------|:------:|:---------:|:--------:|:---------------:|:---------------:|
-| Facebook | ✅ | ✅ | ✅ | ✅ | ✅ |
-| Instagram | ✅ | ✅ | ✅ | ✅ | — |
-| X (Twitter) | ✅ | — | ✅ | ✅ | — |
-| LinkedIn | ✅ | — | ✅ | — | — |
-| YouTube | ✅ | ✅ | ✅ | — | — |
-| TikTok | ✅ | ✅ | ✅ | — | ✅ |
-| Threads | ✅ | ✅ | ✅ | — | ✅ |
-| Bluesky | ✅ | — | ✅ | — | — |
-| Pinterest | ✅ | — | ✅¹ | — | — |
-| Reddit | ✅ | — | ✅ | ✅ | ✅ |
-| Snapchat | ✅ | — | — | — | — |
-| Tumblr | ✅ | — | — | — | — |
-| Google Business | ✅ | ² | — | — | — |
+|----------|:--:|:--:|:--:|:--:|:--:|
+| <Icon icon="facebook" iconType="brands" /> **Facebook** | <Icon icon="check" color="#16a34a" /> | <Icon icon="check" color="#16a34a" /> | <Icon icon="check" color="#16a34a" /> | <Icon icon="check" color="#16a34a" /> | <Icon icon="check" color="#16a34a" /> |
+| <Icon icon="instagram" iconType="brands" /> **Instagram** | <Icon icon="check" color="#16a34a" /> | <Icon icon="check" color="#16a34a" /> | <Icon icon="check" color="#16a34a" /> | <Icon icon="check" color="#16a34a" /> | <Icon icon="minus" color="#cbd5e1" /> |
+| <Icon icon="x-twitter" iconType="brands" /> **X (Twitter)** | <Icon icon="check" color="#16a34a" /> | <Icon icon="minus" color="#cbd5e1" /> | <Icon icon="check" color="#16a34a" /> | <Icon icon="check" color="#16a34a" /> | <Icon icon="minus" color="#cbd5e1" /> |
+| <Icon icon="linkedin" iconType="brands" /> **LinkedIn** | <Icon icon="check" color="#16a34a" /> | <Icon icon="minus" color="#cbd5e1" /> | <Icon icon="check" color="#16a34a" /> | <Icon icon="minus" color="#cbd5e1" /> | <Icon icon="minus" color="#cbd5e1" /> |
+| <Icon icon="youtube" iconType="brands" /> **YouTube** | <Icon icon="check" color="#16a34a" /> | <Icon icon="check" color="#16a34a" /> | <Icon icon="check" color="#16a34a" /> | <Icon icon="minus" color="#cbd5e1" /> | <Icon icon="minus" color="#cbd5e1" /> |
+| <Icon icon="tiktok" iconType="brands" /> **TikTok** | <Icon icon="check" color="#16a34a" /> | <Icon icon="check" color="#16a34a" /> | <Icon icon="check" color="#16a34a" /> | <Icon icon="minus" color="#cbd5e1" /> | <Icon icon="check" color="#16a34a" /> |
+| <Icon icon="threads" iconType="brands" /> **Threads** | <Icon icon="check" color="#16a34a" /> | <Icon icon="check" color="#16a34a" /> | <Icon icon="check" color="#16a34a" /> | <Icon icon="minus" color="#cbd5e1" /> | <Icon icon="check" color="#16a34a" /> |
+| <Icon icon="bluesky" iconType="brands" /> **Bluesky** | <Icon icon="check" color="#16a34a" /> | <Icon icon="minus" color="#cbd5e1" /> | <Icon icon="check" color="#16a34a" /> | <Icon icon="minus" color="#cbd5e1" /> | <Icon icon="minus" color="#cbd5e1" /> |
+| <Icon icon="pinterest" iconType="brands" /> **Pinterest** | <Icon icon="check" color="#16a34a" /> | <Icon icon="minus" color="#cbd5e1" /> | <Icon icon="check" color="#16a34a" /> ¹ | <Icon icon="minus" color="#cbd5e1" /> | <Icon icon="minus" color="#cbd5e1" /> |
+| <Icon icon="reddit" iconType="brands" /> **Reddit** | <Icon icon="check" color="#16a34a" /> | <Icon icon="minus" color="#cbd5e1" /> | <Icon icon="check" color="#16a34a" /> | <Icon icon="check" color="#16a34a" /> | <Icon icon="check" color="#16a34a" /> |
+| <Icon icon="snapchat" iconType="brands" /> **Snapchat** | <Icon icon="check" color="#16a34a" /> | <Icon icon="minus" color="#cbd5e1" /> | <Icon icon="minus" color="#cbd5e1" /> | <Icon icon="minus" color="#cbd5e1" /> | <Icon icon="minus" color="#cbd5e1" /> |
+| <Icon icon="tumblr" iconType="brands" /> **Tumblr** | <Icon icon="check" color="#16a34a" /> | <Icon icon="minus" color="#cbd5e1" /> | <Icon icon="minus" color="#cbd5e1" /> | <Icon icon="minus" color="#cbd5e1" /> | <Icon icon="minus" color="#cbd5e1" /> |
+| <Icon icon="google" iconType="brands" /> **Google Business** | <Icon icon="check" color="#16a34a" /> | <Icon icon="minus" color="#cbd5e1" /> ² | <Icon icon="minus" color="#cbd5e1" /> | <Icon icon="minus" color="#cbd5e1" /> | <Icon icon="minus" color="#cbd5e1" /> |
 
 <Info>
-✅ supported · — not available through the API. <br />
+<Icon icon="check" color="#16a34a" /> supported &nbsp;·&nbsp; <Icon icon="minus" color="#cbd5e1" /> not available through the API.<br />
 ¹ Pinterest comments support fetch + reply, but **not** hide or delete. <br />
 ² Google Business per-post analytics were deprecated by Google; location-level metrics aren't exposed here.
 </Info>
@@ -34,153 +34,7 @@ SmartlyQ publishes to and manages every platform below through a single API. One
 
 ## Platform details
 
-<AccordionGroup>
-
-<Accordion title="Facebook" icon="facebook">
-| | |
-|---|---|
-| **Caption limit** | 63,206 characters |
-| **Post types** | Feed posts (text, link, image, video) |
-| **Capabilities** | Publish · Analytics · Comments · Direct messages |
-| **Connect** | Headless (`POST /v1/social/connect/facebook`) or dashboard |
-| **Tokens** | Page tokens are effectively permanent — no refresh needed |
-
-DMs use Meta's **24-hour messaging window**. Comments support full fetch / reply / hide / delete.
-</Accordion>
-
-<Accordion title="Instagram" icon="instagram">
-| | |
-|---|---|
-| **Caption limit** | 2,200 characters |
-| **Post types** | Feed, Carousel, Reels, Stories |
-| **Capabilities** | Publish · Analytics · Comments · Direct messages |
-| **Connect** | Dashboard |
-| **Tokens** | ~60 days, auto-refreshed |
-
-**Requires media** — a text-only post is rejected. DMs use Meta's **24-hour messaging window**.
-</Accordion>
-
-<Accordion title="X (Twitter)" icon="x-twitter">
-| | |
-|---|---|
-| **Caption limit** | 280 characters |
-| **Post types** | Text, image, video |
-| **Capabilities** | Publish · Comments · Direct messages |
-| **Connect** | Dashboard |
-| **Tokens** | ~2 hours, auto-refreshed — reconnect if an account turns unhealthy |
-
-No analytics via the API. Comments (replies) support full fetch / reply / hide / delete.
-</Accordion>
-
-<Accordion title="LinkedIn" icon="linkedin">
-| | |
-|---|---|
-| **Caption limit** | 3,000 characters |
-| **Post types** | Text, image, video, carousel, document (PDF), GIF |
-| **Capabilities** | Publish · Comments |
-| **Connect** | Dashboard |
-| **Tokens** | ~60 days |
-
-Both **personal profiles and organization pages** are supported. Some analytics require organization-admin scope; if it's missing the account still connects and posts normally.
-</Accordion>
-
-<Accordion title="YouTube" icon="youtube">
-| | |
-|---|---|
-| **Caption limit** | 5,000 characters (description) |
-| **Post types** | Standard video, Shorts, Community posts |
-| **Capabilities** | Publish · Analytics · Comments |
-| **Connect** | Dashboard |
-| **Tokens** | ~1 hour, auto-refreshed |
-</Accordion>
-
-<Accordion title="TikTok" icon="tiktok">
-| | |
-|---|---|
-| **Caption limit** | 2,200 characters |
-| **Post types** | Video, photo carousel |
-| **Capabilities** | Publish · Analytics · Comments |
-| **Connect** | Headless (`POST /v1/social/connect/tiktok`) or dashboard |
-| **Tokens** | ~24 hours, auto-refreshed |
-</Accordion>
-
-<Accordion title="Threads" icon="threads">
-| | |
-|---|---|
-| **Caption limit** | 500 characters |
-| **Post types** | Text, image, video, carousel |
-| **Capabilities** | Publish · Analytics · Comments |
-| **Connect** | Headless (`POST /v1/social/connect/threads`) or dashboard |
-| **Tokens** | ~60 days |
-</Accordion>
-
-<Accordion title="Bluesky" icon="bluesky">
-| | |
-|---|---|
-| **Caption limit** | 300 characters |
-| **Post types** | Text, image, video |
-| **Capabilities** | Publish · Comments |
-| **Connect** | Dashboard (app password) |
-| **Tokens** | Very short-lived (~15 min), auto-refreshed |
-</Accordion>
-
-<Accordion title="Pinterest" icon="pinterest">
-| | |
-|---|---|
-| **Caption limit** | 800 characters (description) |
-| **Post types** | Pins, video pins |
-| **Capabilities** | Publish · Comments (fetch + reply only) |
-| **Connect** | Dashboard |
-| **Tokens** | ~30 days |
-
-Pinterest comments **cannot be hidden or deleted** via the API — those operations return `not_supported`.
-</Accordion>
-
-<Accordion title="Reddit" icon="reddit">
-| | |
-|---|---|
-| **Caption limit** | 40,000 characters (self-text) |
-| **Post types** | Text posts, link posts |
-| **Capabilities** | Publish · Comments · Direct messages |
-| **Connect** | Headless (`POST /v1/social/connect/reddit`) or dashboard |
-| **Tokens** | ~1 hour, auto-refreshed |
-</Accordion>
-
-<Accordion title="Snapchat" icon="snapchat">
-| | |
-|---|---|
-| **Caption limit** | Not length-checked (Stories carry no caption) |
-| **Post types** | Stories, Spotlight |
-| **Capabilities** | Publish |
-| **Connect** | Dashboard |
-| **Tokens** | ~1 hour, auto-refreshed |
-
-Requires a Snapchat Public Profile. No comments or DM inbox.
-</Accordion>
-
-<Accordion title="Tumblr" icon="tumblr">
-| | |
-|---|---|
-| **Caption limit** | No fixed limit |
-| **Post types** | Text, image |
-| **Capabilities** | Publish |
-| **Connect** | Dashboard |
-| **Tokens** | ~42 min, auto-refreshed |
-</Accordion>
-
-<Accordion title="Google Business" icon="google">
-| | |
-|---|---|
-| **Caption limit** | 1,500 characters |
-| **Post types** | Location posts (text + single image) |
-| **Capabilities** | Publish |
-| **Connect** | Dashboard |
-| **Tokens** | ~1 hour, auto-refreshed |
-
-Publishing only — no comments or DM inbox. Per-post analytics were deprecated by Google.
-</Accordion>
-
-</AccordionGroup>
+Every platform has its own page in the sidebar — pick one for its caption limit, post types, capabilities, connect method, and token notes.
 
 ## Media
 
