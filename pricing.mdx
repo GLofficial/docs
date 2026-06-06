@@ -1,0 +1,63 @@
+---
+title: "Pricing"
+icon: "tag"
+description: "Pay-as-you-go API pricing with prepaid SmartlyQ Credits — only pay for what you use."
+---
+
+The SmartlyQ API is **pay-as-you-go**. There are no API plan tiers — you top up a prepaid wallet of **SmartlyQ Credits (SQC)**, and each request deducts credits for the AI resources it actually uses. Build and test for free in sandbox, then switch to a live key when you ship.
+
+<CardGroup cols={3}>
+<Card title="Free to test" icon="flask">
+Build against the full API with a `sqk_test_` key — **no credits charged**.
+</Card>
+<Card title="Pay per request" icon="bolt">
+Live calls deduct SQC based on the model, tokens, and operation type. No subscription for API access.
+</Card>
+<Card title="Top up anytime" icon="wallet">
+Add credits in packages from the Developer Dashboard, or turn on auto-recharge.
+</Card>
+</CardGroup>
+
+## Credit packages
+
+Top up your Developer wallet from the [Developer Dashboard](https://app.smartlyq.com/my/developer):
+
+| Package | Price |
+|---------|-------|
+| 250 SQC | €5 |
+| 750 SQC | €15 |
+| 3,000 SQC | €60 |
+| 7,500 SQC | €150 |
+
+<Tip>Enable **auto-recharge** to keep your wallet funded automatically, so requests never fail for a low balance.</Tip>
+
+## What a request costs
+
+Credit cost per request depends on:
+
+1. **AI model used** — larger, more capable models cost more
+2. **Token count** — input + output tokens consumed
+3. **Operation type** — text, image, video, audio, or presentations
+
+A small minimum charge applies per operation type:
+
+| Operation type | Minimum SQC |
+|----------------|-------------|
+| Text generation | 1 |
+| Image generation | 2 |
+| Audio (TTS/STT) | 1 |
+| Video generation | varies |
+| Presentations | 1 |
+
+Read-only calls — listing posts, fetching analytics, managing accounts — **don't consume credits**. Generation and publishing actions do.
+
+## Track your spend
+
+Check your wallet balance any time:
+
+```bash
+curl https://api.smartlyq.com/v1/me/balance \
+  -H "Authorization: Bearer sqk_live_xxxxxxxxxxxx"
+```
+
+For how the wallet, per-request deductions, and low-balance errors work in detail, see [Billing & Credits](/guides/billing-and-credits).
