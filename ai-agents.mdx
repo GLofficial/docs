@@ -1,122 +1,43 @@
 ---
-title: "MCP Server (AI Agents)"
+title: "AI Agents"
 icon: "robot"
-description: "Connect SmartlyQ to Claude, Cursor, ChatGPT, and any MCP client — manage social media and generate content with natural language."
+description: "Every way to drive SmartlyQ from an AI agent or LLM — MCP, llms.txt, the per-page AI menu, and the REST API."
 ---
 
-SmartlyQ ships a hosted **MCP (Model Context Protocol) server**. MCP is the open standard that lets AI assistants use external tools. With it, an AI agent can post to your socials, generate content, and read analytics on your SmartlyQ account — just by asking.
+SmartlyQ is built to be driven by AI. Whether you're wiring up an autonomous agent, an assistant, or a coding tool, there are four ways to connect — pick the one that fits your client.
 
-<Info>
-**Server URL**
+<CardGroup cols={2}>
 
-```
-https://mcp.smartlyq.com/mcp
-```
-</Info>
+<Card title="MCP Server" icon="plug" href="/mcp-server">
+The hosted **Model Context Protocol** server. Connect Claude, Cursor, ChatGPT, or any MCP client and let an agent post, generate content, and read analytics with natural language. **Start here for most agents.**
+</Card>
 
-## Prerequisites
+<Card title="Use these docs in your AI" icon="file-lines" href="/llms.txt">
+A machine-readable index of the entire documentation at **`/llms.txt`**. Paste it (or the `Open in ChatGPT/Claude` links at the top of any page) so an assistant can answer questions against the real, current docs.
+</Card>
 
-- A SmartlyQ account on a **Pro plan or higher** (API access requires Pro+).
-- An API key (`sqk_live_...`) from the [Developer Dashboard](https://app.smartlyq.com/my/developer), with the scopes you need enabled (see [Scopes](#tool-scopes) below).
-- An MCP-capable client: **Claude Desktop, Claude Code, Cursor, ChatGPT, Windsurf**, or any MCP client.
+<Card title="REST API" icon="code" href="/quickstart">
+Every capability is a plain HTTPS endpoint with an `sqk_live_` Bearer key. Agents that can't speak MCP can call the API directly — see the [API Reference](/api-reference).
+</Card>
 
-## Connect
+<Card title="Per-page AI actions" icon="sparkles">
+Every page has a **Copy page** button and an **Open ▾** menu (ChatGPT, Claude, Perplexity, Grok, Cursor, VS Code). Send any page straight into your assistant to ask questions about it.
+</Card>
 
-The server authenticates with your SmartlyQ API key, passed as a Bearer token.
+</CardGroup>
 
-<CodeGroup>
-```jsonc Claude Desktop / Cursor (mcp config)
-{
-  "mcpServers": {
-    "smartlyq": {
-      "type": "http",
-      "url": "https://mcp.smartlyq.com/mcp",
-      "headers": { "Authorization": "Bearer sqk_live_xxxxxxxxxxxx" }
-    }
-  }
-}
-```
+## Which one should I use?
 
-```bash Claude Code (CLI)
-claude mcp add smartlyq \
-  --transport http https://mcp.smartlyq.com/mcp \
-  --header "Authorization: Bearer sqk_live_xxxxxxxxxxxx"
-```
-</CodeGroup>
+| You're building… | Use |
+|------------------|-----|
+| An agent in Claude, Cursor, ChatGPT, Windsurf | **[MCP Server](/mcp-server)** — tools are pre-wired |
+| A custom backend / your own agent loop | **[REST API](/quickstart)** with an API key |
+| An assistant that answers docs questions | **[llms.txt](/llms.txt)** + the per-page AI menu |
 
-Once connected, try a prompt like:
+## Authentication is the same everywhere
 
-> "List my connected social accounts, then draft and schedule a launch post across all of them for tomorrow at 9am."
+Whichever path you take, access is governed by a single **API key** and its [scopes](/authentication). The MCP server, the REST API, and any SDK all forward that key — there's no separate agent credential to manage, and the same [billing](/guides/billing-and-credits) and [rate limits](/guides/rate-limiting) apply.
 
-## Available tools
-
-| Tool | What it does | Scope |
-|------|--------------|-------|
-| `list_social_accounts` | List connected social accounts | `social:read` |
-| `create_social_post` | Publish a post immediately | `social:write` |
-| `schedule_social_post` | Schedule a post for later | `social:write` |
-| `list_social_posts` | List posts (filter by status/platform) | `social:read` |
-| `retry_social_post` | Re-attempt publishing on given platforms | `social:write` |
-| `disconnect_social_account` | Disconnect a connected account | `social:write` |
-| `get_account_health` | Token validity/status of an account | `social:read` |
-| `get_account_reconnect_url` | URL to re-authenticate an account | `social:read` |
-| `pause_social_account` / `resume_social_account` | Pause/resume posting to an account | `social:write` |
-| `list_comments` | List comments on your posts | `social:read` |
-| `reply_to_comment` | Reply to a comment (posts to platform) | `social:write` |
-| `hide_comment` / `delete_comment` | Hide or delete a comment | `social:write` |
-| `list_conversations` | List DM conversations | `social:read` |
-| `list_messages` | List messages in a conversation | `social:read` |
-| `send_direct_message` | Send a DM (within platform window) | `social:write` |
-| `mark_conversation_read` | Mark a conversation read | `social:write` |
-| `list_webhooks` | List webhook subscriptions + available events | `webhooks:read` |
-| `create_webhook` | Subscribe an HTTPS URL to events | `webhooks:write` |
-| `delete_webhook` | Delete a webhook subscription | `webhooks:write` |
-| `get_analytics_overview` | Likes/impressions/clicks/views overview | `analytics:read` |
-| `rewrite_content` | Rewrite/rephrase text | `articles:write` |
-| `generate_article` | Generate a long-form article | `articles:write` |
-| `generate_image` | Generate an image | `images:write` |
-| `list_video_models` | List video models + options | `videos:read` |
-| `generate_video` | Generate a video | `videos:write` |
-| `text_to_speech` | Convert text to speech | `audio:write` |
-| `get_job` | Get an async job's status/result | `jobs:read` |
-| `list_jobs` | List async jobs | `jobs:read` |
-
-## Tool scopes
-
-Each tool requires the matching scope on your API key. Enable them in the [Developer Dashboard](https://app.smartlyq.com/my/developer). If a key lacks a scope, the tool returns:
-
-```
-SmartlyQ API error (HTTP 403) — code: INSUFFICIENT_SCOPE — API key lacks required scope: social:read
-```
-
-## Async generation
-
-Content generation tools (`generate_article`, `generate_image`, `generate_video`, `text_to_speech`) run asynchronously and return a **job id**. The agent should poll `get_job` until the job's status is `completed` to retrieve the result. See [Async jobs](/guides/async-jobs).
-
-## Webhooks
-
-Subscribe an HTTPS endpoint to events with `create_webhook` (or `POST /webhooks`). Deliveries are an HMAC-SHA256 signed POST of the JSON payload, with the signature in the `X-SmartlyQ-Signature: t=<timestamp>,v1=<hex>` header and the event name in `X-SmartlyQ-Event`. Failed deliveries retry with exponential backoff and are dead-lettered after several attempts.
-
-Available events:
-
-| Event | Fires when |
-|-------|-----------|
-| `post.published` | A post published successfully to all targets |
-| `post.partial` | A post published to some targets but failed on others |
-| `post.failed` | A post failed on all targets |
-| `account.connected` / `account.disconnected` | An account is connected / removed |
-| `account.token_expired` | An account's token expired and needs reconnect |
-| `comment.received` | A new comment arrived on a post |
-| `message.received` | A new direct message arrived |
-| `job.completed` / `job.failed` | An async generation job finished |
-
-Webhooks are workspace-scoped (max 10 per workspace) and the URL must be a public HTTPS endpoint. The signing `secret` is returned once, at creation.
-
-## Billing
-
-MCP calls are ordinary API calls under the hood, so the same [billing and credits](/guides/billing-and-credits) and [rate limits](/guides/rate-limiting) apply. The MCP layer adds no extra charges and grants no extra access — everything is governed by your API key.
-
-## Security
-
-- Treat your API key like a password. If it leaks, rotate it in the Developer Dashboard.
-- The server forwards your key to the SmartlyQ API per request and stores nothing.
+<Tip>
+New to the API? Start with the **[Quickstart](/quickstart)** to get a key and make your first call, then point your agent at the **[MCP Server](/mcp-server)**.
+</Tip>
