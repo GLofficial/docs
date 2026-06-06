@@ -64,6 +64,12 @@
             ]
           },
           {
+            "group": "Platforms",
+            "pages": [
+              "platforms"
+            ]
+          },
+          {
             "group": "AI Agents (MCP)",
             "pages": [
               "ai-agents"
@@ -72,6 +78,7 @@
           {
             "group": "Guides",
             "pages": [
+              "guides/connecting-accounts",
               "guides/workspaces",
               "guides/billing-and-credits",
               "guides/rate-limiting",

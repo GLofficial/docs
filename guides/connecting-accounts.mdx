@@ -1,0 +1,77 @@
+---
+title: "Connecting Accounts"
+description: "Connect social accounts to SmartlyQ and keep them healthy."
+---
+
+Before you can publish, a social account has to be connected to a [workspace](/guides/workspaces). There are two ways to connect, and a small set of endpoints to keep accounts healthy afterward.
+
+## 1. Connect from the dashboard (all platforms)
+
+The simplest path — and the only one for most platforms — is the [Developer Dashboard](https://app.smartlyq.com/my/developer): open **Social Accounts**, choose a platform, and complete the OAuth flow. The account immediately becomes available to the API and appears in `GET /v1/social/accounts`.
+
+## 2. Headless connect (your own UI)
+
+For **Facebook, Threads, TikTok, and Reddit**, you can start the connection from your own app without sending the user through the SmartlyQ dashboard.
+
+<Steps>
+<Step title="Request a connect link">
+Call `POST /v1/social/connect/{platform}` with scope `social:write`. Pass an optional `return_url` to send the user back to your app afterward.
+
+```bash
+curl -X POST https://api.smartlyq.com/v1/social/connect/facebook \
+  -H "Authorization: Bearer sqk_live_xxxxxxxxxxxx" \
+  -H "Content-Type: application/json" \
+  -d '{ "return_url": "https://yourapp.com/connected" }'
+```
+
+```json Response (201)
+{
+  "success": true,
+  "data": {
+    "platform": "facebook",
+    "connect_url": "https://www.facebook.com/v21.0/dialog/oauth?...",
+    "expires_at": "2026-06-06T12:15:00Z"
+  }
+}
+```
+</Step>
+
+<Step title="Send the user to connect_url">
+Open `connect_url` in a browser (redirect, popup, or new tab). The link is **single-use and expires in 15 minutes**. The user authorizes on the platform.
+</Step>
+
+<Step title="The account connects automatically">
+When the user approves, the platform's OAuth callback completes the connection on SmartlyQ's side and — if you supplied `return_url` — redirects the user back to your app. The new account now shows up in `GET /v1/social/accounts`.
+</Step>
+</Steps>
+
+<Warning>
+Other platforms (Instagram, LinkedIn, YouTube, etc.) are connected from the dashboard only. Calling `POST /v1/social/connect/{platform}` with an unsupported platform returns **422 `UNSUPPORTED_PLATFORM`** (the response lists the supported ones). A platform whose OAuth app isn't configured returns **422 `PROVIDER_NOT_CONFIGURED`**.
+</Warning>
+
+## Managing connected accounts
+
+| Action | Endpoint |
+|--------|----------|
+| List accounts | `GET /v1/social/accounts` |
+| Check token health | `GET /v1/social/accounts/{id}/health` |
+| Get a re-auth link | `GET /v1/social/accounts/{id}/reconnect-url` |
+| Pause / resume posting | `POST /v1/social/accounts/{id}/pause` · `/resume` |
+| Disconnect | `DELETE /v1/social/accounts/{id}` |
+
+### Reconnecting an account
+
+Access tokens expire (lifetimes vary by platform — some in hours, some in months). SmartlyQ refreshes them automatically, but if an account's health turns **unhealthy** — or you receive an `account.token_expired` [webhook](/guides/webhooks) — get a reconnect link and send the user through it:
+
+```bash
+curl https://api.smartlyq.com/v1/social/accounts/123/reconnect-url \
+  -H "Authorization: Bearer sqk_live_xxxxxxxxxxxx"
+```
+
+The user re-authorizes and the same account resumes — no new account is created, and scheduled posts keep their target.
+
+<Tip>
+Pausing an account (`/pause`) skips it during publishing **without** disconnecting it — useful for temporarily taking a brand offline. Disconnecting is irreversible; the user must reconnect to use it again.
+</Tip>
+
+See [Platforms](/platforms) for which platforms support headless connect, comments, DMs, and analytics.

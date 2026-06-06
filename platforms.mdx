@@ -1,0 +1,68 @@
+---
+title: "Platforms"
+description: "Which social platforms SmartlyQ supports, and what each one can do through the API."
+---
+
+## Supported platforms
+
+SmartlyQ publishes to and manages the platforms below through a single API. The same `POST /v1/social/posts` call fans a post out to any combination of them — you reference connected accounts by `account_ids` and list the target `platforms`.
+
+| Platform | Publish | Analytics | Comments | Direct messages | Headless connect |
+|----------|:------:|:---------:|:--------:|:---------------:|:---------------:|
+| Facebook | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Instagram | ✅ | ✅ | ✅ | ✅ | — |
+| X (Twitter) | ✅ | — | ✅ | ✅ | — |
+| LinkedIn | ✅ | — | ✅ | — | — |
+| YouTube | ✅ | ✅ | ✅ | — | — |
+| TikTok | ✅ | ✅ | ✅ | — | ✅ |
+| Threads | ✅ | ✅ | ✅ | — | ✅ |
+| Bluesky | ✅ | — | ✅ | — | — |
+| Pinterest | ✅ | — | ✅ ¹ | — | — |
+| Reddit | ✅ | — | ✅ | — | ✅ |
+| Snapchat | ✅ | — | — | — | — |
+| Tumblr | ✅ | — | — | — | — |
+| Google Business | ✅ | ² | — | — | — |
+
+<Info>
+**Legend** — ✅ supported · — not available through the API. <br />
+¹ Pinterest comments support fetch + reply, but **not** hide or delete. <br />
+² Google Business per-post analytics were deprecated by Google; location-level metrics are not exposed here.
+</Info>
+
+- **Headless connect** means you can connect a *new* account from your own UI via `POST /v1/social/connect/{platform}`. Every other platform is connected from the [Developer Dashboard](https://app.smartlyq.com/my/developer). See [Connecting accounts](/guides/connecting-accounts).
+- **Direct messages** are actively synced for Facebook, Instagram, and X. Meta platforms (Facebook/Instagram) enforce a **24-hour reply window** — you can only message a user within 24 hours of their last message.
+
+## Content limits to keep in mind
+
+These are the platforms' own caption/text limits. Posts that exceed them are rejected by the platform at publish time, so trim before you send:
+
+| Platform | Text / caption limit |
+|----------|----------------------|
+| X (Twitter) | 280 characters |
+| Instagram | 2,200 characters |
+| TikTok | 2,200 characters |
+| LinkedIn | 3,000 characters |
+| YouTube | 5,000 characters (description) |
+| Facebook | 63,206 characters |
+
+Platforms not listed (Bluesky, Threads, Pinterest, Reddit, Snapchat, Tumblr, Google Business) have no fixed text limit enforced by SmartlyQ — follow the platform's own guidance.
+
+## Media
+
+Attach media to a post with `media_urls` (publicly reachable HTTPS URLs), or upload to SmartlyQ storage first via `POST /v1/media/upload-url`.
+
+| | |
+|---|---|
+| **Images** | `jpg` · `jpeg` · `png` · `gif` · `webp` — up to **10 MB** |
+| **Video** | `mp4` · `mov` · `m4v` · `webm` — up to **100 MB** |
+
+- **Instagram requires media** — a text-only post will be rejected.
+- Stories / Reels / Shorts: Instagram (feed, carousel, Reels, Stories), YouTube (Shorts + standard), TikTok (photo + video), Snapchat (Stories + Spotlight), LinkedIn (image, video, carousel, document) are detected automatically from the media you attach.
+
+## Per-platform notes
+
+- **LinkedIn** — both personal profiles and organization pages are supported. Some analytics require organization-admin scope; if it's missing, the account still connects and posts normally.
+- **X (Twitter)** — tokens are short-lived (~2 hours); SmartlyQ refreshes them automatically. If an account shows unhealthy, use its [reconnect URL](/guides/connecting-accounts#reconnecting-an-account).
+- **Bluesky** — connected with an app password; tokens are very short-lived and refreshed for you.
+- **Google Business & Tumblr** — publishing only (no comments or DM inbox).
+- Token lifetimes vary widely by platform; SmartlyQ keeps them refreshed. Check any account's status with `GET /v1/social/accounts/{id}/health`.

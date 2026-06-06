@@ -2676,7 +2676,30 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [
+                        true
+                      ]
+                    },
+                    "data": {
+                      "type": "null",
+                      "description": "No payload on success."
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/RequestMeta"
+                    }
+                  }
+                },
+                "example": {
+                  "success": true,
+                  "data": null,
+                  "meta": {
+                    "request_id": "req_abc123",
+                    "timestamp": "2026-03-01T16:00:00Z"
+                  }
                 }
               }
             }
@@ -2723,7 +2746,58 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [
+                        true
+                      ]
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "integer"
+                        },
+                        "platform": {
+                          "type": "string"
+                        },
+                        "account_name": {
+                          "type": "string"
+                        },
+                        "status": {
+                          "type": "string",
+                          "description": "connected | expired | error"
+                        },
+                        "token_expired": {
+                          "type": "boolean"
+                        },
+                        "validity_days": {
+                          "type": "integer",
+                          "description": "Days until the token expires."
+                        }
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/RequestMeta"
+                    }
+                  }
+                },
+                "example": {
+                  "success": true,
+                  "data": {
+                    "id": 123,
+                    "platform": "facebook",
+                    "account_name": "My Business Page",
+                    "status": "connected",
+                    "token_expired": false,
+                    "validity_days": 45
+                  },
+                  "meta": {
+                    "request_id": "req_abc123",
+                    "timestamp": "2026-03-01T16:00:00Z"
+                  }
                 }
               }
             }
@@ -2767,7 +2841,37 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [
+                        true
+                      ]
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "reconnect_url": {
+                          "type": "string",
+                          "format": "uri"
+                        }
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/RequestMeta"
+                    }
+                  }
+                },
+                "example": {
+                  "success": true,
+                  "data": {
+                    "reconnect_url": "https://app.smartlyq.com/connect/facebook?token=..."
+                  },
+                  "meta": {
+                    "request_id": "req_abc123",
+                    "timestamp": "2026-03-01T16:00:00Z"
+                  }
                 }
               }
             }
@@ -2811,7 +2915,40 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [
+                        true
+                      ]
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "integer"
+                        },
+                        "paused": {
+                          "type": "boolean"
+                        }
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/RequestMeta"
+                    }
+                  }
+                },
+                "example": {
+                  "success": true,
+                  "data": {
+                    "id": 123,
+                    "paused": true
+                  },
+                  "meta": {
+                    "request_id": "req_abc123",
+                    "timestamp": "2026-03-01T16:00:00Z"
+                  }
                 }
               }
             }
@@ -2858,7 +2995,40 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [
+                        true
+                      ]
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "integer"
+                        },
+                        "paused": {
+                          "type": "boolean"
+                        }
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/RequestMeta"
+                    }
+                  }
+                },
+                "example": {
+                  "success": true,
+                  "data": {
+                    "id": 123,
+                    "paused": false
+                  },
+                  "meta": {
+                    "request_id": "req_abc123",
+                    "timestamp": "2026-03-01T16:00:00Z"
+                  }
                 }
               }
             }
@@ -2923,7 +3093,77 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [
+                        true
+                      ]
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "success": {
+                          "type": "boolean"
+                        },
+                        "retried": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          },
+                          "description": "Platforms that were retried."
+                        },
+                        "final_status": {
+                          "type": "string",
+                          "description": "published | partial | failed"
+                        },
+                        "platform_results": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "success": {
+                                "type": "boolean"
+                              },
+                              "error": {
+                                "type": "string",
+                                "nullable": true
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/RequestMeta"
+                    }
+                  }
+                },
+                "example": {
+                  "success": true,
+                  "data": {
+                    "success": true,
+                    "retried": [
+                      "facebook",
+                      "instagram"
+                    ],
+                    "final_status": "published",
+                    "platform_results": [
+                      {
+                        "success": true,
+                        "error": null
+                      },
+                      {
+                        "success": true,
+                        "error": null
+                      }
+                    ]
+                  },
+                  "meta": {
+                    "request_id": "req_abc123",
+                    "timestamp": "2026-03-01T16:00:00Z"
+                  }
                 }
               }
             }
@@ -3006,7 +3246,148 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [
+                        true
+                      ]
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "posts": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "integer"
+                              },
+                              "post_id": {
+                                "type": "integer"
+                              },
+                              "remote_post_id": {
+                                "type": "string"
+                              },
+                              "content": {
+                                "type": "string"
+                              },
+                              "permalink": {
+                                "type": "string",
+                                "nullable": true
+                              },
+                              "platform": {
+                                "type": "string"
+                              },
+                              "social_account_id": {
+                                "type": "integer"
+                              },
+                              "account_name": {
+                                "type": "string"
+                              },
+                              "comment_count": {
+                                "type": "integer"
+                              },
+                              "comments": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "id": {
+                                      "type": "integer"
+                                    },
+                                    "content": {
+                                      "type": "string"
+                                    },
+                                    "author_name": {
+                                      "type": "string"
+                                    },
+                                    "author_avatar": {
+                                      "type": "string",
+                                      "nullable": true
+                                    },
+                                    "like_count": {
+                                      "type": "integer"
+                                    },
+                                    "commented_at": {
+                                      "type": "string"
+                                    },
+                                    "is_own": {
+                                      "type": "integer",
+                                      "description": "1 if authored by your account."
+                                    },
+                                    "remote_comment_id": {
+                                      "type": "string"
+                                    },
+                                    "platform": {
+                                      "type": "string"
+                                    },
+                                    "children": {
+                                      "type": "array",
+                                      "items": {
+                                        "type": "object",
+                                        "properties": {}
+                                      },
+                                      "description": "Nested replies, same shape as a comment."
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "pagination": {
+                      "$ref": "#/components/schemas/PaginationMeta"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/RequestMeta"
+                    }
+                  }
+                },
+                "example": {
+                  "success": true,
+                  "data": {
+                    "posts": [
+                      {
+                        "id": 456,
+                        "post_id": 456,
+                        "remote_post_id": "123_987",
+                        "content": "Our new launch!",
+                        "permalink": "https://facebook.com/123_987",
+                        "platform": "facebook",
+                        "social_account_id": 789,
+                        "account_name": "My Business Page",
+                        "comment_count": 2,
+                        "comments": [
+                          {
+                            "id": 1,
+                            "content": "Love this!",
+                            "author_name": "Jane",
+                            "author_avatar": null,
+                            "like_count": 3,
+                            "commented_at": "2026-03-01 11:00:00",
+                            "is_own": 0,
+                            "remote_comment_id": "c_1",
+                            "platform": "facebook",
+                            "children": []
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  "pagination": {
+                    "page": 1,
+                    "per_page": 20,
+                    "total": 1
+                  },
+                  "meta": {
+                    "request_id": "req_abc123",
+                    "timestamp": "2026-03-01T16:00:00Z"
+                  }
                 }
               }
             }
@@ -3065,7 +3446,41 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [
+                        true
+                      ]
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "success": {
+                          "type": "boolean"
+                        },
+                        "remote_id": {
+                          "type": "string",
+                          "description": "Platform-side id of the created reply."
+                        }
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/RequestMeta"
+                    }
+                  }
+                },
+                "example": {
+                  "success": true,
+                  "data": {
+                    "success": true,
+                    "remote_id": "c_2"
+                  },
+                  "meta": {
+                    "request_id": "req_abc123",
+                    "timestamp": "2026-03-01T16:00:00Z"
+                  }
                 }
               }
             }
@@ -3112,7 +3527,40 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [
+                        true
+                      ]
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "success": {
+                          "type": "boolean"
+                        },
+                        "hidden": {
+                          "type": "boolean"
+                        }
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/RequestMeta"
+                    }
+                  }
+                },
+                "example": {
+                  "success": true,
+                  "data": {
+                    "success": true,
+                    "hidden": true
+                  },
+                  "meta": {
+                    "request_id": "req_abc123",
+                    "timestamp": "2026-03-01T16:00:00Z"
+                  }
                 }
               }
             }
@@ -3159,7 +3607,30 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [
+                        true
+                      ]
+                    },
+                    "data": {
+                      "type": "null",
+                      "description": "No payload on success."
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/RequestMeta"
+                    }
+                  }
+                },
+                "example": {
+                  "success": true,
+                  "data": null,
+                  "meta": {
+                    "request_id": "req_abc123",
+                    "timestamp": "2026-03-01T16:00:00Z"
+                  }
                 }
               }
             }
@@ -3251,7 +3722,95 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [
+                        true
+                      ]
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "conversations": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "integer"
+                              },
+                              "social_account_id": {
+                                "type": "integer"
+                              },
+                              "platform": {
+                                "type": "string"
+                              },
+                              "participant_name": {
+                                "type": "string"
+                              },
+                              "participant_avatar": {
+                                "type": "string",
+                                "nullable": true
+                              },
+                              "snippet": {
+                                "type": "string"
+                              },
+                              "unread_count": {
+                                "type": "integer"
+                              },
+                              "last_message_at": {
+                                "type": "string"
+                              },
+                              "status": {
+                                "type": "string",
+                                "description": "open | closed"
+                              },
+                              "meta_window_open": {
+                                "type": "boolean",
+                                "description": "Meta only: whether the 24h reply window is open."
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "pagination": {
+                      "$ref": "#/components/schemas/PaginationMeta"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/RequestMeta"
+                    }
+                  }
+                },
+                "example": {
+                  "success": true,
+                  "data": {
+                    "conversations": [
+                      {
+                        "id": 101,
+                        "social_account_id": 789,
+                        "platform": "facebook",
+                        "participant_name": "Alice",
+                        "participant_avatar": null,
+                        "snippet": "Hi, a question…",
+                        "unread_count": 2,
+                        "last_message_at": "2026-03-01 15:45:00",
+                        "status": "open",
+                        "meta_window_open": true
+                      }
+                    ]
+                  },
+                  "pagination": {
+                    "page": 1,
+                    "per_page": 20,
+                    "total": 1
+                  },
+                  "meta": {
+                    "request_id": "req_abc123",
+                    "timestamp": "2026-03-01T16:00:00Z"
+                  }
                 }
               }
             }
@@ -3313,7 +3872,113 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [
+                        true
+                      ]
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "messages": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "integer"
+                              },
+                              "conversation_id": {
+                                "type": "integer"
+                              },
+                              "direction": {
+                                "type": "string",
+                                "description": "in | out"
+                              },
+                              "content": {
+                                "type": "string",
+                                "nullable": true
+                              },
+                              "media_url": {
+                                "type": "string",
+                                "nullable": true
+                              },
+                              "media_type": {
+                                "type": "string",
+                                "nullable": true
+                              },
+                              "remote_message_id": {
+                                "type": "string"
+                              },
+                              "sender_name": {
+                                "type": "string"
+                              },
+                              "status": {
+                                "type": "string"
+                              },
+                              "sent_at": {
+                                "type": "string"
+                              }
+                            }
+                          }
+                        },
+                        "meta_window": {
+                          "type": "object",
+                          "properties": {
+                            "open": {
+                              "type": "boolean"
+                            },
+                            "expires_at": {
+                              "type": "string",
+                              "format": "date-time",
+                              "nullable": true
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "pagination": {
+                      "$ref": "#/components/schemas/PaginationMeta"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/RequestMeta"
+                    }
+                  }
+                },
+                "example": {
+                  "success": true,
+                  "data": {
+                    "messages": [
+                      {
+                        "id": 1001,
+                        "conversation_id": 101,
+                        "direction": "in",
+                        "content": "Hi!",
+                        "media_url": null,
+                        "media_type": null,
+                        "remote_message_id": "m_1",
+                        "sender_name": "Alice",
+                        "status": "sent",
+                        "sent_at": "2026-03-01 15:30:00"
+                      }
+                    ],
+                    "meta_window": {
+                      "open": true,
+                      "expires_at": "2026-03-02 15:30:00"
+                    }
+                  },
+                  "pagination": {
+                    "page": 1,
+                    "per_page": 20,
+                    "total": 1
+                  },
+                  "meta": {
+                    "request_id": "req_abc123",
+                    "timestamp": "2026-03-01T16:00:00Z"
+                  }
                 }
               }
             }
@@ -3374,7 +4039,87 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [
+                        true
+                      ]
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "success": {
+                          "type": "boolean"
+                        },
+                        "message": {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "integer"
+                            },
+                            "conversation_id": {
+                              "type": "integer"
+                            },
+                            "direction": {
+                              "type": "string",
+                              "description": "in | out"
+                            },
+                            "content": {
+                              "type": "string",
+                              "nullable": true
+                            },
+                            "media_url": {
+                              "type": "string",
+                              "nullable": true
+                            },
+                            "media_type": {
+                              "type": "string",
+                              "nullable": true
+                            },
+                            "remote_message_id": {
+                              "type": "string"
+                            },
+                            "sender_name": {
+                              "type": "string"
+                            },
+                            "status": {
+                              "type": "string"
+                            },
+                            "sent_at": {
+                              "type": "string"
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/RequestMeta"
+                    }
+                  }
+                },
+                "example": {
+                  "success": true,
+                  "data": {
+                    "success": true,
+                    "message": {
+                      "id": 1003,
+                      "conversation_id": 101,
+                      "direction": "out",
+                      "content": "Thanks!",
+                      "media_url": null,
+                      "media_type": null,
+                      "remote_message_id": "m_3",
+                      "sender_name": "You",
+                      "status": "sent",
+                      "sent_at": "2026-03-01 16:00:00"
+                    }
+                  },
+                  "meta": {
+                    "request_id": "req_abc123",
+                    "timestamp": "2026-03-01T16:00:00Z"
+                  }
                 }
               }
             }
@@ -3421,7 +4166,40 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [
+                        true
+                      ]
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "integer"
+                        },
+                        "read": {
+                          "type": "boolean"
+                        }
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/RequestMeta"
+                    }
+                  }
+                },
+                "example": {
+                  "success": true,
+                  "data": {
+                    "id": 101,
+                    "read": true
+                  },
+                  "meta": {
+                    "request_id": "req_abc123",
+                    "timestamp": "2026-03-01T16:00:00Z"
+                  }
                 }
               }
             }
@@ -3458,7 +4236,98 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [
+                        true
+                      ]
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "webhooks": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "integer"
+                              },
+                              "url": {
+                                "type": "string",
+                                "format": "uri"
+                              },
+                              "events": {
+                                "type": "array",
+                                "items": {
+                                  "type": "string"
+                                }
+                              },
+                              "status": {
+                                "type": "string",
+                                "description": "active | disabled"
+                              },
+                              "last_triggered_at": {
+                                "type": "string",
+                                "format": "date-time",
+                                "nullable": true
+                              },
+                              "created_at": {
+                                "type": "string",
+                                "format": "date-time"
+                              }
+                            }
+                          }
+                        },
+                        "events": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          },
+                          "description": "Catalog of subscribable event names."
+                        }
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/RequestMeta"
+                    }
+                  }
+                },
+                "example": {
+                  "success": true,
+                  "data": {
+                    "webhooks": [
+                      {
+                        "id": 1,
+                        "url": "https://example.com/hooks",
+                        "events": [
+                          "post.published",
+                          "comment.received"
+                        ],
+                        "status": "active",
+                        "last_triggered_at": "2026-03-01 15:30:00",
+                        "created_at": "2026-02-10 10:00:00"
+                      }
+                    ],
+                    "events": [
+                      "post.published",
+                      "post.failed",
+                      "post.partial",
+                      "account.connected",
+                      "account.disconnected",
+                      "account.token_expired",
+                      "comment.received",
+                      "message.received",
+                      "job.completed",
+                      "job.failed"
+                    ]
+                  },
+                  "meta": {
+                    "request_id": "req_abc123",
+                    "timestamp": "2026-03-01T16:00:00Z"
+                  }
                 }
               }
             }
@@ -3515,7 +4384,59 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [
+                        true
+                      ]
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "integer"
+                        },
+                        "url": {
+                          "type": "string",
+                          "format": "uri"
+                        },
+                        "events": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "status": {
+                          "type": "string"
+                        },
+                        "secret": {
+                          "type": "string",
+                          "description": "Signing secret — returned ONLY here, at creation. Store it now."
+                        }
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/RequestMeta"
+                    }
+                  }
+                },
+                "example": {
+                  "success": true,
+                  "data": {
+                    "id": 2,
+                    "url": "https://example.com/hooks",
+                    "events": [
+                      "post.published"
+                    ],
+                    "status": "active",
+                    "secret": "whsec_a1b2c3d4e5f6"
+                  },
+                  "meta": {
+                    "request_id": "req_abc123",
+                    "timestamp": "2026-03-01T16:00:00Z"
+                  }
                 }
               }
             }
@@ -3557,7 +4478,30 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [
+                        true
+                      ]
+                    },
+                    "data": {
+                      "type": "null",
+                      "description": "No payload on success."
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/RequestMeta"
+                    }
+                  }
+                },
+                "example": {
+                  "success": true,
+                  "data": null,
+                  "meta": {
+                    "request_id": "req_abc123",
+                    "timestamp": "2026-03-01T16:00:00Z"
+                  }
                 }
               }
             }
@@ -3570,6 +4514,105 @@
           },
           "404": {
             "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/social/connect/{platform}": {
+      "post": {
+        "summary": "Start headless account connection",
+        "description": "Begin connecting a NEW social account from your own UI (no SmartlyQ dashboard session needed). Returns a one-time `connect_url` (valid 15 minutes) — open it in a browser so the user can authorize. After they approve, the platform's OAuth callback completes the connection and (if provided) redirects to `return_url`. Headless connect currently supports facebook, threads, tiktok, and reddit; other platforms are connected from the Developer Dashboard. Requires scope `social:write`.",
+        "operationId": "connectSocialAccount",
+        "tags": [
+          "Social"
+        ],
+        "parameters": [
+          {
+            "name": "platform",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "facebook",
+                "threads",
+                "tiktok",
+                "reddit"
+              ]
+            },
+            "description": "Platform to connect. Headless connect supports facebook, threads, tiktok, reddit."
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "return_url": {
+                    "type": "string",
+                    "format": "uri",
+                    "description": "Optional URL to redirect the user to after they finish authorizing."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Connection link created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [
+                        true
+                      ]
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "platform": {
+                          "type": "string"
+                        },
+                        "connect_url": {
+                          "type": "string",
+                          "format": "uri",
+                          "description": "Open in a browser to authorize. Expires in 15 minutes."
+                        },
+                        "expires_at": {
+                          "type": "string",
+                          "format": "date-time"
+                        }
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/RequestMeta"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
           }
         }
       }

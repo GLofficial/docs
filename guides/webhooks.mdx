@@ -33,30 +33,39 @@ All webhook payloads are JSON:
 
 ## Verifying signatures
 
-Every webhook includes an `X-Signature` header containing an HMAC-SHA256 signature. Verify it using your webhook secret (available in the dashboard):
+Every delivery is signed. Two headers accompany each request:
+
+- `X-SmartlyQ-Signature` — `t=<timestamp>,v1=<hmac>`, where `<hmac>` is the HMAC-SHA256 of `<timestamp>.<raw-body>` keyed with your webhook secret.
+- `X-SmartlyQ-Event` — the event name (e.g. `job.completed`).
+
+Compute the HMAC over the timestamp and the **raw request body** joined with a `.`, then compare it against `v1`:
 
 ```javascript
 const crypto = require("crypto");
 
-function verifySignature(payload, signature, secret) {
+// rawBody = the exact bytes of the request body (do not re-serialize the JSON)
+function verifySignature(rawBody, signatureHeader, secret) {
+  const parts = Object.fromEntries(
+    signatureHeader.split(",").map((kv) => kv.split("="))
+  );
   const expected = crypto
     .createHmac("sha256", secret)
-    .update(payload)
+    .update(`${parts.t}.${rawBody}`)
     .digest("hex");
   return crypto.timingSafeEqual(
-    Buffer.from(signature),
+    Buffer.from(parts.v1),
     Buffer.from(expected)
   );
 }
 ```
 
 <Warning>
-Always verify the signature before processing a webhook. Unverified payloads may be spoofed.
+Always verify the signature before processing a webhook. Unverified payloads may be spoofed. The signing secret is shown once, when you add the endpoint in the dashboard.
 </Warning>
 
 ## Retry policy
 
-If your endpoint returns a non-2xx status code, SmartlyQ retries delivery up to **5 times** with exponential backoff (30s, 60s, 120s, 240s, 480s).
+If your endpoint returns a non-2xx status code, SmartlyQ retries delivery up to **5 times** with exponential backoff — the wait doubles each attempt (≈2, 4, 8, 16, 32 minutes). Deliveries still failing after the final attempt are dropped.
 
 ## Available events
 
