@@ -20,6 +20,9 @@
       "claude",
       "perplexity",
       "grok",
+      "mcp",
+      "cursor",
+      "vscode",
       "download-spec",
       {
         "title": "Full docs (llms.txt)",
