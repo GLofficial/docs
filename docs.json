@@ -167,6 +167,17 @@
                 ]
               },
               {
+                "group": "Avatar Videos",
+                "pages": [
+                  "GET /avatar-videos/avatars",
+                  "GET /avatar-videos/voices",
+                  "POST /avatar-videos/generate",
+                  "POST /avatar-videos/translate",
+                  "POST /avatar-videos/lipsync",
+                  "GET /avatar-videos/{uid}"
+                ]
+              },
+              {
                 "group": "Audio",
                 "pages": [
                   "POST /audio/text-to-speech",
