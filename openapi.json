@@ -631,6 +631,337 @@
         }
       }
     },
+    "/avatar-videos/avatars": {
+      "get": {
+        "summary": "List avatars",
+        "description": "Lists available AI avatars and talking photos for avatar video generation. Not billed.",
+        "operationId": "listAvatars",
+        "tags": [
+          "Videos"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          }
+        }
+      }
+    },
+    "/avatar-videos/voices": {
+      "get": {
+        "summary": "List avatar voices",
+        "description": "Lists available voices (id, name, language, gender) for avatar videos. Not billed.",
+        "operationId": "listAvatarVoices",
+        "tags": [
+          "Videos"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          }
+        }
+      }
+    },
+    "/avatar-videos/generate": {
+      "post": {
+        "summary": "Generate avatar video",
+        "description": "Generates a talking-avatar video from a script. Returns `202 Accepted` with a `job_uid`; poll `GET /v1/avatar-videos/{uid}` for status and the final video URL.\n\n**Before submitting:** call `GET /v1/avatar-videos/avatars` and `GET /v1/avatar-videos/voices` to pick a valid `avatar_id` + `voice_id`.\n\n**Billing:** the cost is deducted from your API wallet when the job is accepted. If the render fails the charge is automatically refunded.",
+        "operationId": "generateAvatarVideo",
+        "tags": [
+          "Videos"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "script",
+                  "avatar_id",
+                  "voice_id"
+                ],
+                "properties": {
+                  "script": {
+                    "type": "string",
+                    "description": "Text the avatar will speak."
+                  },
+                  "avatar_id": {
+                    "type": "string",
+                    "description": "Avatar id from GET /v1/avatar-videos/avatars."
+                  },
+                  "voice_id": {
+                    "type": "string",
+                    "description": "Voice id from GET /v1/avatar-videos/voices."
+                  },
+                  "dimension": {
+                    "type": "string",
+                    "description": "Output resolution WxH.",
+                    "default": "1920x1080"
+                  },
+                  "title": {
+                    "type": "string",
+                    "description": "Optional title for the render."
+                  }
+                }
+              },
+              "example": {
+                "script": "Hello from SmartlyQ.",
+                "avatar_id": "Daisy-inskirt-20220818",
+                "voice_id": "2d5b0e6cf36f460aa7fc47e3eee4ba54",
+                "dimension": "1920x1080"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Accepted — poll GET /v1/avatar-videos/{uid} for result",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "example": {
+                  "success": true,
+                  "data": {
+                    "job_uid": "hg_a1b2c3d4e5f6",
+                    "status": "queued"
+                  },
+                  "usage": {
+                    "units": 1,
+                    "cost": "12.0000",
+                    "balance_remaining": "88.0000"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "402": {
+            "$ref": "#/components/responses/InsufficientBalance"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "429": {
+            "$ref": "#/components/responses/RateLimited"
+          }
+        }
+      }
+    },
+    "/avatar-videos/translate": {
+      "post": {
+        "summary": "Translate a video",
+        "description": "Re-voices an existing video into other languages. Returns `202 Accepted` with a `job_uid`; poll `GET /v1/avatar-videos/{uid}`. Billed per request from your API wallet; refunded on failure.",
+        "operationId": "translateVideo",
+        "tags": [
+          "Videos"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "source_video_url",
+                  "target_languages"
+                ],
+                "properties": {
+                  "source_video_url": {
+                    "type": "string",
+                    "description": "URL of the video to translate."
+                  },
+                  "target_languages": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "Target languages, e.g. [\"Spanish\", \"French\"]."
+                  },
+                  "quality": {
+                    "type": "string",
+                    "enum": [
+                      "speed",
+                      "precision"
+                    ],
+                    "default": "speed"
+                  },
+                  "title": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Accepted — poll GET /v1/avatar-videos/{uid} for result"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "402": {
+            "$ref": "#/components/responses/InsufficientBalance"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      }
+    },
+    "/avatar-videos/lipsync": {
+      "post": {
+        "summary": "Lipsync a video",
+        "description": "Drives an avatar with a provided audio track. Returns `202 Accepted` with a `job_uid`; poll `GET /v1/avatar-videos/{uid}`. Billed per request from your API wallet; refunded on failure.",
+        "operationId": "lipsyncVideo",
+        "tags": [
+          "Videos"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "avatar_id",
+                  "audio_url"
+                ],
+                "properties": {
+                  "avatar_id": {
+                    "type": "string",
+                    "description": "Avatar id from GET /v1/avatar-videos/avatars."
+                  },
+                  "audio_url": {
+                    "type": "string",
+                    "description": "URL of the audio to lipsync."
+                  },
+                  "quality": {
+                    "type": "string",
+                    "enum": [
+                      "speed",
+                      "precision"
+                    ],
+                    "default": "speed"
+                  },
+                  "title": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Accepted — poll GET /v1/avatar-videos/{uid} for result"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "402": {
+            "$ref": "#/components/responses/InsufficientBalance"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      }
+    },
+    "/avatar-videos/{uid}": {
+      "get": {
+        "summary": "Get avatar video render",
+        "description": "Returns the status and (when complete) the video URL for an avatar-video render.",
+        "operationId": "getAvatarVideo",
+        "tags": [
+          "Videos"
+        ],
+        "parameters": [
+          {
+            "name": "uid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The job_uid returned by generate/translate/lipsync."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "example": {
+                  "success": true,
+                  "data": {
+                    "job_uid": "hg_a1b2c3d4e5f6",
+                    "status": "completed",
+                    "kind": "stock",
+                    "progress": 100,
+                    "video_url": "https://videocdn.smartlyq.com/video-studio/42/hg_a1b2c3d4e5f6.mp4",
+                    "duration_sec": 42,
+                    "error": "",
+                    "created_at": "2026-10-15 09:16:00"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
     "/videos": {
       "get": {
         "summary": "List videos",
