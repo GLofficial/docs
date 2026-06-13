@@ -174,6 +174,7 @@
                   "POST /avatar-videos/generate",
                   "POST /avatar-videos/translate",
                   "POST /avatar-videos/lipsync",
+                  "POST /avatar-videos/agent",
                   "GET /avatar-videos/{uid}"
                 ]
               },
