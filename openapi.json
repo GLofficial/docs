@@ -907,6 +907,60 @@
         }
       }
     },
+    "/avatar-videos/agent": {
+      "post": {
+        "summary": "Generate a video from a prompt",
+        "description": "Prompt-to-video. From a single prompt the agent writes the script, picks the avatar and voice, and renders - no `avatar_id`/`voice_id` needed. Returns `202 Accepted` with a `job_uid`; poll `GET /v1/avatar-videos/{uid}`. Billed per request from your API wallet; refunded on failure.",
+        "operationId": "agentVideo",
+        "tags": [
+          "Videos"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "prompt"
+                ],
+                "properties": {
+                  "prompt": {
+                    "type": "string",
+                    "description": "What the video should be about, e.g. 'A 30-second product launch announcement, upbeat and confident'.",
+                    "maxLength": 2000
+                  },
+                  "dimension": {
+                    "type": "string",
+                    "description": "WxH, e.g. 1920x1080 (default) or 1080x1920."
+                  },
+                  "title": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Accepted — poll GET /v1/avatar-videos/{uid} for result"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "402": {
+            "$ref": "#/components/responses/InsufficientBalance"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      }
+    },
     "/avatar-videos/{uid}": {
       "get": {
         "summary": "Get avatar video render",
