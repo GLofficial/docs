@@ -191,6 +191,19 @@
                 "pages": [
                   "POST /content/rewrite"
                 ]
+              },
+              {
+                "group": "SEO",
+                "pages": [
+                  "POST /seo/keyword-research",
+                  "POST /seo/serp",
+                  "POST /seo/keyword-difficulty",
+                  "POST /seo/ranked-keywords",
+                  "POST /seo/domain-overview",
+                  "POST /seo/competitors",
+                  "POST /seo/backlinks-summary",
+                  "POST /seo/audit"
+                ]
               }
             ]
           },
