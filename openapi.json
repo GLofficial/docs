@@ -1805,6 +1805,794 @@
         }
       }
     },
+    "/seo/backlink-prospects": {
+      "post": {
+        "summary": "Backlink prospects (link gap)",
+        "description": "Find link-building prospects: referring domains that link to competitors of the target but not to the target itself.",
+        "operationId": "seoBacklinkProspects",
+        "tags": [
+          "SEO"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "target"
+                ],
+                "properties": {
+                  "target": {
+                    "type": "string",
+                    "description": "Your domain, e.g. example.com."
+                  },
+                  "limit": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 100,
+                    "default": 10,
+                    "description": "Max prospects to return."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Backlink prospects (link gap)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [
+                        true
+                      ]
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "target": {
+                          "type": "string"
+                        },
+                        "competitors": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "domain": {
+                                "type": "string"
+                              },
+                              "rank": {
+                                "type": "integer"
+                              },
+                              "intersections": {
+                                "type": "integer"
+                              }
+                            }
+                          }
+                        },
+                        "prospects": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "referring_domain": {
+                                "type": "string"
+                              },
+                              "rank": {
+                                "type": "integer"
+                              },
+                              "links_to_competitors": {
+                                "type": "integer"
+                              },
+                              "example_source_url": {
+                                "type": "string"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/RequestMeta"
+                    }
+                  }
+                },
+                "example": {
+                  "success": true,
+                  "data": {
+                    "target": "example.com",
+                    "competitors": [
+                      {
+                        "domain": "rival.com",
+                        "rank": 412,
+                        "intersections": 340
+                      }
+                    ],
+                    "prospects": [
+                      {
+                        "referring_domain": "authority-blog.com",
+                        "rank": 520,
+                        "links_to_competitors": 3,
+                        "example_source_url": "https://authority-blog.com/best-tools"
+                      }
+                    ]
+                  },
+                  "meta": {
+                    "request_id": "req_1a2b3c4d",
+                    "timestamp": "2026-07-01T12:00:00Z"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "402": {
+            "$ref": "#/components/responses/InsufficientBalance"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "429": {
+            "$ref": "#/components/responses/RateLimited"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
+      }
+    },
+    "/seo/referring-domains": {
+      "post": {
+        "summary": "Referring domains",
+        "description": "List the top referring domains for a domain by authority, with backlink counts, first-seen date and dofollow counts.",
+        "operationId": "seoReferringDomains",
+        "tags": [
+          "SEO"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "target"
+                ],
+                "properties": {
+                  "target": {
+                    "type": "string",
+                    "description": "Domain or URL to inspect."
+                  },
+                  "limit": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 100,
+                    "default": 20,
+                    "description": "Max referring domains."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Referring domains",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [
+                        true
+                      ]
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "target": {
+                          "type": "string"
+                        },
+                        "domains": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "domain": {
+                                "type": "string"
+                              },
+                              "rank": {
+                                "type": "integer"
+                              },
+                              "backlinks": {
+                                "type": "integer"
+                              },
+                              "first_seen": {
+                                "type": "string"
+                              },
+                              "dofollow": {
+                                "type": "integer"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/RequestMeta"
+                    }
+                  }
+                },
+                "example": {
+                  "success": true,
+                  "data": {
+                    "target": "example.com",
+                    "domains": [
+                      {
+                        "domain": "techblog.com",
+                        "rank": 480,
+                        "backlinks": 1200,
+                        "first_seen": "2024-03-12",
+                        "dofollow": 1100
+                      }
+                    ]
+                  },
+                  "meta": {
+                    "request_id": "req_1a2b3c4d",
+                    "timestamp": "2026-07-01T12:00:00Z"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "402": {
+            "$ref": "#/components/responses/InsufficientBalance"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "429": {
+            "$ref": "#/components/responses/RateLimited"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
+      }
+    },
+    "/seo/backlink-anchors": {
+      "post": {
+        "summary": "Backlink anchors",
+        "description": "List the top backlink anchor texts for a domain, with backlink and referring-domain counts.",
+        "operationId": "seoBacklinkAnchors",
+        "tags": [
+          "SEO"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "target"
+                ],
+                "properties": {
+                  "target": {
+                    "type": "string",
+                    "description": "Domain or URL to inspect."
+                  },
+                  "limit": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 100,
+                    "default": 20,
+                    "description": "Max anchors."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Backlink anchors",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [
+                        true
+                      ]
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "target": {
+                          "type": "string"
+                        },
+                        "anchors": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "anchor": {
+                                "type": "string"
+                              },
+                              "backlinks": {
+                                "type": "integer"
+                              },
+                              "referring_domains": {
+                                "type": "integer"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/RequestMeta"
+                    }
+                  }
+                },
+                "example": {
+                  "success": true,
+                  "data": {
+                    "target": "example.com",
+                    "anchors": [
+                      {
+                        "anchor": "seo tools",
+                        "backlinks": 5400,
+                        "referring_domains": 320
+                      }
+                    ]
+                  },
+                  "meta": {
+                    "request_id": "req_1a2b3c4d",
+                    "timestamp": "2026-07-01T12:00:00Z"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "402": {
+            "$ref": "#/components/responses/InsufficientBalance"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "429": {
+            "$ref": "#/components/responses/RateLimited"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
+      }
+    },
+    "/seo/spam-score": {
+      "post": {
+        "summary": "Backlink spam score",
+        "description": "Get the backlink spam/toxicity score (0-100) for one or more domains.",
+        "operationId": "seoSpamScore",
+        "tags": [
+          "SEO"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "targets"
+                ],
+                "properties": {
+                  "targets": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "minItems": 1,
+                    "description": "Domains to score."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Backlink spam score",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [
+                        true
+                      ]
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "spam": {
+                          "type": "object",
+                          "additionalProperties": {
+                            "type": "integer"
+                          },
+                          "description": "Map of domain -> spam score (0-100)."
+                        }
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/RequestMeta"
+                    }
+                  }
+                },
+                "example": {
+                  "success": true,
+                  "data": {
+                    "spam": {
+                      "example.com": 12,
+                      "spammy-site.net": 78
+                    }
+                  },
+                  "meta": {
+                    "request_id": "req_1a2b3c4d",
+                    "timestamp": "2026-07-01T12:00:00Z"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "402": {
+            "$ref": "#/components/responses/InsufficientBalance"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "429": {
+            "$ref": "#/components/responses/RateLimited"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
+      }
+    },
+    "/seo/rank-history": {
+      "post": {
+        "summary": "Historical rank overview",
+        "description": "Historical organic keyword count and traffic (ETV) trend by month. Premium lookup (priced ~10x a normal SEO call).",
+        "operationId": "seoRankHistory",
+        "tags": [
+          "SEO"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "target"
+                ],
+                "properties": {
+                  "target": {
+                    "type": "string",
+                    "description": "Domain to inspect, e.g. example.com."
+                  },
+                  "location": {
+                    "type": "string",
+                    "default": "United States",
+                    "description": "Market location name."
+                  },
+                  "language": {
+                    "type": "string",
+                    "default": "en",
+                    "description": "Language code."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Historical rank overview",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [
+                        true
+                      ]
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "target": {
+                          "type": "string"
+                        },
+                        "history": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "year": {
+                                "type": "integer"
+                              },
+                              "month": {
+                                "type": "integer"
+                              },
+                              "organic_keywords": {
+                                "type": "integer"
+                              },
+                              "organic_etv": {
+                                "type": "number"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/RequestMeta"
+                    }
+                  }
+                },
+                "example": {
+                  "success": true,
+                  "data": {
+                    "target": "example.com",
+                    "history": [
+                      {
+                        "year": 2026,
+                        "month": 5,
+                        "organic_keywords": 11800,
+                        "organic_etv": 44210.3
+                      },
+                      {
+                        "year": 2026,
+                        "month": 6,
+                        "organic_keywords": 12500,
+                        "organic_etv": 48230.7
+                      }
+                    ]
+                  },
+                  "meta": {
+                    "request_id": "req_1a2b3c4d",
+                    "timestamp": "2026-07-01T12:00:00Z"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "402": {
+            "$ref": "#/components/responses/InsufficientBalance"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "429": {
+            "$ref": "#/components/responses/RateLimited"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
+      }
+    },
+    "/seo/site-audit": {
+      "post": {
+        "summary": "Deep site audit",
+        "description": "Crawl-based technical SEO audit: overall on-page score, crawl issues, and the worst-scoring pages with their flagged checks. Slower (~10-15s).",
+        "operationId": "seoSiteAudit",
+        "tags": [
+          "SEO"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "url"
+                ],
+                "properties": {
+                  "url": {
+                    "type": "string",
+                    "format": "uri",
+                    "description": "Site URL to crawl."
+                  },
+                  "max_pages": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 100,
+                    "default": 20,
+                    "description": "Max pages to crawl."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Deep site audit",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [
+                        true
+                      ]
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "url": {
+                          "type": "string"
+                        },
+                        "audit": {
+                          "type": "object",
+                          "properties": {
+                            "crawl_progress": {
+                              "type": "string"
+                            },
+                            "pages_crawled": {
+                              "type": "integer"
+                            },
+                            "pages_with_errors": {
+                              "type": "integer"
+                            },
+                            "onpage_score": {
+                              "type": "number"
+                            },
+                            "checks": {
+                              "type": "object"
+                            },
+                            "pages": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "url": {
+                                    "type": "string"
+                                  },
+                                  "onpage_score": {
+                                    "type": "number"
+                                  },
+                                  "status_code": {
+                                    "type": "integer"
+                                  },
+                                  "title": {
+                                    "type": "string"
+                                  },
+                                  "flagged_checks": {
+                                    "type": "array",
+                                    "items": {
+                                      "type": "string"
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/RequestMeta"
+                    }
+                  }
+                },
+                "example": {
+                  "success": true,
+                  "data": {
+                    "url": "https://example.com",
+                    "audit": {
+                      "crawl_progress": "finished",
+                      "pages_crawled": 20,
+                      "pages_with_errors": 3,
+                      "onpage_score": 88.4,
+                      "checks": {
+                        "duplicate_title": false,
+                        "broken_links": true
+                      },
+                      "pages": [
+                        {
+                          "url": "https://example.com/old",
+                          "onpage_score": 61.2,
+                          "status_code": 200,
+                          "title": "Old Page",
+                          "flagged_checks": [
+                            "low_content_rate",
+                            "no_description"
+                          ]
+                        }
+                      ]
+                    }
+                  },
+                  "meta": {
+                    "request_id": "req_1a2b3c4d",
+                    "timestamp": "2026-07-01T12:00:00Z"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "402": {
+            "$ref": "#/components/responses/InsufficientBalance"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "429": {
+            "$ref": "#/components/responses/RateLimited"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
+      }
+    },
     "/audio/text-to-speech": {
       "post": {
         "summary": "Text to speech",
