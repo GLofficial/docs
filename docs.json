@@ -202,7 +202,13 @@
                   "POST /seo/domain-overview",
                   "POST /seo/competitors",
                   "POST /seo/backlinks-summary",
-                  "POST /seo/audit"
+                  "POST /seo/audit",
+                  "POST /seo/backlink-prospects",
+                  "POST /seo/referring-domains",
+                  "POST /seo/backlink-anchors",
+                  "POST /seo/spam-score",
+                  "POST /seo/rank-history",
+                  "POST /seo/site-audit"
                 ]
               }
             ]
