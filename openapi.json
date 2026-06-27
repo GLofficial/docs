@@ -1535,7 +1535,7 @@
           }
         },
         "responses": {
-          "200": { "description": "Keyword suggestions with volume, CPC and competition", "content": { "application/json": { "schema": { "type": "object" } } } },
+          "200": { "description": "Keyword suggestions with volume, CPC and competition", "content": { "application/json": { "schema": {"type":"object","properties":{"success":{"type":"boolean","enum":[true]},"data":{"type":"object","properties":{"keywords":{"type":"array","items":{"type":"object","properties":{"keyword":{"type":"string"},"volume":{"type":"integer"},"cpc":{"type":"number"},"competition":{"type":"number"}}}},"seed":{"type":"string"},"location":{"type":"string"},"total_found":{"type":"integer"}}},"meta":{"$ref":"#/components/schemas/RequestMeta"}}} } } },
           "401": { "$ref": "#/components/responses/Unauthorized" },
           "402": { "$ref": "#/components/responses/InsufficientBalance" },
           "403": { "$ref": "#/components/responses/Forbidden" },
@@ -1574,7 +1574,7 @@
           }
         },
         "responses": {
-          "200": { "description": "Organic SERP results plus SERP features", "content": { "application/json": { "schema": { "type": "object" } } } },
+          "200": { "description": "Organic SERP results plus SERP features", "content": { "application/json": { "schema": {"type":"object","properties":{"success":{"type":"boolean","enum":[true]},"data":{"type":"object","properties":{"results":{"type":"array","items":{"type":"object","properties":{"position":{"type":"integer"},"title":{"type":"string"},"url":{"type":"string"},"description":{"type":"string"},"domain":{"type":"string"}}}},"keyword":{"type":"string"},"location":{"type":"string"},"serp_features":{"type":"array","items":{"type":"string"}},"people_also_ask":{"type":"array","items":{"type":"string"}}}},"meta":{"$ref":"#/components/schemas/RequestMeta"}}} } } },
           "401": { "$ref": "#/components/responses/Unauthorized" },
           "402": { "$ref": "#/components/responses/InsufficientBalance" },
           "403": { "$ref": "#/components/responses/Forbidden" },
@@ -1611,7 +1611,7 @@
           }
         },
         "responses": {
-          "200": { "description": "Difficulty score per keyword", "content": { "application/json": { "schema": { "type": "object" } } } },
+          "200": { "description": "Difficulty score per keyword", "content": { "application/json": { "schema": {"type":"object","properties":{"success":{"type":"boolean","enum":[true]},"data":{"type":"object","properties":{"difficulty":{"type":"object","additionalProperties":{"type":"integer"},"description":"Map of keyword -> difficulty score (0-100)."}}},"meta":{"$ref":"#/components/schemas/RequestMeta"}}} } } },
           "401": { "$ref": "#/components/responses/Unauthorized" },
           "402": { "$ref": "#/components/responses/InsufficientBalance" },
           "403": { "$ref": "#/components/responses/Forbidden" },
@@ -1649,7 +1649,7 @@
           }
         },
         "responses": {
-          "200": { "description": "Ranked keywords with position, volume and ETV", "content": { "application/json": { "schema": { "type": "object" } } } },
+          "200": { "description": "Ranked keywords with position, volume and ETV", "content": { "application/json": { "schema": {"type":"object","properties":{"success":{"type":"boolean","enum":[true]},"data":{"type":"object","properties":{"target":{"type":"string"},"keywords":{"type":"array","items":{"type":"object","properties":{"keyword":{"type":"string"},"position":{"type":"integer"},"url":{"type":"string"},"type":{"type":"string"},"search_volume":{"type":"integer"},"cpc":{"type":"number"},"etv":{"type":"number"}}}}}},"meta":{"$ref":"#/components/schemas/RequestMeta"}}} } } },
           "401": { "$ref": "#/components/responses/Unauthorized" },
           "402": { "$ref": "#/components/responses/InsufficientBalance" },
           "403": { "$ref": "#/components/responses/Forbidden" },
@@ -1686,7 +1686,7 @@
           }
         },
         "responses": {
-          "200": { "description": "Organic overview metrics", "content": { "application/json": { "schema": { "type": "object" } } } },
+          "200": { "description": "Organic overview metrics", "content": { "application/json": { "schema": {"type":"object","properties":{"success":{"type":"boolean","enum":[true]},"data":{"type":"object","properties":{"target":{"type":"string"},"overview":{"type":"object","properties":{"organic_keywords":{"type":"integer"},"organic_etv":{"type":"number"},"pos_1":{"type":"integer"},"pos_2_3":{"type":"integer"},"pos_4_10":{"type":"integer"},"pos_11_20":{"type":"integer"},"is_new":{"type":"integer"},"is_up":{"type":"integer"},"is_down":{"type":"integer"}}}}},"meta":{"$ref":"#/components/schemas/RequestMeta"}}} } } },
           "401": { "$ref": "#/components/responses/Unauthorized" },
           "402": { "$ref": "#/components/responses/InsufficientBalance" },
           "403": { "$ref": "#/components/responses/Forbidden" },
@@ -1724,7 +1724,7 @@
           }
         },
         "responses": {
-          "200": { "description": "Competitor domains with overlap metrics", "content": { "application/json": { "schema": { "type": "object" } } } },
+          "200": { "description": "Competitor domains with overlap metrics", "content": { "application/json": { "schema": {"type":"object","properties":{"success":{"type":"boolean","enum":[true]},"data":{"type":"object","properties":{"target":{"type":"string"},"competitors":{"type":"array","items":{"type":"object","properties":{"domain":{"type":"string"},"common_keywords":{"type":"integer"},"organic_keywords":{"type":"integer"},"organic_etv":{"type":"number"}}}}}},"meta":{"$ref":"#/components/schemas/RequestMeta"}}} } } },
           "401": { "$ref": "#/components/responses/Unauthorized" },
           "402": { "$ref": "#/components/responses/InsufficientBalance" },
           "403": { "$ref": "#/components/responses/Forbidden" },
@@ -1759,7 +1759,7 @@
           }
         },
         "responses": {
-          "200": { "description": "Backlink profile summary", "content": { "application/json": { "schema": { "type": "object" } } } },
+          "200": { "description": "Backlink profile summary", "content": { "application/json": { "schema": {"type":"object","properties":{"success":{"type":"boolean","enum":[true]},"data":{"type":"object","properties":{"target":{"type":"string"},"summary":{"type":"object","properties":{"rank":{"type":"integer"},"backlinks":{"type":"integer"},"referring_domains":{"type":"integer"},"referring_main_domains":{"type":"integer"},"broken_backlinks":{"type":"integer"},"referring_links_types":{"type":"object"},"referring_links_attributes":{"type":"object"}}}}},"meta":{"$ref":"#/components/schemas/RequestMeta"}}} } } },
           "401": { "$ref": "#/components/responses/Unauthorized" },
           "402": { "$ref": "#/components/responses/InsufficientBalance" },
           "403": { "$ref": "#/components/responses/Forbidden" },
@@ -1795,7 +1795,7 @@
           }
         },
         "responses": {
-          "200": { "description": "On-page audit result", "content": { "application/json": { "schema": { "type": "object" } } } },
+          "200": { "description": "On-page audit result", "content": { "application/json": { "schema": {"type":"object","properties":{"success":{"type":"boolean","enum":[true]},"data":{"type":"object","properties":{"url":{"type":"string"},"audit":{"type":"object","properties":{"crawl_progress":{"type":"string"},"pages_crawled":{"type":"integer"},"pages_with_errors":{"type":"integer"},"onpage_score":{"type":"number"},"checks":{"type":"object"}}}}},"meta":{"$ref":"#/components/schemas/RequestMeta"}}} } } },
           "401": { "$ref": "#/components/responses/Unauthorized" },
           "402": { "$ref": "#/components/responses/InsufficientBalance" },
           "403": { "$ref": "#/components/responses/Forbidden" },
