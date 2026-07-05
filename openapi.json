@@ -93,6 +93,10 @@
     {
       "name": "Webhooks",
       "description": "Subscribe to event notifications (HMAC-signed deliveries with retries)."
+    },
+    {
+      "name": "Shorts",
+      "description": "Magic Shorts: turn long videos into ranked viral clips"
     }
   ],
   "paths": {
@@ -1525,23 +1529,132 @@
                   "keyword"
                 ],
                 "properties": {
-                  "keyword": { "type": "string", "description": "Seed keyword to expand." },
-                  "location": { "type": "string", "default": "United States", "description": "Market location name." },
-                  "language": { "type": "string", "default": "en", "description": "Language code." },
-                  "limit": { "type": "integer", "minimum": 5, "maximum": 50, "default": 20, "description": "Max keywords to return." }
+                  "keyword": {
+                    "type": "string",
+                    "description": "Seed keyword to expand."
+                  },
+                  "location": {
+                    "type": "string",
+                    "default": "United States",
+                    "description": "Market location name."
+                  },
+                  "language": {
+                    "type": "string",
+                    "default": "en",
+                    "description": "Language code."
+                  },
+                  "limit": {
+                    "type": "integer",
+                    "minimum": 5,
+                    "maximum": 50,
+                    "default": 20,
+                    "description": "Max keywords to return."
+                  }
                 }
               }
             }
           }
         },
         "responses": {
-          "200": { "description": "Keyword suggestions with volume, CPC and competition", "content": { "application/json": { "schema": {"type":"object","properties":{"success":{"type":"boolean","enum":[true]},"data":{"type":"object","properties":{"keywords":{"type":"array","items":{"type":"object","properties":{"keyword":{"type":"string"},"volume":{"type":"integer"},"cpc":{"type":"number"},"competition":{"type":"number"}}}},"seed":{"type":"string"},"location":{"type":"string"},"total_found":{"type":"integer"}}},"meta":{"$ref":"#/components/schemas/RequestMeta"}}}, "example": {"success":true,"data":{"keywords":[{"keyword":"seo software","volume":18100,"cpc":12.4,"competition":0.78},{"keyword":"best seo tools","volume":8100,"cpc":9.2,"competition":0.65}],"seed":"seo tools","location":"United States","total_found":2},"meta":{"request_id":"req_1a2b3c4d","timestamp":"2026-07-01T12:00:00Z"}} } } },
-          "401": { "$ref": "#/components/responses/Unauthorized" },
-          "402": { "$ref": "#/components/responses/InsufficientBalance" },
-          "403": { "$ref": "#/components/responses/Forbidden" },
-          "422": { "$ref": "#/components/responses/ValidationError" },
-          "429": { "$ref": "#/components/responses/RateLimited" },
-          "500": { "$ref": "#/components/responses/ServerError" }
+          "200": {
+            "description": "Keyword suggestions with volume, CPC and competition",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [
+                        true
+                      ]
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "keywords": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "keyword": {
+                                "type": "string"
+                              },
+                              "volume": {
+                                "type": "integer"
+                              },
+                              "cpc": {
+                                "type": "number"
+                              },
+                              "competition": {
+                                "type": "number"
+                              }
+                            }
+                          }
+                        },
+                        "seed": {
+                          "type": "string"
+                        },
+                        "location": {
+                          "type": "string"
+                        },
+                        "total_found": {
+                          "type": "integer"
+                        }
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/RequestMeta"
+                    }
+                  }
+                },
+                "example": {
+                  "success": true,
+                  "data": {
+                    "keywords": [
+                      {
+                        "keyword": "seo software",
+                        "volume": 18100,
+                        "cpc": 12.4,
+                        "competition": 0.78
+                      },
+                      {
+                        "keyword": "best seo tools",
+                        "volume": 8100,
+                        "cpc": 9.2,
+                        "competition": 0.65
+                      }
+                    ],
+                    "seed": "seo tools",
+                    "location": "United States",
+                    "total_found": 2
+                  },
+                  "meta": {
+                    "request_id": "req_1a2b3c4d",
+                    "timestamp": "2026-07-01T12:00:00Z"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "402": {
+            "$ref": "#/components/responses/InsufficientBalance"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "429": {
+            "$ref": "#/components/responses/RateLimited"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
         }
       }
     },
@@ -1563,24 +1676,155 @@
                   "keyword"
                 ],
                 "properties": {
-                  "keyword": { "type": "string", "description": "Keyword to look up." },
-                  "location": { "type": "string", "default": "United States", "description": "Market location name." },
-                  "language": { "type": "string", "default": "en", "description": "Language code." },
-                  "device": { "type": "string", "enum": ["desktop", "mobile"], "default": "desktop", "description": "Device." },
-                  "depth": { "type": "integer", "minimum": 1, "maximum": 100, "default": 10, "description": "Number of results to fetch." }
+                  "keyword": {
+                    "type": "string",
+                    "description": "Keyword to look up."
+                  },
+                  "location": {
+                    "type": "string",
+                    "default": "United States",
+                    "description": "Market location name."
+                  },
+                  "language": {
+                    "type": "string",
+                    "default": "en",
+                    "description": "Language code."
+                  },
+                  "device": {
+                    "type": "string",
+                    "enum": [
+                      "desktop",
+                      "mobile"
+                    ],
+                    "default": "desktop",
+                    "description": "Device."
+                  },
+                  "depth": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 100,
+                    "default": 10,
+                    "description": "Number of results to fetch."
+                  }
                 }
               }
             }
           }
         },
         "responses": {
-          "200": { "description": "Organic SERP results plus SERP features", "content": { "application/json": { "schema": {"type":"object","properties":{"success":{"type":"boolean","enum":[true]},"data":{"type":"object","properties":{"results":{"type":"array","items":{"type":"object","properties":{"position":{"type":"integer"},"title":{"type":"string"},"url":{"type":"string"},"description":{"type":"string"},"domain":{"type":"string"}}}},"keyword":{"type":"string"},"location":{"type":"string"},"serp_features":{"type":"array","items":{"type":"string"}},"people_also_ask":{"type":"array","items":{"type":"string"}}}},"meta":{"$ref":"#/components/schemas/RequestMeta"}}}, "example": {"success":true,"data":{"results":[{"position":1,"title":"Best SEO Tools (2026)","url":"https://example.com/seo-tools","description":"Compare the top SEO tools for 2026.","domain":"example.com"}],"keyword":"seo tools","location":"United States","serp_features":["featured_snippet","people_also_ask"],"people_also_ask":["What is the best SEO tool?","Are SEO tools worth it?"]},"meta":{"request_id":"req_1a2b3c4d","timestamp":"2026-07-01T12:00:00Z"}} } } },
-          "401": { "$ref": "#/components/responses/Unauthorized" },
-          "402": { "$ref": "#/components/responses/InsufficientBalance" },
-          "403": { "$ref": "#/components/responses/Forbidden" },
-          "422": { "$ref": "#/components/responses/ValidationError" },
-          "429": { "$ref": "#/components/responses/RateLimited" },
-          "500": { "$ref": "#/components/responses/ServerError" }
+          "200": {
+            "description": "Organic SERP results plus SERP features",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [
+                        true
+                      ]
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "results": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "position": {
+                                "type": "integer"
+                              },
+                              "title": {
+                                "type": "string"
+                              },
+                              "url": {
+                                "type": "string"
+                              },
+                              "description": {
+                                "type": "string"
+                              },
+                              "domain": {
+                                "type": "string"
+                              }
+                            }
+                          }
+                        },
+                        "keyword": {
+                          "type": "string"
+                        },
+                        "location": {
+                          "type": "string"
+                        },
+                        "serp_features": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "people_also_ask": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/RequestMeta"
+                    }
+                  }
+                },
+                "example": {
+                  "success": true,
+                  "data": {
+                    "results": [
+                      {
+                        "position": 1,
+                        "title": "Best SEO Tools (2026)",
+                        "url": "https://example.com/seo-tools",
+                        "description": "Compare the top SEO tools for 2026.",
+                        "domain": "example.com"
+                      }
+                    ],
+                    "keyword": "seo tools",
+                    "location": "United States",
+                    "serp_features": [
+                      "featured_snippet",
+                      "people_also_ask"
+                    ],
+                    "people_also_ask": [
+                      "What is the best SEO tool?",
+                      "Are SEO tools worth it?"
+                    ]
+                  },
+                  "meta": {
+                    "request_id": "req_1a2b3c4d",
+                    "timestamp": "2026-07-01T12:00:00Z"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "402": {
+            "$ref": "#/components/responses/InsufficientBalance"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "429": {
+            "$ref": "#/components/responses/RateLimited"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
         }
       }
     },
@@ -1602,22 +1846,94 @@
                   "keywords"
                 ],
                 "properties": {
-                  "keywords": { "type": "array", "items": { "type": "string" }, "minItems": 1, "description": "Keywords to score." },
-                  "location": { "type": "string", "default": "United States", "description": "Market location name." },
-                  "language": { "type": "string", "default": "en", "description": "Language code." }
+                  "keywords": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "minItems": 1,
+                    "description": "Keywords to score."
+                  },
+                  "location": {
+                    "type": "string",
+                    "default": "United States",
+                    "description": "Market location name."
+                  },
+                  "language": {
+                    "type": "string",
+                    "default": "en",
+                    "description": "Language code."
+                  }
                 }
               }
             }
           }
         },
         "responses": {
-          "200": { "description": "Difficulty score per keyword", "content": { "application/json": { "schema": {"type":"object","properties":{"success":{"type":"boolean","enum":[true]},"data":{"type":"object","properties":{"difficulty":{"type":"object","additionalProperties":{"type":"integer"},"description":"Map of keyword -> difficulty score (0-100)."}}},"meta":{"$ref":"#/components/schemas/RequestMeta"}}}, "example": {"success":true,"data":{"difficulty":{"seo tools":67,"keyword research":54}},"meta":{"request_id":"req_1a2b3c4d","timestamp":"2026-07-01T12:00:00Z"}} } } },
-          "401": { "$ref": "#/components/responses/Unauthorized" },
-          "402": { "$ref": "#/components/responses/InsufficientBalance" },
-          "403": { "$ref": "#/components/responses/Forbidden" },
-          "422": { "$ref": "#/components/responses/ValidationError" },
-          "429": { "$ref": "#/components/responses/RateLimited" },
-          "500": { "$ref": "#/components/responses/ServerError" }
+          "200": {
+            "description": "Difficulty score per keyword",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [
+                        true
+                      ]
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "difficulty": {
+                          "type": "object",
+                          "additionalProperties": {
+                            "type": "integer"
+                          },
+                          "description": "Map of keyword -> difficulty score (0-100)."
+                        }
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/RequestMeta"
+                    }
+                  }
+                },
+                "example": {
+                  "success": true,
+                  "data": {
+                    "difficulty": {
+                      "seo tools": 67,
+                      "keyword research": 54
+                    }
+                  },
+                  "meta": {
+                    "request_id": "req_1a2b3c4d",
+                    "timestamp": "2026-07-01T12:00:00Z"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "402": {
+            "$ref": "#/components/responses/InsufficientBalance"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "429": {
+            "$ref": "#/components/responses/RateLimited"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
         }
       }
     },
@@ -1639,23 +1955,130 @@
                   "target"
                 ],
                 "properties": {
-                  "target": { "type": "string", "description": "Domain to inspect, e.g. example.com." },
-                  "location": { "type": "string", "default": "United States", "description": "Market location name." },
-                  "language": { "type": "string", "default": "en", "description": "Language code." },
-                  "limit": { "type": "integer", "minimum": 1, "maximum": 200, "default": 50, "description": "Max keywords to return." }
+                  "target": {
+                    "type": "string",
+                    "description": "Domain to inspect, e.g. example.com."
+                  },
+                  "location": {
+                    "type": "string",
+                    "default": "United States",
+                    "description": "Market location name."
+                  },
+                  "language": {
+                    "type": "string",
+                    "default": "en",
+                    "description": "Language code."
+                  },
+                  "limit": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 200,
+                    "default": 50,
+                    "description": "Max keywords to return."
+                  }
                 }
               }
             }
           }
         },
         "responses": {
-          "200": { "description": "Ranked keywords with position, volume and ETV", "content": { "application/json": { "schema": {"type":"object","properties":{"success":{"type":"boolean","enum":[true]},"data":{"type":"object","properties":{"target":{"type":"string"},"keywords":{"type":"array","items":{"type":"object","properties":{"keyword":{"type":"string"},"position":{"type":"integer"},"url":{"type":"string"},"type":{"type":"string"},"search_volume":{"type":"integer"},"cpc":{"type":"number"},"etv":{"type":"number"}}}}}},"meta":{"$ref":"#/components/schemas/RequestMeta"}}}, "example": {"success":true,"data":{"target":"example.com","keywords":[{"keyword":"seo tools","position":3,"url":"https://example.com/seo-tools","type":"organic","search_volume":18100,"cpc":12.4,"etv":2450.5}]},"meta":{"request_id":"req_1a2b3c4d","timestamp":"2026-07-01T12:00:00Z"}} } } },
-          "401": { "$ref": "#/components/responses/Unauthorized" },
-          "402": { "$ref": "#/components/responses/InsufficientBalance" },
-          "403": { "$ref": "#/components/responses/Forbidden" },
-          "422": { "$ref": "#/components/responses/ValidationError" },
-          "429": { "$ref": "#/components/responses/RateLimited" },
-          "500": { "$ref": "#/components/responses/ServerError" }
+          "200": {
+            "description": "Ranked keywords with position, volume and ETV",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [
+                        true
+                      ]
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "target": {
+                          "type": "string"
+                        },
+                        "keywords": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "keyword": {
+                                "type": "string"
+                              },
+                              "position": {
+                                "type": "integer"
+                              },
+                              "url": {
+                                "type": "string"
+                              },
+                              "type": {
+                                "type": "string"
+                              },
+                              "search_volume": {
+                                "type": "integer"
+                              },
+                              "cpc": {
+                                "type": "number"
+                              },
+                              "etv": {
+                                "type": "number"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/RequestMeta"
+                    }
+                  }
+                },
+                "example": {
+                  "success": true,
+                  "data": {
+                    "target": "example.com",
+                    "keywords": [
+                      {
+                        "keyword": "seo tools",
+                        "position": 3,
+                        "url": "https://example.com/seo-tools",
+                        "type": "organic",
+                        "search_volume": 18100,
+                        "cpc": 12.4,
+                        "etv": 2450.5
+                      }
+                    ]
+                  },
+                  "meta": {
+                    "request_id": "req_1a2b3c4d",
+                    "timestamp": "2026-07-01T12:00:00Z"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "402": {
+            "$ref": "#/components/responses/InsufficientBalance"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "429": {
+            "$ref": "#/components/responses/RateLimited"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
         }
       }
     },
@@ -1677,22 +2100,126 @@
                   "target"
                 ],
                 "properties": {
-                  "target": { "type": "string", "description": "Domain to inspect, e.g. example.com." },
-                  "location": { "type": "string", "default": "United States", "description": "Market location name." },
-                  "language": { "type": "string", "default": "en", "description": "Language code." }
+                  "target": {
+                    "type": "string",
+                    "description": "Domain to inspect, e.g. example.com."
+                  },
+                  "location": {
+                    "type": "string",
+                    "default": "United States",
+                    "description": "Market location name."
+                  },
+                  "language": {
+                    "type": "string",
+                    "default": "en",
+                    "description": "Language code."
+                  }
                 }
               }
             }
           }
         },
         "responses": {
-          "200": { "description": "Organic overview metrics", "content": { "application/json": { "schema": {"type":"object","properties":{"success":{"type":"boolean","enum":[true]},"data":{"type":"object","properties":{"target":{"type":"string"},"overview":{"type":"object","properties":{"organic_keywords":{"type":"integer"},"organic_etv":{"type":"number"},"pos_1":{"type":"integer"},"pos_2_3":{"type":"integer"},"pos_4_10":{"type":"integer"},"pos_11_20":{"type":"integer"},"is_new":{"type":"integer"},"is_up":{"type":"integer"},"is_down":{"type":"integer"}}}}},"meta":{"$ref":"#/components/schemas/RequestMeta"}}}, "example": {"success":true,"data":{"target":"example.com","overview":{"organic_keywords":12500,"organic_etv":48230.7,"pos_1":320,"pos_2_3":540,"pos_4_10":2100,"pos_11_20":3800,"is_new":45,"is_up":210,"is_down":130}},"meta":{"request_id":"req_1a2b3c4d","timestamp":"2026-07-01T12:00:00Z"}} } } },
-          "401": { "$ref": "#/components/responses/Unauthorized" },
-          "402": { "$ref": "#/components/responses/InsufficientBalance" },
-          "403": { "$ref": "#/components/responses/Forbidden" },
-          "422": { "$ref": "#/components/responses/ValidationError" },
-          "429": { "$ref": "#/components/responses/RateLimited" },
-          "500": { "$ref": "#/components/responses/ServerError" }
+          "200": {
+            "description": "Organic overview metrics",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [
+                        true
+                      ]
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "target": {
+                          "type": "string"
+                        },
+                        "overview": {
+                          "type": "object",
+                          "properties": {
+                            "organic_keywords": {
+                              "type": "integer"
+                            },
+                            "organic_etv": {
+                              "type": "number"
+                            },
+                            "pos_1": {
+                              "type": "integer"
+                            },
+                            "pos_2_3": {
+                              "type": "integer"
+                            },
+                            "pos_4_10": {
+                              "type": "integer"
+                            },
+                            "pos_11_20": {
+                              "type": "integer"
+                            },
+                            "is_new": {
+                              "type": "integer"
+                            },
+                            "is_up": {
+                              "type": "integer"
+                            },
+                            "is_down": {
+                              "type": "integer"
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/RequestMeta"
+                    }
+                  }
+                },
+                "example": {
+                  "success": true,
+                  "data": {
+                    "target": "example.com",
+                    "overview": {
+                      "organic_keywords": 12500,
+                      "organic_etv": 48230.7,
+                      "pos_1": 320,
+                      "pos_2_3": 540,
+                      "pos_4_10": 2100,
+                      "pos_11_20": 3800,
+                      "is_new": 45,
+                      "is_up": 210,
+                      "is_down": 130
+                    }
+                  },
+                  "meta": {
+                    "request_id": "req_1a2b3c4d",
+                    "timestamp": "2026-07-01T12:00:00Z"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "402": {
+            "$ref": "#/components/responses/InsufficientBalance"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "429": {
+            "$ref": "#/components/responses/RateLimited"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
         }
       }
     },
@@ -1714,23 +2241,118 @@
                   "target"
                 ],
                 "properties": {
-                  "target": { "type": "string", "description": "Domain to inspect, e.g. example.com." },
-                  "location": { "type": "string", "default": "United States", "description": "Market location name." },
-                  "language": { "type": "string", "default": "en", "description": "Language code." },
-                  "limit": { "type": "integer", "minimum": 1, "maximum": 50, "default": 10, "description": "Max competitors to return." }
+                  "target": {
+                    "type": "string",
+                    "description": "Domain to inspect, e.g. example.com."
+                  },
+                  "location": {
+                    "type": "string",
+                    "default": "United States",
+                    "description": "Market location name."
+                  },
+                  "language": {
+                    "type": "string",
+                    "default": "en",
+                    "description": "Language code."
+                  },
+                  "limit": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 50,
+                    "default": 10,
+                    "description": "Max competitors to return."
+                  }
                 }
               }
             }
           }
         },
         "responses": {
-          "200": { "description": "Competitor domains with overlap metrics", "content": { "application/json": { "schema": {"type":"object","properties":{"success":{"type":"boolean","enum":[true]},"data":{"type":"object","properties":{"target":{"type":"string"},"competitors":{"type":"array","items":{"type":"object","properties":{"domain":{"type":"string"},"common_keywords":{"type":"integer"},"organic_keywords":{"type":"integer"},"organic_etv":{"type":"number"}}}}}},"meta":{"$ref":"#/components/schemas/RequestMeta"}}}, "example": {"success":true,"data":{"target":"example.com","competitors":[{"domain":"rival.com","common_keywords":1840,"organic_keywords":22500,"organic_etv":75200}]},"meta":{"request_id":"req_1a2b3c4d","timestamp":"2026-07-01T12:00:00Z"}} } } },
-          "401": { "$ref": "#/components/responses/Unauthorized" },
-          "402": { "$ref": "#/components/responses/InsufficientBalance" },
-          "403": { "$ref": "#/components/responses/Forbidden" },
-          "422": { "$ref": "#/components/responses/ValidationError" },
-          "429": { "$ref": "#/components/responses/RateLimited" },
-          "500": { "$ref": "#/components/responses/ServerError" }
+          "200": {
+            "description": "Competitor domains with overlap metrics",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [
+                        true
+                      ]
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "target": {
+                          "type": "string"
+                        },
+                        "competitors": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "domain": {
+                                "type": "string"
+                              },
+                              "common_keywords": {
+                                "type": "integer"
+                              },
+                              "organic_keywords": {
+                                "type": "integer"
+                              },
+                              "organic_etv": {
+                                "type": "number"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/RequestMeta"
+                    }
+                  }
+                },
+                "example": {
+                  "success": true,
+                  "data": {
+                    "target": "example.com",
+                    "competitors": [
+                      {
+                        "domain": "rival.com",
+                        "common_keywords": 1840,
+                        "organic_keywords": 22500,
+                        "organic_etv": 75200
+                      }
+                    ]
+                  },
+                  "meta": {
+                    "request_id": "req_1a2b3c4d",
+                    "timestamp": "2026-07-01T12:00:00Z"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "402": {
+            "$ref": "#/components/responses/InsufficientBalance"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "429": {
+            "$ref": "#/components/responses/RateLimited"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
         }
       }
     },
@@ -1752,20 +2374,114 @@
                   "target"
                 ],
                 "properties": {
-                  "target": { "type": "string", "description": "Domain or URL to inspect." }
+                  "target": {
+                    "type": "string",
+                    "description": "Domain or URL to inspect."
+                  }
                 }
               }
             }
           }
         },
         "responses": {
-          "200": { "description": "Backlink profile summary", "content": { "application/json": { "schema": {"type":"object","properties":{"success":{"type":"boolean","enum":[true]},"data":{"type":"object","properties":{"target":{"type":"string"},"summary":{"type":"object","properties":{"rank":{"type":"integer"},"backlinks":{"type":"integer"},"referring_domains":{"type":"integer"},"referring_main_domains":{"type":"integer"},"broken_backlinks":{"type":"integer"},"referring_links_types":{"type":"object"},"referring_links_attributes":{"type":"object"}}}}},"meta":{"$ref":"#/components/schemas/RequestMeta"}}}, "example": {"success":true,"data":{"target":"example.com","summary":{"rank":412,"backlinks":185400,"referring_domains":3120,"referring_main_domains":2850,"broken_backlinks":240,"referring_links_types":{"anchor":150000,"image":35400},"referring_links_attributes":{"nofollow":42000,"dofollow":143400}}},"meta":{"request_id":"req_1a2b3c4d","timestamp":"2026-07-01T12:00:00Z"}} } } },
-          "401": { "$ref": "#/components/responses/Unauthorized" },
-          "402": { "$ref": "#/components/responses/InsufficientBalance" },
-          "403": { "$ref": "#/components/responses/Forbidden" },
-          "422": { "$ref": "#/components/responses/ValidationError" },
-          "429": { "$ref": "#/components/responses/RateLimited" },
-          "500": { "$ref": "#/components/responses/ServerError" }
+          "200": {
+            "description": "Backlink profile summary",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [
+                        true
+                      ]
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "target": {
+                          "type": "string"
+                        },
+                        "summary": {
+                          "type": "object",
+                          "properties": {
+                            "rank": {
+                              "type": "integer"
+                            },
+                            "backlinks": {
+                              "type": "integer"
+                            },
+                            "referring_domains": {
+                              "type": "integer"
+                            },
+                            "referring_main_domains": {
+                              "type": "integer"
+                            },
+                            "broken_backlinks": {
+                              "type": "integer"
+                            },
+                            "referring_links_types": {
+                              "type": "object"
+                            },
+                            "referring_links_attributes": {
+                              "type": "object"
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/RequestMeta"
+                    }
+                  }
+                },
+                "example": {
+                  "success": true,
+                  "data": {
+                    "target": "example.com",
+                    "summary": {
+                      "rank": 412,
+                      "backlinks": 185400,
+                      "referring_domains": 3120,
+                      "referring_main_domains": 2850,
+                      "broken_backlinks": 240,
+                      "referring_links_types": {
+                        "anchor": 150000,
+                        "image": 35400
+                      },
+                      "referring_links_attributes": {
+                        "nofollow": 42000,
+                        "dofollow": 143400
+                      }
+                    }
+                  },
+                  "meta": {
+                    "request_id": "req_1a2b3c4d",
+                    "timestamp": "2026-07-01T12:00:00Z"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "402": {
+            "$ref": "#/components/responses/InsufficientBalance"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "429": {
+            "$ref": "#/components/responses/RateLimited"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
         }
       }
     },
@@ -1787,21 +2503,112 @@
                   "url"
                 ],
                 "properties": {
-                  "url": { "type": "string", "format": "uri", "description": "Full page URL to audit." },
-                  "max_pages": { "type": "integer", "minimum": 1, "maximum": 50, "default": 10, "description": "Max pages to crawl." }
+                  "url": {
+                    "type": "string",
+                    "format": "uri",
+                    "description": "Full page URL to audit."
+                  },
+                  "max_pages": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 50,
+                    "default": 10,
+                    "description": "Max pages to crawl."
+                  }
                 }
               }
             }
           }
         },
         "responses": {
-          "200": { "description": "On-page audit result", "content": { "application/json": { "schema": {"type":"object","properties":{"success":{"type":"boolean","enum":[true]},"data":{"type":"object","properties":{"url":{"type":"string"},"audit":{"type":"object","properties":{"crawl_progress":{"type":"string"},"pages_crawled":{"type":"integer"},"pages_with_errors":{"type":"integer"},"onpage_score":{"type":"number"},"checks":{"type":"object"}}}}},"meta":{"$ref":"#/components/schemas/RequestMeta"}}}, "example": {"success":true,"data":{"url":"https://example.com/page","audit":{"crawl_progress":"finished","pages_crawled":1,"pages_with_errors":0,"onpage_score":92.5,"checks":{"no_title":false,"no_description":false,"low_content_rate":false}}},"meta":{"request_id":"req_1a2b3c4d","timestamp":"2026-07-01T12:00:00Z"}} } } },
-          "401": { "$ref": "#/components/responses/Unauthorized" },
-          "402": { "$ref": "#/components/responses/InsufficientBalance" },
-          "403": { "$ref": "#/components/responses/Forbidden" },
-          "422": { "$ref": "#/components/responses/ValidationError" },
-          "429": { "$ref": "#/components/responses/RateLimited" },
-          "500": { "$ref": "#/components/responses/ServerError" }
+          "200": {
+            "description": "On-page audit result",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [
+                        true
+                      ]
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "url": {
+                          "type": "string"
+                        },
+                        "audit": {
+                          "type": "object",
+                          "properties": {
+                            "crawl_progress": {
+                              "type": "string"
+                            },
+                            "pages_crawled": {
+                              "type": "integer"
+                            },
+                            "pages_with_errors": {
+                              "type": "integer"
+                            },
+                            "onpage_score": {
+                              "type": "number"
+                            },
+                            "checks": {
+                              "type": "object"
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/RequestMeta"
+                    }
+                  }
+                },
+                "example": {
+                  "success": true,
+                  "data": {
+                    "url": "https://example.com/page",
+                    "audit": {
+                      "crawl_progress": "finished",
+                      "pages_crawled": 1,
+                      "pages_with_errors": 0,
+                      "onpage_score": 92.5,
+                      "checks": {
+                        "no_title": false,
+                        "no_description": false,
+                        "low_content_rate": false
+                      }
+                    }
+                  },
+                  "meta": {
+                    "request_id": "req_1a2b3c4d",
+                    "timestamp": "2026-07-01T12:00:00Z"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "402": {
+            "$ref": "#/components/responses/InsufficientBalance"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "429": {
+            "$ref": "#/components/responses/RateLimited"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
         }
       }
     },
@@ -6179,6 +6986,443 @@
                 }
               }
             }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/videos/hook": {
+      "post": {
+        "summary": "Generate a viral hook line",
+        "description": "Writes ONE scroll-stopping hook line (<=8 words) to overlay on a short's first seconds. Provide `script` or `transcript_words`. Billed per request from your API wallet; refunded on failure.",
+        "operationId": "generateVideoHook",
+        "tags": [
+          "Videos"
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "script": {
+                    "type": "string",
+                    "description": "Plain script/transcript text."
+                  },
+                  "transcript_words": {
+                    "type": "array",
+                    "items": {
+                      "type": "object"
+                    },
+                    "description": "Word-level transcript [{word,start,end}] (alternative to script)."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The generated hook line."
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "402": {
+            "$ref": "#/components/responses/InsufficientBalance"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      }
+    },
+    "/videos/broll-suggest": {
+      "post": {
+        "summary": "Suggest B-roll moments",
+        "description": "Suggests B-roll moments (with timings) for a word-level transcript. Billed per request; refunded on failure.",
+        "operationId": "suggestBroll",
+        "tags": [
+          "Videos"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "transcript_words"
+                ],
+                "properties": {
+                  "transcript_words": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "word": {
+                          "type": "string"
+                        },
+                        "start": {
+                          "type": "integer",
+                          "description": "ms"
+                        },
+                        "end": {
+                          "type": "integer",
+                          "description": "ms"
+                        }
+                      }
+                    },
+                    "description": "Word-level transcript with millisecond start/end."
+                  },
+                  "target_count": {
+                    "type": "integer",
+                    "default": 5,
+                    "description": "How many suggestions (3-10)."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "B-roll suggestions."
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "402": {
+            "$ref": "#/components/responses/InsufficientBalance"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      }
+    },
+    "/videos/emphasis": {
+      "post": {
+        "summary": "Suggest on-screen emphasis",
+        "description": "Picks on-screen emphasis moments (punchy full-screen text with timings) from a word-level transcript. Billed per request; refunded on failure.",
+        "operationId": "suggestEmphasis",
+        "tags": [
+          "Videos"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "transcript_words"
+                ],
+                "properties": {
+                  "transcript_words": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "word": {
+                          "type": "string"
+                        },
+                        "start": {
+                          "type": "integer",
+                          "description": "ms"
+                        },
+                        "end": {
+                          "type": "integer",
+                          "description": "ms"
+                        }
+                      }
+                    },
+                    "description": "Word-level transcript with millisecond start/end."
+                  },
+                  "target_count": {
+                    "type": "integer",
+                    "default": 8,
+                    "description": "How many picks (3-15)."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Emphasis picks."
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "402": {
+            "$ref": "#/components/responses/InsufficientBalance"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      }
+    },
+    "/videos/viral-thumbnail": {
+      "post": {
+        "summary": "Generate a viral thumbnail",
+        "description": "Generates a viral, click-optimized thumbnail from a video title (optionally guided by a reference image) and returns a hosted `image_url`. Billed per request; refunded on failure.",
+        "operationId": "generateViralThumbnail",
+        "tags": [
+          "Videos"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "title"
+                ],
+                "properties": {
+                  "title": {
+                    "type": "string",
+                    "description": "Video title (1-300 chars)."
+                  },
+                  "aspect_ratio": {
+                    "type": "string",
+                    "enum": [
+                      "16:9",
+                      "9:16"
+                    ],
+                    "default": "16:9",
+                    "description": "16:9 (YouTube) or 9:16 (Shorts/Reels/TikTok)."
+                  },
+                  "image_url": {
+                    "type": "string",
+                    "description": "Optional https reference image whose subject is preserved."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The generated thumbnail (image_url + media_id)."
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "402": {
+            "$ref": "#/components/responses/InsufficientBalance"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      }
+    },
+    "/content/caption": {
+      "post": {
+        "summary": "Generate a social caption",
+        "description": "Writes ONE platform-tuned social caption (with hashtags) for a short-form video. Billed per request; refunded on failure.",
+        "operationId": "generateCaption",
+        "tags": [
+          "Content"
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "platform": {
+                    "type": "string",
+                    "enum": [
+                      "twitter",
+                      "tiktok",
+                      "instagram",
+                      "facebook",
+                      "linkedin",
+                      "youtube"
+                    ],
+                    "description": "Destination platform (sets length + voice)."
+                  },
+                  "tone": {
+                    "type": "string",
+                    "default": "engaging"
+                  },
+                  "title": {
+                    "type": "string"
+                  },
+                  "content": {
+                    "type": "string",
+                    "description": "What the video says (transcript) so the caption is on-topic."
+                  },
+                  "current_caption": {
+                    "type": "string",
+                    "description": "An existing caption to improve."
+                  },
+                  "instruction": {
+                    "type": "string",
+                    "description": "Extra instruction, e.g. 'add a CTA'."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The generated caption."
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "402": {
+            "$ref": "#/components/responses/InsufficientBalance"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      }
+    },
+    "/shorts/generate": {
+      "post": {
+        "summary": "Generate viral shorts from a long video",
+        "description": "Turns one long video into ranked, ready-to-post vertical (9:16) clips with hooks + virality scores. Provide `video_url` (direct media) OR `source_url` (a YouTube/Vimeo/TikTok link). Returns `202 Accepted` with a `job_uid`; poll `GET /v1/shorts/{uid}`. Billed per REQUESTED clip from your API wallet; a wholly-failed job is refunded automatically.",
+        "operationId": "generateShorts",
+        "tags": [
+          "Shorts"
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "video_url": {
+                    "type": "string",
+                    "description": "Direct media URL (provide this or source_url)."
+                  },
+                  "source_url": {
+                    "type": "string",
+                    "description": "Platform link (YouTube/Vimeo/TikTok/Loom/...), downloaded server-side."
+                  },
+                  "clip_count": {
+                    "type": "integer",
+                    "default": 10,
+                    "description": "Clips to produce (3-20). Billed per requested clip."
+                  },
+                  "language": {
+                    "type": "string",
+                    "default": "en",
+                    "description": "Spoken language code."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Accepted — poll GET /v1/shorts/{uid} for the ranked clips"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "402": {
+            "$ref": "#/components/responses/InsufficientBalance"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      }
+    },
+    "/shorts": {
+      "get": {
+        "summary": "List shorts jobs",
+        "description": "Lists your workspace's Magic Shorts jobs.",
+        "operationId": "listShorts",
+        "tags": [
+          "Shorts"
+        ],
+        "parameters": [
+          {
+            "name": "per_page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Items per page (max 100)."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of shorts jobs."
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          }
+        }
+      }
+    },
+    "/shorts/{uid}": {
+      "get": {
+        "summary": "Get shorts job + clips",
+        "description": "Gets a Magic Shorts job's status and its ranked clips (hooks, scores, clip URLs). Poll after `generateShorts` until `status` is `completed`.",
+        "operationId": "getShorts",
+        "tags": [
+          "Shorts"
+        ],
+        "parameters": [
+          {
+            "name": "uid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The job_uid returned by shorts/generate."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The shorts job and its clips."
           },
           "401": {
             "$ref": "#/components/responses/Unauthorized"

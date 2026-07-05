@@ -163,7 +163,19 @@
                   "POST /videos/generate",
                   "GET /videos",
                   "GET /videos/{video_id}",
-                  "DELETE /videos/{video_id}"
+                  "DELETE /videos/{video_id}",
+                  "POST /videos/hook",
+                  "POST /videos/broll-suggest",
+                  "POST /videos/emphasis",
+                  "POST /videos/viral-thumbnail"
+                ]
+              },
+              {
+                "group": "Shorts",
+                "pages": [
+                  "POST /shorts/generate",
+                  "GET /shorts",
+                  "GET /shorts/{uid}"
                 ]
               },
               {
@@ -189,7 +201,8 @@
               {
                 "group": "Content",
                 "pages": [
-                  "POST /content/rewrite"
+                  "POST /content/rewrite",
+                  "POST /content/caption"
                 ]
               },
               {
