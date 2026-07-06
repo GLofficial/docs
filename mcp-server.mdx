@@ -17,12 +17,24 @@ https://mcp.smartlyq.com/mcp
 ## Prerequisites
 
 - A SmartlyQ account on a **Pro plan or higher** (API access requires Pro+).
-- An API key (`sqk_live_...`) from the [Developer Dashboard](https://app.smartlyq.com/my/developer), with the scopes you need enabled (see [Scopes](#tool-scopes) below).
-- An MCP-capable client: **Claude Desktop, Claude Code, Cursor, ChatGPT, Windsurf**, or any MCP client.
+- An MCP-capable client: **Claude.ai, Claude Desktop, Claude Code, Cursor, ChatGPT, Windsurf**, or any MCP client.
 
-## Connect
+## Connect with OAuth (recommended)
 
-The server authenticates with your SmartlyQ API key, passed as a Bearer token.
+The server supports **OAuth 2.1 sign-in** (MCP spec authorization) — no API key needed. This is the only way to connect from **claude.ai** custom connectors, and the easiest everywhere else:
+
+1. Add a custom connector / MCP server with the URL `https://mcp.smartlyq.com/mcp`.
+2. Your client opens a SmartlyQ sign-in window. Log in, pick the **workspace** to connect, and tick the **permissions** you want to grant.
+3. Approve — you're connected. Revoke anytime from **Settings > Developer API** (the connection appears as an API key).
+
+```bash Claude Code (CLI)
+claude mcp add smartlyq --transport http https://mcp.smartlyq.com/mcp
+# Claude Code walks you through the SmartlyQ sign-in on first use.
+```
+
+## Connect with an API key
+
+Alternatively, authenticate with a SmartlyQ API key (`sqk_live_...`) from the [Developer Dashboard](https://app.smartlyq.com/my/developer) — with the scopes you need enabled (see [Scopes](#tool-scopes) below) — passed as a Bearer token.
 
 <CodeGroup>
 ```jsonc Claude Desktop / Cursor (mcp config)
@@ -80,6 +92,18 @@ Once connected, try a prompt like:
 | `text_to_speech` | Convert text to speech | `audio:write` |
 | `get_job` | Get an async job's status/result | `jobs:read` |
 | `list_jobs` | List async jobs | `jobs:read` |
+
+## The full API catalog (operations facade)
+
+Beyond the curated tools above, **three facade tools expose every operation in the SmartlyQ API** (100+ operations across Chatbot, Media, Short URLs, AI Captain, Account, and more) without flooding the model's context:
+
+| Tool | What it does |
+|------|--------------|
+| `search_operations` | Find operations by intent ("shorten a url", "train chatbot") |
+| `describe_operation` | Full parameter/body docs for one operation |
+| `execute_operation` | Run it — write/delete operations require an explicit `confirm: true` |
+
+The agent discovers what it needs (`search_operations` → `describe_operation` → `execute_operation`); scopes, rate limits, and billing apply exactly as for direct API calls.
 
 ## Tool scopes
 
