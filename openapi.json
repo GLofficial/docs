@@ -3400,6 +3400,447 @@
         }
       }
     },
+    "/seo/brand-lookup": {
+      "post": {
+        "summary": "AI Visibility: brand lookup",
+        "description": "How often ChatGPT and Google AI Overview cite a brand, domain or keyword: total mentions, AI search volume, estimated impressions (split by platform), the citing prompts, cited source domains, related pages and a 12-month trend.",
+        "operationId": "seoBrandLookup",
+        "tags": [
+          "SEO"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "value"
+                ],
+                "properties": {
+                  "value": {
+                    "type": "string",
+                    "description": "Brand name, domain, or keyword to look up."
+                  },
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "keyword",
+                      "domain"
+                    ],
+                    "default": "keyword",
+                    "description": "Whether `value` is a brand/keyword or a domain."
+                  },
+                  "location": {
+                    "type": "string",
+                    "default": "United States",
+                    "description": "Location name."
+                  }
+                }
+              },
+              "example": {
+                "value": "nike.com",
+                "type": "domain",
+                "location": "United States"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Per-platform AI mention metrics",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [
+                        true
+                      ]
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "value": {
+                          "type": "string"
+                        },
+                        "type": {
+                          "type": "string"
+                        },
+                        "platforms": {
+                          "type": "object",
+                          "description": "Per-platform totals keyed by chat_gpt / google.",
+                          "additionalProperties": {
+                            "type": "object",
+                            "properties": {
+                              "mentions": {
+                                "type": "integer"
+                              },
+                              "ai_search_volume": {
+                                "type": "integer"
+                              },
+                              "impressions": {
+                                "type": "integer"
+                              }
+                            }
+                          }
+                        },
+                        "queries": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "question": {
+                                "type": "string"
+                              },
+                              "platform": {
+                                "type": "string"
+                              },
+                              "ai_search_volume": {
+                                "type": "integer"
+                              }
+                            }
+                          }
+                        },
+                        "related_pages": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "page": {
+                                "type": "string"
+                              },
+                              "platform": {
+                                "type": "string"
+                              },
+                              "mentions": {
+                                "type": "integer"
+                              },
+                              "ai_search_volume": {
+                                "type": "integer"
+                              }
+                            }
+                          }
+                        },
+                        "cited_sources": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "domain": {
+                                "type": "string"
+                              },
+                              "citations": {
+                                "type": "integer"
+                              }
+                            }
+                          }
+                        },
+                        "trend": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "year": {
+                                "type": "integer"
+                              },
+                              "month": {
+                                "type": "integer"
+                              },
+                              "volume": {
+                                "type": "integer"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/RequestMeta"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "402": {
+            "$ref": "#/components/responses/InsufficientBalance"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "429": {
+            "$ref": "#/components/responses/RateLimited"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
+      }
+    },
+    "/seo/prompt-explorer": {
+      "post": {
+        "summary": "AI Visibility: prompt explorer",
+        "description": "Run one prompt across ChatGPT, Claude, Gemini and Perplexity side-by-side. Returns each model's answer text, citations and fan-out queries; pass `brand` to get a mentions_brand flag per answer.",
+        "operationId": "seoPromptExplorer",
+        "tags": [
+          "SEO"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "prompt"
+                ],
+                "properties": {
+                  "prompt": {
+                    "type": "string",
+                    "description": "The prompt to run across the AI models."
+                  },
+                  "models": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "enum": [
+                        "chat_gpt",
+                        "claude",
+                        "gemini",
+                        "perplexity"
+                      ]
+                    },
+                    "description": "Which models to query (default all four)."
+                  },
+                  "web_search": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Allow the models to use web search."
+                  },
+                  "country": {
+                    "type": "string",
+                    "description": "Two-letter ISO country code to geolocate web search (e.g. 'US')."
+                  },
+                  "brand": {
+                    "type": "string",
+                    "description": "Optional brand to flag mentions of in each answer."
+                  }
+                }
+              },
+              "example": {
+                "prompt": "What is the best CRM for a small agency?",
+                "brand": "SmartlyQ"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Per-model answers",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [
+                        true
+                      ]
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "prompt": {
+                          "type": "string"
+                        },
+                        "brand": {
+                          "type": "string"
+                        },
+                        "responses": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "model": {
+                                "type": "string"
+                              },
+                              "model_name": {
+                                "type": "string"
+                              },
+                              "text": {
+                                "type": "string"
+                              },
+                              "citations": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "title": {
+                                      "type": "string"
+                                    },
+                                    "url": {
+                                      "type": "string"
+                                    }
+                                  }
+                                }
+                              },
+                              "fan_out_queries": {
+                                "type": "array",
+                                "items": {
+                                  "type": "string"
+                                }
+                              },
+                              "mentions_brand": {
+                                "type": "boolean"
+                              },
+                              "error": {
+                                "type": "string"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/RequestMeta"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "402": {
+            "$ref": "#/components/responses/InsufficientBalance"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "429": {
+            "$ref": "#/components/responses/RateLimited"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
+      }
+    },
+    "/seo/ai-audit": {
+      "post": {
+        "summary": "AI Visibility Audit (async)",
+        "description": "Zero-input GEO audit: give a website URL and the audit auto-generates realistic customer queries in the market's language (or accepts your own), runs every query across ChatGPT, Claude, Gemini and Perplexity, and scores unaided brand presence. The result contains an AI Presence Score (0-100 = share of query x model checks whose answer mentions the brand or domain), per-query mention results, and the competitors AI recommends instead. Long-running (typically 5-15 minutes): returns 202 with a job_id - poll GET /jobs/{job_id}. Billed per (query x model) check.",
+        "operationId": "seoAiAudit",
+        "tags": [
+          "SEO"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "url"
+                ],
+                "properties": {
+                  "url": {
+                    "type": "string",
+                    "description": "The business website URL to audit."
+                  },
+                  "brand": {
+                    "type": "string",
+                    "description": "Brand name to detect in answers (auto-detected from the site when omitted)."
+                  },
+                  "location": {
+                    "type": "string",
+                    "default": "United States",
+                    "description": "Market/location name (queries are generated in its language)."
+                  },
+                  "language": {
+                    "type": "string",
+                    "description": "ISO language code override for generated queries."
+                  },
+                  "queries": {
+                    "type": "array",
+                    "maxItems": 12,
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "Custom customer queries (max 12). Omit to auto-generate 8 from the website."
+                  },
+                  "models": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "enum": [
+                        "chat_gpt",
+                        "claude",
+                        "gemini",
+                        "perplexity"
+                      ]
+                    },
+                    "description": "Which models to check (default all four)."
+                  },
+                  "name": {
+                    "type": "string",
+                    "description": "Optional audit name."
+                  }
+                }
+              },
+              "example": {
+                "url": "acme-plumbing.com",
+                "location": "United Kingdom"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Accepted; poll job for the audit report",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JobCreatedResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "402": {
+            "$ref": "#/components/responses/InsufficientBalance"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "429": {
+            "$ref": "#/components/responses/RateLimited"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
+      }
+    },
     "/audio/text-to-speech": {
       "post": {
         "summary": "Text to speech",

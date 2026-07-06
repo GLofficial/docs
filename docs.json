@@ -221,7 +221,10 @@
                   "POST /seo/backlink-anchors",
                   "POST /seo/spam-score",
                   "POST /seo/rank-history",
-                  "POST /seo/site-audit"
+                  "POST /seo/site-audit",
+                  "POST /seo/brand-lookup",
+                  "POST /seo/prompt-explorer",
+                  "POST /seo/ai-audit"
                 ]
               }
             ]
