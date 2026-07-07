@@ -125,6 +125,8 @@ SmartlyQ API error (HTTP 403) — code: INSUFFICIENT_SCOPE — API key lacks req
 
 Content generation tools (`generate_article`, `generate_image`, `generate_video`, `text_to_speech`) run asynchronously and return a **job id**. The agent should poll `get_job` until the job's status is `completed` to retrieve the result. See [Async jobs](/guides/async-jobs).
 
+The long SEO lookups (`/seo/site-audit`, `/seo/rank-history`, `/seo/brand-lookup`, `/seo/prompt-explorer`) are also async on the REST API (202 + `job_uid`). Over MCP you don't need to do anything: **the MCP server waits for these jobs internally** and returns the finished result as a normal tool response (30s-2min). If the wait budget is exceeded you receive the `job_uid` to poll with `get_job`.
+
 ## Webhooks
 
 Subscribe an HTTPS endpoint to events with `create_webhook` (or `POST /webhooks`) so your agent reacts to posts publishing, comments arriving, or jobs finishing. Deliveries are HMAC-signed and retried with backoff — see the full [Webhooks guide](/guides/webhooks) for the event list, signature verification, and retry policy.

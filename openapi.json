@@ -3107,7 +3107,7 @@
     "/seo/rank-history": {
       "post": {
         "summary": "Historical rank overview",
-        "description": "Historical organic keyword count and traffic (ETV) trend by month. Premium lookup (priced ~10x a normal SEO call).",
+        "description": "Historical organic rank/traffic trend by month. Premium lookup. Async: returns 202 + job_uid - poll GET /jobs/{job_uid} for the result.\n\nHistorical organic keyword count and traffic (ETV) trend by month. Premium lookup (priced ~10x a normal SEO call).",
         "operationId": "seoRankHistory",
         "tags": [
           "SEO"
@@ -3142,79 +3142,6 @@
           }
         },
         "responses": {
-          "200": {
-            "description": "Historical rank overview",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "success": {
-                      "type": "boolean",
-                      "enum": [
-                        true
-                      ]
-                    },
-                    "data": {
-                      "type": "object",
-                      "properties": {
-                        "target": {
-                          "type": "string"
-                        },
-                        "history": {
-                          "type": "array",
-                          "items": {
-                            "type": "object",
-                            "properties": {
-                              "year": {
-                                "type": "integer"
-                              },
-                              "month": {
-                                "type": "integer"
-                              },
-                              "organic_keywords": {
-                                "type": "integer"
-                              },
-                              "organic_etv": {
-                                "type": "number"
-                              }
-                            }
-                          }
-                        }
-                      }
-                    },
-                    "meta": {
-                      "$ref": "#/components/schemas/RequestMeta"
-                    }
-                  }
-                },
-                "example": {
-                  "success": true,
-                  "data": {
-                    "target": "example.com",
-                    "history": [
-                      {
-                        "year": 2026,
-                        "month": 5,
-                        "organic_keywords": 11800,
-                        "organic_etv": 44210.3
-                      },
-                      {
-                        "year": 2026,
-                        "month": 6,
-                        "organic_keywords": 12500,
-                        "organic_etv": 48230.7
-                      }
-                    ]
-                  },
-                  "meta": {
-                    "request_id": "req_1a2b3c4d",
-                    "timestamp": "2026-07-01T12:00:00Z"
-                  }
-                }
-              }
-            }
-          },
           "401": {
             "$ref": "#/components/responses/Unauthorized"
           },
@@ -3232,6 +3159,16 @@
           },
           "500": {
             "$ref": "#/components/responses/ServerError"
+          },
+          "202": {
+            "description": "Accepted - job queued. Poll GET /jobs/{job_uid}; on completion result_data contains the same payload the old 200 body carried.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JobCreatedResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -3239,7 +3176,7 @@
     "/seo/site-audit": {
       "post": {
         "summary": "Deep site audit",
-        "description": "Crawl-based technical SEO audit: overall on-page score, crawl issues, and the worst-scoring pages with their flagged checks. Slower (~10-15s).",
+        "description": "Deep crawl-based technical site audit. Async: returns 202 + job_uid - poll GET /jobs/{job_uid}; result_data carries the audit (typically 30-90s).\n\nCrawl-based technical SEO audit: overall on-page score, crawl issues, and the worst-scoring pages with their flagged checks. Slower (~10-15s).",
         "operationId": "seoSiteAudit",
         "tags": [
           "SEO"
@@ -3272,113 +3209,6 @@
           }
         },
         "responses": {
-          "200": {
-            "description": "Deep site audit",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "success": {
-                      "type": "boolean",
-                      "enum": [
-                        true
-                      ]
-                    },
-                    "data": {
-                      "type": "object",
-                      "properties": {
-                        "url": {
-                          "type": "string"
-                        },
-                        "audit": {
-                          "type": "object",
-                          "properties": {
-                            "crawl_progress": {
-                              "type": "string"
-                            },
-                            "pages_crawled": {
-                              "type": "integer"
-                            },
-                            "pages_with_errors": {
-                              "type": "integer"
-                            },
-                            "onpage_score": {
-                              "type": "number"
-                            },
-                            "checks": {
-                              "type": "object"
-                            },
-                            "pages": {
-                              "type": "array",
-                              "items": {
-                                "type": "object",
-                                "properties": {
-                                  "url": {
-                                    "type": "string"
-                                  },
-                                  "onpage_score": {
-                                    "type": "number"
-                                  },
-                                  "status_code": {
-                                    "type": "integer"
-                                  },
-                                  "title": {
-                                    "type": "string"
-                                  },
-                                  "flagged_checks": {
-                                    "type": "array",
-                                    "items": {
-                                      "type": "string"
-                                    }
-                                  }
-                                }
-                              }
-                            }
-                          }
-                        }
-                      }
-                    },
-                    "meta": {
-                      "$ref": "#/components/schemas/RequestMeta"
-                    }
-                  }
-                },
-                "example": {
-                  "success": true,
-                  "data": {
-                    "url": "https://example.com",
-                    "audit": {
-                      "crawl_progress": "finished",
-                      "pages_crawled": 20,
-                      "pages_with_errors": 3,
-                      "onpage_score": 88.4,
-                      "checks": {
-                        "duplicate_title": false,
-                        "broken_links": true
-                      },
-                      "pages": [
-                        {
-                          "url": "https://example.com/old",
-                          "onpage_score": 61.2,
-                          "status_code": 200,
-                          "title": "Old Page",
-                          "flagged_checks": [
-                            "low_content_rate",
-                            "no_description"
-                          ]
-                        }
-                      ]
-                    }
-                  },
-                  "meta": {
-                    "request_id": "req_1a2b3c4d",
-                    "timestamp": "2026-07-01T12:00:00Z"
-                  }
-                }
-              }
-            }
-          },
           "401": {
             "$ref": "#/components/responses/Unauthorized"
           },
@@ -3396,6 +3226,16 @@
           },
           "500": {
             "$ref": "#/components/responses/ServerError"
+          },
+          "202": {
+            "description": "Accepted - job queued. Poll GET /jobs/{job_uid}; on completion result_data contains the same payload the old 200 body carried.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JobCreatedResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -3403,7 +3243,7 @@
     "/seo/brand-lookup": {
       "post": {
         "summary": "AI Visibility: brand lookup",
-        "description": "How often ChatGPT and Google AI Overview cite a brand, domain or keyword: total mentions, AI search volume, estimated impressions (split by platform), the citing prompts, cited source domains, related pages and a 12-month trend.",
+        "description": "AI Visibility brand/domain citation lookup. Async: returns 202 + job_uid - poll GET /jobs/{job_uid} for the result (may take ~1 minute).\n\nHow often ChatGPT and Google AI Overview cite a brand, domain or keyword: total mentions, AI search volume, estimated impressions (split by platform), the citing prompts, cited source domains, related pages and a 12-month trend.",
         "operationId": "seoBrandLookup",
         "tags": [
           "SEO"
@@ -3447,124 +3287,6 @@
           }
         },
         "responses": {
-          "200": {
-            "description": "Per-platform AI mention metrics",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "success": {
-                      "type": "boolean",
-                      "enum": [
-                        true
-                      ]
-                    },
-                    "data": {
-                      "type": "object",
-                      "properties": {
-                        "value": {
-                          "type": "string"
-                        },
-                        "type": {
-                          "type": "string"
-                        },
-                        "platforms": {
-                          "type": "object",
-                          "description": "Per-platform totals keyed by chat_gpt / google.",
-                          "additionalProperties": {
-                            "type": "object",
-                            "properties": {
-                              "mentions": {
-                                "type": "integer"
-                              },
-                              "ai_search_volume": {
-                                "type": "integer"
-                              },
-                              "impressions": {
-                                "type": "integer"
-                              }
-                            }
-                          }
-                        },
-                        "queries": {
-                          "type": "array",
-                          "items": {
-                            "type": "object",
-                            "properties": {
-                              "question": {
-                                "type": "string"
-                              },
-                              "platform": {
-                                "type": "string"
-                              },
-                              "ai_search_volume": {
-                                "type": "integer"
-                              }
-                            }
-                          }
-                        },
-                        "related_pages": {
-                          "type": "array",
-                          "items": {
-                            "type": "object",
-                            "properties": {
-                              "page": {
-                                "type": "string"
-                              },
-                              "platform": {
-                                "type": "string"
-                              },
-                              "mentions": {
-                                "type": "integer"
-                              },
-                              "ai_search_volume": {
-                                "type": "integer"
-                              }
-                            }
-                          }
-                        },
-                        "cited_sources": {
-                          "type": "array",
-                          "items": {
-                            "type": "object",
-                            "properties": {
-                              "domain": {
-                                "type": "string"
-                              },
-                              "citations": {
-                                "type": "integer"
-                              }
-                            }
-                          }
-                        },
-                        "trend": {
-                          "type": "array",
-                          "items": {
-                            "type": "object",
-                            "properties": {
-                              "year": {
-                                "type": "integer"
-                              },
-                              "month": {
-                                "type": "integer"
-                              },
-                              "volume": {
-                                "type": "integer"
-                              }
-                            }
-                          }
-                        }
-                      }
-                    },
-                    "meta": {
-                      "$ref": "#/components/schemas/RequestMeta"
-                    }
-                  }
-                }
-              }
-            }
-          },
           "401": {
             "$ref": "#/components/responses/Unauthorized"
           },
@@ -3582,6 +3304,16 @@
           },
           "500": {
             "$ref": "#/components/responses/ServerError"
+          },
+          "202": {
+            "description": "Accepted - job queued. Poll GET /jobs/{job_uid}; on completion result_data contains the same payload the old 200 body carried.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JobCreatedResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -3589,7 +3321,7 @@
     "/seo/prompt-explorer": {
       "post": {
         "summary": "AI Visibility: prompt explorer",
-        "description": "Run one prompt across ChatGPT, Claude, Gemini and Perplexity side-by-side. Returns each model's answer text, citations and fan-out queries; pass `brand` to get a mentions_brand flag per answer.",
+        "description": "Run a prompt across ChatGPT/Claude/Gemini/Perplexity. Async: returns 202 + job_uid - poll GET /jobs/{job_uid} for the result (1-2 minutes).\n\nRun one prompt across ChatGPT, Claude, Gemini and Perplexity side-by-side. Returns each model's answer text, citations and fan-out queries; pass `brand` to get a mentions_brand flag per answer.",
         "operationId": "seoPromptExplorer",
         "tags": [
           "SEO"
@@ -3644,81 +3376,6 @@
           }
         },
         "responses": {
-          "200": {
-            "description": "Per-model answers",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "success": {
-                      "type": "boolean",
-                      "enum": [
-                        true
-                      ]
-                    },
-                    "data": {
-                      "type": "object",
-                      "properties": {
-                        "prompt": {
-                          "type": "string"
-                        },
-                        "brand": {
-                          "type": "string"
-                        },
-                        "responses": {
-                          "type": "array",
-                          "items": {
-                            "type": "object",
-                            "properties": {
-                              "model": {
-                                "type": "string"
-                              },
-                              "model_name": {
-                                "type": "string"
-                              },
-                              "text": {
-                                "type": "string"
-                              },
-                              "citations": {
-                                "type": "array",
-                                "items": {
-                                  "type": "object",
-                                  "properties": {
-                                    "title": {
-                                      "type": "string"
-                                    },
-                                    "url": {
-                                      "type": "string"
-                                    }
-                                  }
-                                }
-                              },
-                              "fan_out_queries": {
-                                "type": "array",
-                                "items": {
-                                  "type": "string"
-                                }
-                              },
-                              "mentions_brand": {
-                                "type": "boolean"
-                              },
-                              "error": {
-                                "type": "string"
-                              }
-                            }
-                          }
-                        }
-                      }
-                    },
-                    "meta": {
-                      "$ref": "#/components/schemas/RequestMeta"
-                    }
-                  }
-                }
-              }
-            }
-          },
           "401": {
             "$ref": "#/components/responses/Unauthorized"
           },
@@ -3736,6 +3393,16 @@
           },
           "500": {
             "$ref": "#/components/responses/ServerError"
+          },
+          "202": {
+            "description": "Accepted - job queued. Poll GET /jobs/{job_uid}; on completion result_data contains the same payload the old 200 body carried.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JobCreatedResponse"
+                }
+              }
+            }
           }
         }
       }
