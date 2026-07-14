@@ -191,6 +191,12 @@
                 ]
               },
               {
+                "group": "Presentations",
+                "pages": [
+                  "POST /presentations/generate"
+                ]
+              },
+              {
                 "group": "Audio",
                 "pages": [
                   "POST /audio/text-to-speech",
