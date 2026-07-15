@@ -3,7 +3,7 @@
   "info": {
     "title": "SmartlyQ API",
     "version": "1.0.0",
-    "description": "# SmartlyQ API\n\nREST API for the SmartlyQ platform: generate content, manage social posts, chatbots, media, and more.\n\n## Quick Start\n\n1. Get an API key from [app.smartlyq.com/my/developer](https://app.smartlyq.com/my/developer).\n2. Send your first request:\n\n```bash\ncurl -H \"Authorization: Bearer YOUR_API_KEY\" https://api.smartlyq.com/v1/me\n```\n\n## Authentication\n\nAll requests (except health/docs) require a **Bearer token**. Use your API key as the token:\n\n- **Key types:** `sqk_live_*` (live) or `sqk_test_*` (test/sandbox).\n- **Header:** `Authorization: Bearer sqk_live_xxxx` or `Authorization: Bearer sqk_test_xxxx`.\n\n| Scope | Description |\n|-------|-------------|\n| `articles:read` | List and get articles |\n| `articles:write` | Generate, delete articles |\n| `images:read` | List and get images |\n| `images:write` | Generate, delete images |\n| `videos:read` | List and get videos |\n| `videos:write` | Generate, delete videos |\n| `presentations:write` | Generate presentations |\n| `social:read` | List accounts and posts |\n| `social:write` | Create, update, delete posts |\n| `audio:read` | Get audio resources |\n| `audio:write` | Text-to-speech, speech-to-text |\n| `urls:read` | List and get short URLs and stats |\n| `urls:write` | Shorten, delete URLs |\n| `captain:use` | AI Captain messages and conversations |\n| `chatbot:use` | Chatbots, train, messages, conversations |\n| `media:read` | List and get media |\n| `media:write` | Upload, delete media |\n| `analytics:read` | Overview, posts, account analytics |\n| `jobs:read` | List and get async jobs, cancel |\n| `seo:read` | Keyword research, SERP, rank tracking, competitors, backlinks, on-page audits |\n\n## Billing & Credits\n\n- **Prepaid wallet:** API usage is deducted from your Developer API wallet (credits in SQC).\n- **Pricing:** See the [pricing table](https://smartlyq.com/pricing) and in-app Developer dashboard for per-operation costs.\n- **How it works:** Each billable request (e.g. generate, post, chatbot message) consumes credits; response may include `usage` with `cost` and `balance_remaining`.\n- **Top up:** Add credits via [app.smartlyq.com/my/developer](https://app.smartlyq.com/my/developer) (wallet / top-up).\n\n## Rate Limiting\n\nLimits apply per API key (and may be enforced per user or IP). Default is 60 requests per minute per key (overridable per key).\n\nResponse headers:\n\n| Header | Description |\n|--------|-------------|\n| `X-RateLimit-Limit` | Max requests per window |\n| `X-RateLimit-Remaining` | Remaining in current window |\n| `X-RateLimit-Reset` | Unix timestamp when the window resets |\n\nWhen exceeded: HTTP `429` with `Retry-After` header.\n\n## Errors\n\nErrors are JSON with a consistent shape:\n\n```json\n{\n  \"success\": false,\n  \"error\": {\n    \"code\": \"ERROR_CODE\",\n    \"message\": \"Human-readable message\",\n    \"details\": {}\n  },\n  \"meta\": { \"request_id\": \"...\", \"timestamp\": \"...\" }\n}\n```\n\n| HTTP | Code | Meaning |\n|-----|------|---------|\n| 400 | `BAD_REQUEST` | Malformed or invalid request |\n| 401 | `UNAUTHORIZED` | Missing or invalid API key |\n| 402 | `INSUFFICIENT_BALANCE` | Not enough credits |\n| 403 | `FORBIDDEN` | Valid key but insufficient scope or access |\n| 404 | `RESOURCE_NOT_FOUND` | Resource does not exist |\n| 409 | `CONFLICT` | Conflict (e.g. duplicate idempotency) |\n| 422 | `VALIDATION_ERROR` | Validation failed (fields in details) |\n| 429 | `RATE_LIMIT_EXCEEDED` | Too many requests |\n| 500 | `INTERNAL_ERROR` | Server error |\n\n## Async Jobs & Polling\n\nSome operations (e.g. article or video generation) return **HTTP 202 Accepted** with a `job_id`. Poll for status:\n\n- **Poll:** `GET /jobs/{job_id}` until `status` is `completed`, `failed`, or `cancelled`.\n- Response includes `result` or `error` when finished.\n\n## Webhooks\n\nConfigure webhook URLs in the Developer dashboard. We send HTTP POST to your URL with a signed payload.\n\n- **Verification:** Validate signature using your webhook secret (see dashboard).\n- **Events:** e.g. `job.completed`, `job.failed`, `chatbot.conversation.ended`.\n\n## Idempotency\n\nFor POST/PUT/PATCH, send **`X-Idempotency-Key`** (unique value per logical operation). Within 24 hours, the same key returns the same response without re-executing.\n\n## Pagination\n\n- **Offset:** `page` (1-based) and `per_page` (default 20, max 100).\n- Response includes `pagination` with `page`, `per_page`, `total`, `pages`.\n\n## Versioning\n\nCurrent version is **v1**. Base path: `https://api.smartlyq.com/v1`. Future versions will use new path prefixes (e.g. `/v2/`).\n",
+    "description": "# SmartlyQ API\n\nREST API for the SmartlyQ platform: generate content, manage social posts, chatbots, media, and more.\n\n## Quick Start\n\n1. Get an API key from [app.smartlyq.com/my/developer](https://app.smartlyq.com/my/developer).\n2. Send your first request:\n\n```bash\ncurl -H \"Authorization: Bearer YOUR_API_KEY\" https://api.smartlyq.com/v1/me\n```\n\n## Authentication\n\nAll requests (except health/docs) require a **Bearer token**. Use your API key as the token:\n\n- **Key types:** `sqk_live_*` (live) or `sqk_test_*` (test/sandbox).\n- **Header:** `Authorization: Bearer sqk_live_xxxx` or `Authorization: Bearer sqk_test_xxxx`.\n\n| Scope | Description |\n|-------|-------------|\n| `articles:read` | List and get articles |\n| `articles:write` | Generate, delete articles |\n| `images:read` | List and get images |\n| `images:write` | Generate, delete images |\n| `videos:read` | List and get videos |\n| `videos:write` | Generate, delete videos |\n| `presentations:write` | Generate presentations |\n| `social:read` | List accounts and posts |\n| `social:write` | Create, update, delete posts |\n| `audio:read` | Get audio resources |\n| `audio:write` | Text-to-speech, speech-to-text |\n| `urls:read` | List and get short URLs and stats |\n| `urls:write` | Shorten, delete URLs |\n| `captain:use` | AI Captain messages and conversations |\n| `chatbot:use` | Chatbots, train, messages, conversations |\n| `media:read` | List and get media |\n| `media:write` | Upload, delete media |\n| `analytics:read` | Overview, posts, account analytics |\n| `jobs:read` | List and get async jobs, cancel |\n| `seo:read` | Keyword research, SERP, rank tracking, competitors, backlinks, on-page audits |\n| `contacts:read` | List and get CRM contacts, tags and notes |\n| `contacts:write` | Create, update contacts; add/remove tags; add notes |\n| `opportunities:read` | List pipelines and deals/opportunities |\n| `opportunities:write` | Create/update deals, move stages, set status |\n| `workspaces:write` | Create sub-account workspaces |\n\n## Billing & Credits\n\n- **Prepaid wallet:** API usage is deducted from your Developer API wallet (credits in SQC).\n- **Pricing:** See the [pricing table](https://smartlyq.com/pricing) and in-app Developer dashboard for per-operation costs.\n- **How it works:** Each billable request (e.g. generate, post, chatbot message) consumes credits; response may include `usage` with `cost` and `balance_remaining`.\n- **Top up:** Add credits via [app.smartlyq.com/my/developer](https://app.smartlyq.com/my/developer) (wallet / top-up).\n\n## Rate Limiting\n\nLimits apply per API key (and may be enforced per user or IP). Default is 60 requests per minute per key (overridable per key).\n\nResponse headers:\n\n| Header | Description |\n|--------|-------------|\n| `X-RateLimit-Limit` | Max requests per window |\n| `X-RateLimit-Remaining` | Remaining in current window |\n| `X-RateLimit-Reset` | Unix timestamp when the window resets |\n\nWhen exceeded: HTTP `429` with `Retry-After` header.\n\n## Errors\n\nErrors are JSON with a consistent shape:\n\n```json\n{\n  \"success\": false,\n  \"error\": {\n    \"code\": \"ERROR_CODE\",\n    \"message\": \"Human-readable message\",\n    \"details\": {}\n  },\n  \"meta\": { \"request_id\": \"...\", \"timestamp\": \"...\" }\n}\n```\n\n| HTTP | Code | Meaning |\n|-----|------|---------|\n| 400 | `BAD_REQUEST` | Malformed or invalid request |\n| 401 | `UNAUTHORIZED` | Missing or invalid API key |\n| 402 | `INSUFFICIENT_BALANCE` | Not enough credits |\n| 403 | `FORBIDDEN` | Valid key but insufficient scope or access |\n| 404 | `RESOURCE_NOT_FOUND` | Resource does not exist |\n| 409 | `CONFLICT` | Conflict (e.g. duplicate idempotency) |\n| 422 | `VALIDATION_ERROR` | Validation failed (fields in details) |\n| 429 | `RATE_LIMIT_EXCEEDED` | Too many requests |\n| 500 | `INTERNAL_ERROR` | Server error |\n\n## Async Jobs & Polling\n\nSome operations (e.g. article or video generation) return **HTTP 202 Accepted** with a `job_id`. Poll for status:\n\n- **Poll:** `GET /jobs/{job_id}` until `status` is `completed`, `failed`, or `cancelled`.\n- Response includes `result` or `error` when finished.\n\n## Webhooks\n\nConfigure webhook URLs in the Developer dashboard. We send HTTP POST to your URL with a signed payload.\n\n- **Verification:** Validate signature using your webhook secret (see dashboard).\n- **Events:** e.g. `job.completed`, `job.failed`, `chatbot.conversation.ended`.\n\n## Idempotency\n\nFor POST/PUT/PATCH, send **`X-Idempotency-Key`** (unique value per logical operation). Within 24 hours, the same key returns the same response without re-executing.\n\n## Pagination\n\n- **Offset:** `page` (1-based) and `per_page` (default 20, max 100).\n- Response includes `pagination` with `page`, `per_page`, `total`, `pages`.\n\n## Versioning\n\nCurrent version is **v1**. Base path: `https://api.smartlyq.com/v1`. Future versions will use new path prefixes (e.g. `/v2/`).\n",
     "contact": {
       "name": "SmartlyQ Support",
       "url": "https://smartlyq.com",
@@ -26,6 +26,18 @@
     }
   ],
   "tags": [
+    {
+      "name": "CRM Contacts",
+      "description": "CRM contacts: create, update, upsert, tags and notes"
+    },
+    {
+      "name": "CRM Opportunities",
+      "description": "Sales pipelines and deals/opportunities"
+    },
+    {
+      "name": "Workspaces",
+      "description": "Create sub-account workspaces"
+    },
     {
       "name": "Articles",
       "description": "Long-form article generation and management"
@@ -7641,6 +7653,879 @@
           },
           "500": {
             "$ref": "#/components/responses/ServerError"
+          }
+        }
+      }
+    },
+    "/contacts": {
+      "post": {
+        "summary": "Create or upsert a contact",
+        "description": "Create a CRM contact. With no `id` and a matching `email`, the existing contact is updated instead of duplicated (upsert). Fires the contact_created / contact_updated automation events.",
+        "operationId": "createContact",
+        "tags": [
+          "CRM Contacts"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "first_name": {
+                    "type": "string"
+                  },
+                  "last_name": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string",
+                    "description": "Full name; derived from first/last when those are sent."
+                  },
+                  "email": {
+                    "type": "string",
+                    "format": "email"
+                  },
+                  "phone": {
+                    "type": "string"
+                  },
+                  "company": {
+                    "type": "string"
+                  },
+                  "role": {
+                    "type": "string"
+                  },
+                  "status": {
+                    "type": "string",
+                    "enum": [
+                      "active",
+                      "prospect",
+                      "inactive"
+                    ]
+                  },
+                  "timezone": {
+                    "type": "string"
+                  },
+                  "language": {
+                    "type": "string"
+                  },
+                  "source": {
+                    "type": "string"
+                  },
+                  "tags": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "attributes": {
+                    "type": "object",
+                    "description": "Custom attribute values keyed by attribute key.",
+                    "additionalProperties": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Contact created"
+          },
+          "200": {
+            "description": "Existing contact updated (matched by email)"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      },
+      "get": {
+        "summary": "List contacts",
+        "description": "List CRM contacts in the workspace. Supports `search`, `tag` and `status` filters plus pagination.",
+        "operationId": "listContacts",
+        "tags": [
+          "CRM Contacts"
+        ],
+        "parameters": [
+          {
+            "name": "search",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Match name, email, company or phone."
+          },
+          {
+            "name": "tag",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Only contacts carrying this tag."
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "active",
+                "prospect",
+                "inactive"
+              ]
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 1
+            }
+          },
+          {
+            "name": "per_page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 20,
+              "maximum": 100
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Paginated contacts"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          }
+        }
+      }
+    },
+    "/contacts/{id}": {
+      "get": {
+        "summary": "Get a contact",
+        "operationId": "getContact",
+        "tags": [
+          "CRM Contacts"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Contact"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      },
+      "patch": {
+        "summary": "Update a contact",
+        "description": "Update a contact by id. Fires the contact_updated automation event (plus tag_added / tag_removed for tag changes).",
+        "operationId": "updateContact",
+        "tags": [
+          "CRM Contacts"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "first_name": {
+                    "type": "string"
+                  },
+                  "last_name": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "email": {
+                    "type": "string",
+                    "format": "email"
+                  },
+                  "phone": {
+                    "type": "string"
+                  },
+                  "company": {
+                    "type": "string"
+                  },
+                  "role": {
+                    "type": "string"
+                  },
+                  "status": {
+                    "type": "string",
+                    "enum": [
+                      "active",
+                      "prospect",
+                      "inactive"
+                    ]
+                  },
+                  "timezone": {
+                    "type": "string"
+                  },
+                  "language": {
+                    "type": "string"
+                  },
+                  "source": {
+                    "type": "string"
+                  },
+                  "tags": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "attributes": {
+                    "type": "object",
+                    "additionalProperties": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated contact"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      }
+    },
+    "/contacts/{id}/tags": {
+      "post": {
+        "summary": "Add tags to a contact",
+        "description": "Add one or more tags (idempotent union). Each newly added tag fires the tag_added automation event.",
+        "operationId": "addContactTags",
+        "tags": [
+          "CRM Contacts"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "tags"
+                ],
+                "properties": {
+                  "tags": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The contact's full tag list after adding"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Remove tags from a contact",
+        "description": "Remove one or more tags. Each removed tag fires the tag_removed automation event.",
+        "operationId": "removeContactTags",
+        "tags": [
+          "CRM Contacts"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "tags"
+                ],
+                "properties": {
+                  "tags": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The contact's remaining tag list"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/contacts/{id}/notes": {
+      "get": {
+        "summary": "List contact notes",
+        "operationId": "listContactNotes",
+        "tags": [
+          "CRM Contacts"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Notes for the contact, newest first"
+          }
+        }
+      },
+      "post": {
+        "summary": "Add a note to a contact",
+        "operationId": "addContactNote",
+        "tags": [
+          "CRM Contacts"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "body"
+                ],
+                "properties": {
+                  "body": {
+                    "type": "string"
+                  },
+                  "author_name": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Note created"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      }
+    },
+    "/pipelines": {
+      "get": {
+        "summary": "List pipelines",
+        "description": "List sales pipelines in the workspace, each with its ordered stages.",
+        "operationId": "listPipelines",
+        "tags": [
+          "CRM Opportunities"
+        ],
+        "responses": {
+          "200": {
+            "description": "Pipelines with stages"
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a pipeline",
+        "operationId": "createPipeline",
+        "tags": [
+          "CRM Opportunities"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "name"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "seed_default_stages": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Seed the default 7-stage template."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Pipeline created (with stages)"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      }
+    },
+    "/opportunities": {
+      "get": {
+        "summary": "List opportunities",
+        "description": "List deals/opportunities. Filter by `pipeline_id`, `status`, `stage` or `assigned_user_id`.",
+        "operationId": "listOpportunities",
+        "tags": [
+          "CRM Opportunities"
+        ],
+        "parameters": [
+          {
+            "name": "pipeline_id",
+            "in": "query",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "open",
+                "won",
+                "lost",
+                "abandoned"
+              ]
+            }
+          },
+          {
+            "name": "stage",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "assigned_user_id",
+            "in": "query",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 1
+            }
+          },
+          {
+            "name": "per_page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 20,
+              "maximum": 100
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Paginated opportunities"
+          }
+        }
+      },
+      "post": {
+        "summary": "Create an opportunity",
+        "description": "Create a deal/opportunity. Fires deal_created (and deal_won / deal_lost when created with a terminal status). Falls back to the default pipeline when `pipeline_id` is omitted.",
+        "operationId": "createOpportunity",
+        "tags": [
+          "CRM Opportunities"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "name"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "Opportunity / deal name."
+                  },
+                  "contact_email": {
+                    "type": "string",
+                    "format": "email"
+                  },
+                  "company": {
+                    "type": "string"
+                  },
+                  "value": {
+                    "type": "number",
+                    "description": "Monetary value."
+                  },
+                  "pipeline_id": {
+                    "type": "integer"
+                  },
+                  "stage": {
+                    "type": "string",
+                    "description": "Stage key within the pipeline."
+                  },
+                  "status": {
+                    "type": "string",
+                    "enum": [
+                      "open",
+                      "won",
+                      "lost",
+                      "abandoned"
+                    ],
+                    "default": "open"
+                  },
+                  "assigned_user_id": {
+                    "type": "integer"
+                  },
+                  "next_action_date": {
+                    "type": "string",
+                    "format": "date"
+                  },
+                  "notes": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Opportunity created"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      }
+    },
+    "/opportunities/{id}": {
+      "get": {
+        "summary": "Get an opportunity",
+        "operationId": "getOpportunity",
+        "tags": [
+          "CRM Opportunities"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Opportunity"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      },
+      "patch": {
+        "summary": "Update an opportunity",
+        "description": "Update a deal. Moving `stage` follows won/lost stage semantics into `status` unless `status` is set explicitly. Fires deal_stage_changed / deal_won / deal_lost as applicable.",
+        "operationId": "updateOpportunity",
+        "tags": [
+          "CRM Opportunities"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "contact_email": {
+                    "type": "string",
+                    "format": "email"
+                  },
+                  "company": {
+                    "type": "string"
+                  },
+                  "value": {
+                    "type": "number"
+                  },
+                  "pipeline_id": {
+                    "type": "integer"
+                  },
+                  "stage": {
+                    "type": "string"
+                  },
+                  "status": {
+                    "type": "string",
+                    "enum": [
+                      "open",
+                      "won",
+                      "lost",
+                      "abandoned"
+                    ]
+                  },
+                  "assigned_user_id": {
+                    "type": "integer"
+                  },
+                  "next_action_date": {
+                    "type": "string",
+                    "format": "date"
+                  },
+                  "notes": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated opportunity"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete an opportunity",
+        "operationId": "deleteOpportunity",
+        "tags": [
+          "CRM Opportunities"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Deleted"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/opportunities/{id}/status": {
+      "post": {
+        "summary": "Update opportunity status",
+        "description": "Set the opportunity outcome. Transitioning into won/lost fires deal_won / deal_lost.",
+        "operationId": "updateOpportunityStatus",
+        "tags": [
+          "CRM Opportunities"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "status"
+                ],
+                "properties": {
+                  "status": {
+                    "type": "string",
+                    "enum": [
+                      "open",
+                      "won",
+                      "lost",
+                      "abandoned"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated opportunity"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      }
+    },
+    "/workspaces": {
+      "post": {
+        "summary": "Create a workspace (sub-account)",
+        "description": "Create a sub-account workspace under the agency the API key belongs to. Requires the workspaces:write scope; plan workspace caps apply.",
+        "operationId": "createWorkspace",
+        "tags": [
+          "Workspaces"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "name"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "maxLength": 120
+                  },
+                  "account_type": {
+                    "type": "string",
+                    "enum": [
+                      "client",
+                      "agency_internal"
+                    ],
+                    "default": "client"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Workspace created"
+          },
+          "402": {
+            "description": "Workspace limit reached for the plan"
+          },
+          "409": {
+            "description": "Key's workspace has no agency tenant"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
           }
         }
       }
