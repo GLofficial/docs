@@ -3,7 +3,7 @@
   "info": {
     "title": "SmartlyQ API",
     "version": "1.0.0",
-    "description": "# SmartlyQ API\n\nREST API for the SmartlyQ platform: generate content, manage social posts, chatbots, media, and more.\n\n## Quick Start\n\n1. Get an API key from [app.smartlyq.com/my/developer](https://app.smartlyq.com/my/developer).\n2. Send your first request:\n\n```bash\ncurl -H \"Authorization: Bearer YOUR_API_KEY\" https://api.smartlyq.com/v1/me\n```\n\n## Authentication\n\nAll requests (except health/docs) require a **Bearer token**. Use your API key as the token:\n\n- **Key types:** `sqk_live_*` (live) or `sqk_test_*` (test/sandbox).\n- **Header:** `Authorization: Bearer sqk_live_xxxx` or `Authorization: Bearer sqk_test_xxxx`.\n\n| Scope | Description |\n|-------|-------------|\n| `articles:read` | List and get articles |\n| `articles:write` | Generate, delete articles |\n| `images:read` | List and get images |\n| `images:write` | Generate, delete images |\n| `videos:read` | List and get videos |\n| `videos:write` | Generate, delete videos |\n| `presentations:write` | Generate presentations |\n| `social:read` | List accounts and posts |\n| `social:write` | Create, update, delete posts |\n| `audio:read` | Get audio resources |\n| `audio:write` | Text-to-speech, speech-to-text |\n| `urls:read` | List and get short URLs and stats |\n| `urls:write` | Shorten, delete URLs |\n| `captain:use` | AI Captain messages and conversations |\n| `chatbot:use` | Chatbots, train, messages, conversations |\n| `media:read` | List and get media |\n| `media:write` | Upload, delete media |\n| `analytics:read` | Overview, posts, account analytics |\n| `jobs:read` | List and get async jobs, cancel |\n| `seo:read` | Keyword research, SERP, rank tracking, competitors, backlinks, on-page audits |\n| `contacts:read` | List and get CRM contacts, tags and notes |\n| `contacts:write` | Create, update contacts; add/remove tags; add notes |\n| `opportunities:read` | List pipelines and deals/opportunities |\n| `opportunities:write` | Create/update deals, move stages, set status |\n| `workspaces:write` | Create sub-account workspaces |\n\n## Billing & Credits\n\n- **Prepaid wallet:** API usage is deducted from your Developer API wallet (credits in SQC).\n- **Pricing:** See the [pricing table](https://smartlyq.com/pricing) and in-app Developer dashboard for per-operation costs.\n- **How it works:** Each billable request (e.g. generate, post, chatbot message) consumes credits; response may include `usage` with `cost` and `balance_remaining`.\n- **Top up:** Add credits via [app.smartlyq.com/my/developer](https://app.smartlyq.com/my/developer) (wallet / top-up).\n\n## Rate Limiting\n\nLimits apply per API key (and may be enforced per user or IP). Default is 60 requests per minute per key (overridable per key).\n\nResponse headers:\n\n| Header | Description |\n|--------|-------------|\n| `X-RateLimit-Limit` | Max requests per window |\n| `X-RateLimit-Remaining` | Remaining in current window |\n| `X-RateLimit-Reset` | Unix timestamp when the window resets |\n\nWhen exceeded: HTTP `429` with `Retry-After` header.\n\n## Errors\n\nErrors are JSON with a consistent shape:\n\n```json\n{\n  \"success\": false,\n  \"error\": {\n    \"code\": \"ERROR_CODE\",\n    \"message\": \"Human-readable message\",\n    \"details\": {}\n  },\n  \"meta\": { \"request_id\": \"...\", \"timestamp\": \"...\" }\n}\n```\n\n| HTTP | Code | Meaning |\n|-----|------|---------|\n| 400 | `BAD_REQUEST` | Malformed or invalid request |\n| 401 | `UNAUTHORIZED` | Missing or invalid API key |\n| 402 | `INSUFFICIENT_BALANCE` | Not enough credits |\n| 403 | `FORBIDDEN` | Valid key but insufficient scope or access |\n| 404 | `RESOURCE_NOT_FOUND` | Resource does not exist |\n| 409 | `CONFLICT` | Conflict (e.g. duplicate idempotency) |\n| 422 | `VALIDATION_ERROR` | Validation failed (fields in details) |\n| 429 | `RATE_LIMIT_EXCEEDED` | Too many requests |\n| 500 | `INTERNAL_ERROR` | Server error |\n\n## Async Jobs & Polling\n\nSome operations (e.g. article or video generation) return **HTTP 202 Accepted** with a `job_id`. Poll for status:\n\n- **Poll:** `GET /jobs/{job_id}` until `status` is `completed`, `failed`, or `cancelled`.\n- Response includes `result` or `error` when finished.\n\n## Webhooks\n\nConfigure webhook URLs in the Developer dashboard. We send HTTP POST to your URL with a signed payload.\n\n- **Verification:** Validate signature using your webhook secret (see dashboard).\n- **Events:** e.g. `job.completed`, `job.failed`, `chatbot.conversation.ended`.\n\n## Idempotency\n\nFor POST/PUT/PATCH, send **`X-Idempotency-Key`** (unique value per logical operation). Within 24 hours, the same key returns the same response without re-executing.\n\n## Pagination\n\n- **Offset:** `page` (1-based) and `per_page` (default 20, max 100).\n- Response includes `pagination` with `page`, `per_page`, `total`, `pages`.\n\n## Versioning\n\nCurrent version is **v1**. Base path: `https://api.smartlyq.com/v1`. Future versions will use new path prefixes (e.g. `/v2/`).\n",
+    "description": "# SmartlyQ API\n\nREST API for the SmartlyQ platform: generate content, manage social posts, chatbots, media, and more.\n\n## Quick Start\n\n1. Get an API key from [app.smartlyq.com/my/developer](https://app.smartlyq.com/my/developer).\n2. Send your first request:\n\n```bash\ncurl -H \"Authorization: Bearer YOUR_API_KEY\" https://api.smartlyq.com/v1/me\n```\n\n## Authentication\n\nAll requests (except health/docs) require a **Bearer token**. Use your API key as the token:\n\n- **Key types:** `sqk_live_*` (live) or `sqk_test_*` (test/sandbox).\n- **Header:** `Authorization: Bearer sqk_live_xxxx` or `Authorization: Bearer sqk_test_xxxx`.\n\n| Scope | Description |\n|-------|-------------|\n| `articles:read` | List and get articles |\n| `articles:write` | Generate, delete articles |\n| `images:read` | List and get images |\n| `images:write` | Generate, delete images |\n| `videos:read` | List and get videos |\n| `videos:write` | Generate, delete videos |\n| `presentations:read` | List and get presentations |\n| `presentations:write` | Generate presentations |\n| `social:read` | List accounts and posts |\n| `social:write` | Create, update, delete posts |\n| `audio:read` | Get audio resources |\n| `audio:write` | Text-to-speech, speech-to-text |\n| `urls:read` | List and get short URLs and stats |\n| `urls:write` | Shorten, delete URLs |\n| `captain:use` | AI Captain messages and conversations |\n| `chatbot:use` | Chatbots, train, messages, conversations |\n| `media:read` | List and get media |\n| `media:write` | Upload, delete media |\n| `analytics:read` | Overview, posts, account analytics |\n| `jobs:read` | List and get async jobs, cancel |\n| `seo:read` | Keyword research, SERP, rank tracking, competitors, backlinks, on-page audits |\n| `contacts:read` | List and get CRM contacts, tags and notes |\n| `contacts:write` | Create, update contacts; add/remove tags; add notes |\n| `opportunities:read` | List pipelines and deals/opportunities |\n| `opportunities:write` | Create/update deals, move stages, set status |\n| `workspaces:write` | Create sub-account workspaces |\n\n## Billing & Credits\n\n- **Prepaid wallet:** API usage is deducted from your Developer API wallet (credits in SQC).\n- **Pricing:** See the [pricing table](https://smartlyq.com/pricing) and in-app Developer dashboard for per-operation costs.\n- **How it works:** Each billable request (e.g. generate, post, chatbot message) consumes credits; response may include `usage` with `cost` and `balance_remaining`.\n- **Top up:** Add credits via [app.smartlyq.com/my/developer](https://app.smartlyq.com/my/developer) (wallet / top-up).\n\n## Rate Limiting\n\nLimits apply per API key (and may be enforced per user or IP). Default is 60 requests per minute per key (overridable per key).\n\nResponse headers:\n\n| Header | Description |\n|--------|-------------|\n| `X-RateLimit-Limit` | Max requests per window |\n| `X-RateLimit-Remaining` | Remaining in current window |\n| `X-RateLimit-Reset` | Unix timestamp when the window resets |\n\nWhen exceeded: HTTP `429` with `Retry-After` header.\n\n## Errors\n\nErrors are JSON with a consistent shape:\n\n```json\n{\n  \"success\": false,\n  \"error\": {\n    \"code\": \"ERROR_CODE\",\n    \"message\": \"Human-readable message\",\n    \"details\": {}\n  },\n  \"meta\": { \"request_id\": \"...\", \"timestamp\": \"...\" }\n}\n```\n\n| HTTP | Code | Meaning |\n|-----|------|---------|\n| 400 | `BAD_REQUEST` | Malformed or invalid request |\n| 401 | `UNAUTHORIZED` | Missing or invalid API key |\n| 402 | `INSUFFICIENT_BALANCE` | Not enough credits |\n| 403 | `FORBIDDEN` | Valid key but insufficient scope or access |\n| 404 | `RESOURCE_NOT_FOUND` | Resource does not exist |\n| 409 | `CONFLICT` | Conflict (e.g. duplicate idempotency) |\n| 422 | `VALIDATION_ERROR` | Validation failed (fields in details) |\n| 429 | `RATE_LIMIT_EXCEEDED` | Too many requests |\n| 500 | `INTERNAL_ERROR` | Server error |\n\n## Async Jobs & Polling\n\nSome operations (e.g. article or video generation) return **HTTP 202 Accepted** with a `job_id`. Poll for status:\n\n- **Poll:** `GET /jobs/{job_id}` until `status` is `completed`, `failed`, or `cancelled`.\n- Response includes `result` or `error` when finished.\n\n## Webhooks\n\nConfigure webhook URLs in the Developer dashboard. We send HTTP POST to your URL with a signed payload.\n\n- **Verification:** Validate signature using your webhook secret (see dashboard).\n- **Events:** e.g. `job.completed`, `job.failed`, `chatbot.conversation.ended`.\n\n## Idempotency\n\nFor POST/PUT/PATCH, send **`X-Idempotency-Key`** (unique value per logical operation). Within 24 hours, the same key returns the same response without re-executing.\n\n## Pagination\n\n- **Offset:** `page` (1-based) and `per_page` (default 20, max 100).\n- Response includes `pagination` with `page`, `per_page`, `total`, `pages`.\n\n## Versioning\n\nCurrent version is **v1**. Base path: `https://api.smartlyq.com/v1`. Future versions will use new path prefixes (e.g. `/v2/`).\n",
     "contact": {
       "name": "SmartlyQ Support",
       "url": "https://smartlyq.com",
@@ -8590,7 +8590,7 @@
     "/contacts/{id}/messages": {
       "post": {
         "summary": "Log a message on a contact's timeline",
-        "description": "Record an inbound/outbound message in the contact's conversation timeline (feeds the Inbox). Does NOT deliver email/SMS \u2014 channel delivery goes through automations/campaigns, which carry billing + compliance.",
+        "description": "Record an inbound/outbound message in the contact's conversation timeline (feeds the Inbox). Does NOT deliver email/SMS — channel delivery goes through automations/campaigns, which carry billing + compliance.",
         "operationId": "addContactMessage",
         "tags": [
           "CRM Contacts"
@@ -8654,7 +8654,7 @@
     "/custom-fields": {
       "get": {
         "summary": "List custom fields",
-        "description": "List CRM custom field (custom attribute) definitions \u2014 the schema behind {{attributes.<key>}}.",
+        "description": "List CRM custom field (custom attribute) definitions — the schema behind {{attributes.<key>}}.",
         "operationId": "listCustomFields",
         "tags": [
           "CRM Custom Fields"
@@ -8755,6 +8755,169 @@
           },
           "404": {
             "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/presentations": {
+      "get": {
+        "summary": "List presentations",
+        "operationId": "listPresentations",
+        "tags": [
+          "Presentations"
+        ],
+        "description": "Lists the authenticated user's presentations, newest first. Requires the `presentations:read` scope. Read-only - consumes no credits.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/PageParam"
+          },
+          {
+            "$ref": "#/components/parameters/PerPageParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Paginated list of presentations",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PresentationListResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
+      }
+    },
+    "/presentations/{presentation_id}": {
+      "get": {
+        "summary": "Get presentation",
+        "operationId": "getPresentation",
+        "tags": [
+          "Presentations"
+        ],
+        "description": "Returns a presentation's details including its editor URL and, when public, its share URL. Requires the `presentations:read` scope. Read-only - consumes no credits.",
+        "parameters": [
+          {
+            "name": "presentation_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Presentation id returned by generate or list."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Presentation details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [
+                        true
+                      ]
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/PresentationDetail"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/RequestMeta"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete presentation",
+        "operationId": "deletePresentation",
+        "tags": [
+          "Presentations"
+        ],
+        "description": "Permanently deletes a presentation and removes it from the media library. Requires the `presentations:write` scope.",
+        "parameters": [
+          {
+            "name": "presentation_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Presentation id returned by generate or list."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Presentation deleted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [
+                        true
+                      ]
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "deleted": {
+                          "type": "boolean",
+                          "enum": [
+                            true
+                          ]
+                        }
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/RequestMeta"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
           }
         }
       }
@@ -10546,6 +10709,115 @@
                 "example": "USD"
               }
             }
+          },
+          "meta": {
+            "$ref": "#/components/schemas/RequestMeta"
+          }
+        }
+      },
+      "PresentationSummary": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "cm9x1a2b3c4d5e6f7g8h9"
+          },
+          "title": {
+            "type": "string",
+            "example": "Q3 Performance Review"
+          },
+          "slides_count": {
+            "type": "integer",
+            "example": 8
+          },
+          "is_public": {
+            "type": "boolean",
+            "example": false
+          },
+          "theme": {
+            "type": "string",
+            "example": "mystique"
+          },
+          "total_views": {
+            "type": "integer",
+            "example": 12
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "PresentationDetail": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "cm9x1a2b3c4d5e6f7g8h9"
+          },
+          "title": {
+            "type": "string",
+            "example": "Q3 Performance Review"
+          },
+          "slides_count": {
+            "type": "integer",
+            "example": 8
+          },
+          "is_public": {
+            "type": "boolean",
+            "example": false
+          },
+          "theme": {
+            "type": "string",
+            "example": "mystique"
+          },
+          "total_views": {
+            "type": "integer",
+            "example": 12
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "edit_url": {
+            "type": "string",
+            "example": "https://presentations.smartlyq.com/presentation/cm9x1a2b3c4d5e6f7g8h9"
+          },
+          "share_url": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Public share link - null while the presentation is private.",
+            "example": null
+          }
+        }
+      },
+      "PresentationListResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "enum": [
+              true
+            ]
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PresentationSummary"
+            }
+          },
+          "pagination": {
+            "$ref": "#/components/schemas/PaginationMeta"
           },
           "meta": {
             "$ref": "#/components/schemas/RequestMeta"
