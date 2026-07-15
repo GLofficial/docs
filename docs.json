@@ -178,6 +178,7 @@
                 "group": "Workspaces",
                 "pages": [
                   "POST /workspaces",
+                  "POST /workspaces/bulk",
                   "GET /workspaces",
                   "GET /workspaces/{id}",
                   "POST /workspaces/{id}/disable-saas",
