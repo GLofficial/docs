@@ -177,7 +177,11 @@
               {
                 "group": "Workspaces",
                 "pages": [
-                  "POST /workspaces"
+                  "POST /workspaces",
+                  "GET /workspaces",
+                  "GET /workspaces/{id}",
+                  "POST /workspaces/{id}/disable-saas",
+                  "DELETE /workspaces/{id}"
                 ]
               }
             ]
