@@ -1,0 +1,85 @@
+---
+title: "Agency sub-accounts & SaaS"
+icon: "building"
+description: "Manage agency sub-accounts over the API, and which actions are reserved for SaaS-plan members."
+---
+
+If your API key's workspace is an **agency** (a whitelabel tenant), you can manage its client **sub-accounts** over the API: create them, list them, pause and resume, delete, and — for SaaS-plan members — run bulk lifecycle actions.
+
+<Note>
+All sub-account endpoints require your key's workspace to be attached to an **agency tenant**. Other keys receive **409 `NOT_ELIGIBLE`**.
+</Note>
+
+## Two tiers of access
+
+Most sub-account management is available to any agency. **Bulk actions are reserved for SaaS-plan members.**
+
+| Capability | Endpoint | Requires |
+|---|---|---|
+| Create a sub-account | `POST /v1/workspaces` | Agency tenant · `workspaces:write` |
+| List sub-accounts | `GET /v1/workspaces` | Agency tenant · `workspaces:read` |
+| Get a sub-account | `GET /v1/workspaces/{id}` | Agency tenant · `workspaces:read` |
+| Pause / resume | `POST /v1/workspaces/{id}/pause` · `/resume` | Agency tenant · `workspaces:write` |
+| Disable SaaS (off-ramp) | `POST /v1/workspaces/{id}/disable-saas` | Agency tenant · `workspaces:write` |
+| Delete | `DELETE /v1/workspaces/{id}` | Agency tenant · `workspaces:write` |
+| **Bulk lifecycle** | `POST /v1/workspaces/bulk` | **Active SaaS plan** · `workspaces:bulk` |
+
+## SaaS-member only: bulk lifecycle
+
+Bulk actions across many sub-accounts are **SaaS-member only**. Your agency must be on an active SaaS plan — in practice, it must have a **connected, charges-enabled Stripe account** able to bill your clients (the equivalent of a SaaS Pro tier).
+
+<Warning>
+If your agency is not on an active SaaS plan, `POST /v1/workspaces/bulk` returns **403 `SAAS_PLAN_REQUIRED`**. Connect a client-billing Stripe account first.
+</Warning>
+
+`POST /v1/workspaces/bulk` applies one action — `pause`, `resume`, or `disable_saas` — to up to **200** client sub-accounts at once. It requires the dedicated **`workspaces:bulk`** scope (separate from `workspaces:write`), because a mass action is high blast-radius. Because `disable_saas` is irreversible (it cancels each client's subscription and refunds each sub-wallet to the agency), it also requires a typed confirmation.
+
+```bash
+curl -X POST https://api.smartlyq.com/v1/workspaces/bulk \
+  -H "Authorization: Bearer sqk_live_xxxxxxxxxxxx" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "workspace_ids": [101, 102, 103],
+    "action": "disable_saas",
+    "cancel_subscription": true,
+    "confirm": "BULK"
+  }'
+```
+
+The action is applied per workspace, and the response reports each outcome:
+
+```json
+{
+  "ok": true,
+  "action": "disable_saas",
+  "applied": 2,
+  "failed": 1,
+  "results": [
+    { "workspace_id": 101, "ok": true,  "error": null },
+    { "workspace_id": 102, "ok": true,  "error": null },
+    { "workspace_id": 103, "ok": false, "error": "not_found" }
+  ]
+}
+```
+
+| Field | Meaning |
+|---|---|
+| `applied` | Workspaces the action succeeded on |
+| `failed` | Workspaces that were skipped (see `results[].error`) |
+| `results[].error` | Per-workspace failure reason (`null` on success) |
+
+## Not on a SaaS plan
+
+```json
+{
+  "success": false,
+  "error": {
+    "code": "SAAS_PLAN_REQUIRED",
+    "message": "This endpoint requires an active SaaS plan: connect a Stripe account that can bill your clients before using SaaS/bulk actions."
+  }
+}
+```
+
+<Tip>
+The single-sub-account lifecycle endpoints (create, list, get, pause, resume, disable-SaaS, delete) stay available to every agency — only the **bulk** endpoint is gated to SaaS-plan members. Disabling SaaS on one sub-account is always available so agencies can unwind billing even if their Stripe connection changes.
+</Tip>
