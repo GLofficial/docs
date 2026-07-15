@@ -240,7 +240,10 @@
               {
                 "group": "Presentations",
                 "pages": [
-                  "POST /presentations/generate"
+                  "POST /presentations/generate",
+                  "GET /presentations",
+                  "GET /presentations/{presentation_id}",
+                  "DELETE /presentations/{presentation_id}"
                 ]
               },
               {
