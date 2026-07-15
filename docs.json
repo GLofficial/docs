@@ -136,6 +136,43 @@
             ]
           },
           {
+            "group": "CRM",
+            "pages": [
+              {
+                "group": "Contacts",
+                "pages": [
+                  "POST /contacts",
+                  "GET /contacts",
+                  "GET /contacts/{id}",
+                  "PATCH /contacts/{id}",
+                  "POST /contacts/{id}/tags",
+                  "DELETE /contacts/{id}/tags",
+                  "GET /contacts/{id}/notes",
+                  "POST /contacts/{id}/notes"
+                ]
+              },
+              {
+                "group": "Opportunities",
+                "pages": [
+                  "GET /pipelines",
+                  "POST /pipelines",
+                  "GET /opportunities",
+                  "POST /opportunities",
+                  "GET /opportunities/{id}",
+                  "PATCH /opportunities/{id}",
+                  "POST /opportunities/{id}/status",
+                  "DELETE /opportunities/{id}"
+                ]
+              },
+              {
+                "group": "Workspaces",
+                "pages": [
+                  "POST /workspaces"
+                ]
+              }
+            ]
+          },
+          {
             "group": "AI Generation",
             "pages": [
               {
