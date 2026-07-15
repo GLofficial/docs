@@ -8677,6 +8677,64 @@
         }
       }
     },
+    "/workspaces/{id}/pause": {
+      "post": {
+        "summary": "Pause (suspend) a workspace",
+        "description": "Pause a client sub-account: block all access + operations for its users, but keep the data (reversible with resume). Cannot pause the agency's own workspaces. Requires the workspaces:write scope.",
+        "operationId": "pauseWorkspace",
+        "tags": [
+          "Workspaces"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Workspace id (must be a client sub-account, not your own)."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sub-account paused"
+          },
+          "422": {
+            "description": "Cannot pause an agency-owned workspace"
+          }
+        }
+      }
+    },
+    "/workspaces/{id}/resume": {
+      "post": {
+        "summary": "Resume a paused workspace",
+        "description": "Reactivate a paused sub-account: restore access + operations. Requires the workspaces:write scope.",
+        "operationId": "resumeWorkspace",
+        "tags": [
+          "Workspaces"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Workspace id."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sub-account resumed"
+          },
+          "404": {
+            "description": "Workspace not found in your agency"
+          }
+        }
+      }
+    },
     "/contacts/{id}/enroll": {
       "post": {
         "summary": "Enroll a contact in an automation",
