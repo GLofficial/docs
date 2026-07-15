@@ -148,7 +148,17 @@
                   "POST /contacts/{id}/tags",
                   "DELETE /contacts/{id}/tags",
                   "GET /contacts/{id}/notes",
-                  "POST /contacts/{id}/notes"
+                  "POST /contacts/{id}/notes",
+                  "POST /contacts/{id}/enroll",
+                  "POST /contacts/{id}/messages"
+                ]
+              },
+              {
+                "group": "Custom Fields",
+                "pages": [
+                  "GET /custom-fields",
+                  "POST /custom-fields",
+                  "DELETE /custom-fields/{id}"
                 ]
               },
               {

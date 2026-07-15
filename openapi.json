@@ -31,6 +31,10 @@
       "description": "CRM contacts: create, update, upsert, tags and notes"
     },
     {
+      "name": "CRM Custom Fields",
+      "description": "Custom field (custom attribute) definitions"
+    },
+    {
       "name": "CRM Opportunities",
       "description": "Sales pipelines and deals/opportunities"
     },
@@ -8526,6 +8530,231 @@
           },
           "422": {
             "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      }
+    },
+    "/contacts/{id}/enroll": {
+      "post": {
+        "summary": "Enroll a contact in an automation",
+        "description": "Enrol a contact into an active automation (GHL 'add to workflow'). Queues a run for that automation carrying the contact's context.",
+        "operationId": "enrollContact",
+        "tags": [
+          "CRM Contacts"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "automation_id"
+                ],
+                "properties": {
+                  "automation_id": {
+                    "type": "integer",
+                    "description": "Active automation id."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Contact enrolled (run queued)"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "409": {
+            "description": "Automation is not active"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      }
+    },
+    "/contacts/{id}/messages": {
+      "post": {
+        "summary": "Log a message on a contact's timeline",
+        "description": "Record an inbound/outbound message in the contact's conversation timeline (feeds the Inbox). Does NOT deliver email/SMS \u2014 channel delivery goes through automations/campaigns, which carry billing + compliance.",
+        "operationId": "addContactMessage",
+        "tags": [
+          "CRM Contacts"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "body_text"
+                ],
+                "properties": {
+                  "body_text": {
+                    "type": "string"
+                  },
+                  "direction": {
+                    "type": "string",
+                    "enum": [
+                      "in",
+                      "out"
+                    ],
+                    "default": "out"
+                  },
+                  "channel": {
+                    "type": "string",
+                    "description": "e.g. email, sms, note (default note)."
+                  },
+                  "subject": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Message logged"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      }
+    },
+    "/custom-fields": {
+      "get": {
+        "summary": "List custom fields",
+        "description": "List CRM custom field (custom attribute) definitions \u2014 the schema behind {{attributes.<key>}}.",
+        "operationId": "listCustomFields",
+        "tags": [
+          "CRM Custom Fields"
+        ],
+        "responses": {
+          "200": {
+            "description": "Custom field definitions"
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a custom field",
+        "description": "Define a new CRM custom field. Its attr_key is derived from the label and is used to set values via the contact's `attributes` object.",
+        "operationId": "createCustomField",
+        "tags": [
+          "CRM Custom Fields"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "label"
+                ],
+                "properties": {
+                  "label": {
+                    "type": "string"
+                  },
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "text",
+                      "textarea",
+                      "number",
+                      "date",
+                      "dropdown",
+                      "multiselect",
+                      "checkbox",
+                      "phone",
+                      "email",
+                      "url"
+                    ],
+                    "default": "text"
+                  },
+                  "options": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "Choices for dropdown/multiselect."
+                  },
+                  "default_value": {
+                    "type": "string"
+                  },
+                  "group_name": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Custom field created"
+          },
+          "409": {
+            "description": "A field with this key already exists"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      }
+    },
+    "/custom-fields/{id}": {
+      "delete": {
+        "summary": "Delete a custom field",
+        "operationId": "deleteCustomField",
+        "tags": [
+          "CRM Custom Fields"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Deleted"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
           }
         }
       }
