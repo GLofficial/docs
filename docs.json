@@ -185,7 +185,11 @@
                   "POST /workspaces/{id}/disable-saas",
                   "DELETE /workspaces/{id}",
                   "POST /workspaces/{id}/pause",
-                  "POST /workspaces/{id}/resume"
+                  "POST /workspaces/{id}/resume",
+                  "GET /workspaces/{id}/subscription",
+                  "GET /workspaces/{id}/wallet",
+                  "GET /saas/plans",
+                  "GET /saas/plans/{id}"
                 ]
               }
             ]

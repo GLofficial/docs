@@ -8806,6 +8806,111 @@
         }
       }
     },
+    "/workspaces/{id}/subscription": {
+      "get": {
+        "summary": "Get a sub-account's subscription",
+        "description": "Read a sub-account's SaaS subscription + billing snapshot: billing_mode, rebilling state, plan_id, Stripe subscription_status, billing_cycle, and sub-wallet balance. Requires the workspaces:read scope.",
+        "operationId": "getWorkspaceSubscription",
+        "tags": [
+          "Workspaces"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Workspace id."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Subscription + billing snapshot"
+          },
+          "404": {
+            "description": "Workspace not found in your agency"
+          }
+        }
+      }
+    },
+    "/workspaces/{id}/wallet": {
+      "get": {
+        "summary": "Get a sub-account's wallet balance",
+        "description": "Read a sub-account's wallet balance in SQC. Requires the workspaces:read scope.",
+        "operationId": "getWorkspaceWallet",
+        "tags": [
+          "Workspaces"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Workspace id."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Wallet balance"
+          },
+          "404": {
+            "description": "Workspace not found in your agency"
+          }
+        }
+      }
+    },
+    "/saas/plans": {
+      "get": {
+        "summary": "List SaaS plans",
+        "description": "List the SaaS plans (client packages) configured for the agency the API key belongs to, with price, interval, setup fee, features and limits. Read-only. Requires the workspaces:read scope.",
+        "operationId": "listSaasPlans",
+        "tags": [
+          "Workspaces"
+        ],
+        "responses": {
+          "200": {
+            "description": "List of SaaS plans"
+          },
+          "409": {
+            "description": "Key's workspace has no agency tenant"
+          }
+        }
+      }
+    },
+    "/saas/plans/{id}": {
+      "get": {
+        "summary": "Get a SaaS plan",
+        "description": "Get one SaaS plan (client package) by id. Read-only. Requires the workspaces:read scope.",
+        "operationId": "getSaasPlan",
+        "tags": [
+          "Workspaces"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Plan (package) id."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "SaaS plan"
+          },
+          "404": {
+            "description": "Plan not found in your agency"
+          }
+        }
+      }
+    },
     "/contacts/{id}/enroll": {
       "post": {
         "summary": "Enroll a contact in an automation",
