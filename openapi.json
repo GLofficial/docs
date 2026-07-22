@@ -10299,9 +10299,21 @@
           "platforms": {
             "type": "array",
             "items": {
-              "type": "string"
+              "type": "string",
+              "enum": [
+                "facebook",
+                "instagram",
+                "twitter",
+                "linkedin",
+                "youtube",
+                "tiktok",
+                "gmb",
+                "threads",
+                "bluesky",
+                "tumblr"
+              ]
             },
-            "description": "Target platforms (e.g. facebook, twitter, instagram)"
+            "description": "Target platforms. Use `twitter` for X and `gmb` for Google Business."
           },
           "account_ids": {
             "type": "array",
@@ -10339,9 +10351,21 @@
           "platforms": {
             "type": "array",
             "items": {
-              "type": "string"
+              "type": "string",
+              "enum": [
+                "facebook",
+                "instagram",
+                "twitter",
+                "linkedin",
+                "youtube",
+                "tiktok",
+                "gmb",
+                "threads",
+                "bluesky",
+                "tumblr"
+              ]
             },
-            "description": "Target platforms"
+            "description": "Target platforms. Use `twitter` for X and `gmb` for Google Business."
           },
           "account_ids": {
             "type": "array",
@@ -10378,8 +10402,21 @@
           "platforms": {
             "type": "array",
             "items": {
-              "type": "string"
-            }
+              "type": "string",
+              "enum": [
+                "facebook",
+                "instagram",
+                "twitter",
+                "linkedin",
+                "youtube",
+                "tiktok",
+                "gmb",
+                "threads",
+                "bluesky",
+                "tumblr"
+              ]
+            },
+            "description": "Target platforms. Use `twitter` for X and `gmb` for Google Business."
           },
           "account_ids": {
             "type": "array",
