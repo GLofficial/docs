@@ -1198,7 +1198,12 @@
           "500": {
             "$ref": "#/components/responses/ServerError"
           }
-        }
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ProfileHeader"
+          }
+        ]
       }
     },
     "/social/posts": {
@@ -1250,7 +1255,12 @@
           "500": {
             "$ref": "#/components/responses/ServerError"
           }
-        }
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ProfileHeader"
+          }
+        ]
       },
       "get": {
         "summary": "List social posts",
@@ -1284,6 +1294,9 @@
               "type": "string"
             },
             "description": "Filter by social platform"
+          },
+          {
+            "$ref": "#/components/parameters/ProfileHeader"
           }
         ],
         "responses": {
@@ -1358,7 +1371,12 @@
           "500": {
             "$ref": "#/components/responses/ServerError"
           }
-        }
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ProfileHeader"
+          }
+        ]
       }
     },
     "/social/posts/{post_id}": {
@@ -4668,6 +4686,9 @@
               ],
               "default": "30d"
             }
+          },
+          {
+            "$ref": "#/components/parameters/ProfileHeader"
           }
         ],
         "responses": {
@@ -5648,6 +5669,9 @@
               "type": "integer"
             },
             "description": ""
+          },
+          {
+            "$ref": "#/components/parameters/ProfileHeader"
           }
         ],
         "responses": {
@@ -6124,6 +6148,9 @@
               "type": "integer"
             },
             "description": ""
+          },
+          {
+            "$ref": "#/components/parameters/ProfileHeader"
           }
         ],
         "responses": {
@@ -6960,6 +6987,9 @@
               ]
             },
             "description": "Platform to connect. All 13 platforms are supported (use `twitter` for X, `gmb` for Google Business)."
+          },
+          {
+            "$ref": "#/components/parameters/ProfileHeader"
           }
         ],
         "requestBody": {
@@ -7051,6 +7081,9 @@
               "type": "string"
             },
             "description": "For this GET, pass the `state_token` from the `connect_url` (NOT a platform name)."
+          },
+          {
+            "$ref": "#/components/parameters/ProfileHeader"
           }
         ],
         "responses": {
@@ -9298,6 +9331,501 @@
           }
         }
       }
+    },
+    "/profiles": {
+      "post": {
+        "summary": "Create a profile",
+        "description": "Create a profile - a managed sub-account for one end-customer of your product. Connected accounts inside profiles are billed monthly per account from your API wallet (no plan caps). Requires the profiles:write scope.",
+        "operationId": "createProfile",
+        "tags": [
+          "Profiles"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "name"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "maxLength": 120
+                  },
+                  "external_id": {
+                    "type": "string",
+                    "maxLength": 128,
+                    "description": "Your own customer id, for correlation"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Profile created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Profile"
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "Profile limit reached"
+          },
+          "404": {
+            "description": "Profiles are not enabled for this account"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      },
+      "get": {
+        "summary": "List profiles",
+        "description": "List your profiles (newest first). Requires the profiles:read scope.",
+        "operationId": "listProfiles",
+        "tags": [
+          "Profiles"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/PageParam"
+          },
+          {
+            "$ref": "#/components/parameters/PerPageParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Profiles",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "profiles": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Profile"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/profiles/{id}": {
+      "get": {
+        "summary": "Get a profile",
+        "operationId": "getProfile",
+        "tags": [
+          "Profiles"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ProfileIdParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Profile",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Profile"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete a profile",
+        "description": "Soft-deletes the profile and schedules async teardown of its workspace and connected accounts. Send {\"confirm\": \"DELETE\"} in the body. Requires the profiles:write scope.",
+        "operationId": "deleteProfile",
+        "tags": [
+          "Profiles"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ProfileIdParam"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "confirm"
+                ],
+                "properties": {
+                  "confirm": {
+                    "type": "string",
+                    "enum": [
+                      "DELETE"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Deletion scheduled"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      }
+    },
+    "/profiles/{id}/accounts": {
+      "get": {
+        "summary": "List a profile's connected accounts",
+        "description": "The social accounts the end-customer has connected to this profile. Requires the profiles:read scope.",
+        "operationId": "listProfileAccounts",
+        "tags": [
+          "Profiles"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ProfileIdParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Connected accounts",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "accounts": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "integer"
+                          },
+                          "platform": {
+                            "type": "string"
+                          },
+                          "account_id": {
+                            "type": "string"
+                          },
+                          "account_name": {
+                            "type": "string"
+                          },
+                          "account_username": {
+                            "type": "string"
+                          },
+                          "connected_at": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/profiles/{id}/pause": {
+      "post": {
+        "summary": "Pause a profile",
+        "description": "Pause a profile: its workspace is suspended, delegated calls return 409, and its accounts stop counting toward monthly account billing. Requires the profiles:write scope.",
+        "operationId": "pauseProfile",
+        "tags": [
+          "Profiles"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ProfileIdParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/profiles/{id}/resume": {
+      "post": {
+        "summary": "Resume a profile",
+        "description": "Resume a paused profile. Requires the profiles:write scope.",
+        "operationId": "resumeProfile",
+        "tags": [
+          "Profiles"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ProfileIdParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/profiles/{id}/connect-link": {
+      "post": {
+        "summary": "Create a hosted connect link",
+        "description": "Mints a signed, single-use hosted page URL you forward to your end-customer. They open it with no login, pick platforms, and approve access; connected accounts land in this profile. The link dies for other browsers once opened. Requires the profiles:write scope.",
+        "operationId": "createProfileConnectLink",
+        "tags": [
+          "Profiles"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ProfileIdParam"
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "platforms": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "Subset of platforms to offer (default: all 13)"
+                  },
+                  "return_url": {
+                    "type": "string",
+                    "description": "Where the customer lands after each connect (default: back on the hosted page)"
+                  },
+                  "ttl": {
+                    "type": "integer",
+                    "minimum": 300,
+                    "maximum": 604800,
+                    "description": "Link lifetime in seconds (default 86400)"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Connect link",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "connect_url": {
+                      "type": "string"
+                    },
+                    "expires_at": {
+                      "type": "string"
+                    },
+                    "platforms": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "409": {
+            "description": "Profile is paused"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      }
+    },
+    "/profiles/{id}/connect/{platform}": {
+      "post": {
+        "summary": "Get a raw connect URL for one platform",
+        "description": "Per-platform OAuth connect URL targeting this profile, for developers building their own connect UI. Same mechanics as POST /social/connect/{platform}. Requires the profiles:write scope.",
+        "operationId": "createProfileConnectUrl",
+        "tags": [
+          "Profiles"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ProfileIdParam"
+          },
+          {
+            "name": "platform",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Platform key (facebook, instagram, twitter, linkedin, youtube, tiktok, threads, bluesky, pinterest, reddit, snapchat, tumblr, gmb)"
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "return_url": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Connect URL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "platform": {
+                      "type": "string"
+                    },
+                    "connect_url": {
+                      "type": "string"
+                    },
+                    "expires_at": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "409": {
+            "description": "Profile is paused"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      }
+    },
+    "/me/account-billing": {
+      "get": {
+        "summary": "Account billing summary",
+        "description": "Live count of billable connected accounts across your profiles, the price bands, the estimated next monthly charge, and recent billing history. Accounts are billed per calendar month from your API wallet: $6 each for accounts 1-10, $3 for 11-100, $1 from 101 up, snapshotted on the 1st (UTC). Requires the profiles:read scope.",
+        "operationId": "getAccountBilling",
+        "tags": [
+          "Profiles"
+        ],
+        "responses": {
+          "200": {
+            "description": "Billing summary",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "active_accounts": {
+                      "type": "integer"
+                    },
+                    "currency": {
+                      "type": "string"
+                    },
+                    "bands": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "up_to": {
+                            "type": "integer",
+                            "nullable": true
+                          },
+                          "price": {
+                            "type": "number"
+                          }
+                        }
+                      }
+                    },
+                    "estimated_next_charge": {
+                      "type": "number",
+                      "nullable": true
+                    },
+                    "next_billing_date": {
+                      "type": "string"
+                    },
+                    "history": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "period": {
+                            "type": "string"
+                          },
+                          "accounts": {
+                            "type": "integer"
+                          },
+                          "amount": {
+                            "type": "number"
+                          },
+                          "status": {
+                            "type": "string"
+                          },
+                          "charged_at": {
+                            "type": "string",
+                            "nullable": true
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -9438,6 +9966,24 @@
         "schema": {
           "type": "string"
         }
+      },
+      "ProfileIdParam": {
+        "name": "id",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "integer"
+        },
+        "description": "Profile id"
+      },
+      "ProfileHeader": {
+        "name": "X-Profile-Id",
+        "in": "header",
+        "required": false,
+        "schema": {
+          "type": "integer"
+        },
+        "description": "Act inside a profile (sub-account) you own: data reads and writes target the profile workspace while billing, rate limits and usage stay on your own account. Requires the profiles:manage scope. Returns 404 for profiles you do not own and 409 for paused profiles."
       }
     },
     "headers": {
@@ -11235,6 +11781,38 @@
           },
           "meta": {
             "$ref": "#/components/schemas/RequestMeta"
+          }
+        }
+      },
+      "Profile": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "workspace_id": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          },
+          "external_id": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "active",
+              "paused",
+              "deleted"
+            ]
+          },
+          "paused_for_billing": {
+            "type": "boolean"
+          },
+          "created_at": {
+            "type": "string"
           }
         }
       }

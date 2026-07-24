@@ -72,6 +72,7 @@
             "pages": [
               "guides/connecting-accounts",
               "guides/workspaces",
+              "guides/profiles",
               "guides/agency-saas",
               "guides/billing-and-credits",
               "guides/rate-limiting",
@@ -192,6 +193,21 @@
                   "GET /saas/plans/{id}"
                 ]
               }
+            ]
+          },
+          {
+            "group": "Profiles",
+            "pages": [
+              "POST /profiles",
+              "GET /profiles",
+              "GET /profiles/{id}",
+              "GET /profiles/{id}/accounts",
+              "POST /profiles/{id}/connect-link",
+              "POST /profiles/{id}/connect/{platform}",
+              "POST /profiles/{id}/pause",
+              "POST /profiles/{id}/resume",
+              "DELETE /profiles/{id}",
+              "GET /me/account-billing"
             ]
           },
           {

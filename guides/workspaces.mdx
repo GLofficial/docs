@@ -6,6 +6,8 @@ description: "How workspace scoping works in the SmartlyQ API."
 
 Every resource in SmartlyQ belongs to a **workspace**. Workspaces provide tenant isolation — data in one workspace is invisible to another.
 
+<Note>Building a product where **your own customers** connect accounts and never see SmartlyQ? That is [Profiles](/guides/profiles) - per-end-customer sub-accounts with hosted connect links and per-account billing. Workspaces are for agency sub-accounts you manage yourself.</Note>
+
 ## Passing workspace_id
 
 Most endpoints accept an optional `workspace_id` parameter. When provided, the API:

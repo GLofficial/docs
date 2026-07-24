@@ -1,0 +1,84 @@
+---
+title: "Profiles"
+description: "Build your own multi-tenant product on the SmartlyQ API - one profile per end-customer, self-serve account connection, per-account billing"
+icon: "users"
+---
+
+Profiles let you build your own SaaS on top of the SmartlyQ API. Each profile is a managed sub-account for one of **your** end-customers: they connect their own social accounts through a hosted link (no SmartlyQ login, no SmartlyQ branding beyond the OAuth consent), and you operate the full API inside their profile with a single header.
+
+Profiles are different from [workspaces](/guides/workspaces): workspaces are agency sub-accounts with plan-based limits and optional SaaS billing to the client; profiles are developer infrastructure - no plan caps, usage-billed per connected account, and invisible to the end-customer.
+
+## Quick start
+
+**1. Create a profile for your customer**
+
+```bash
+curl -X POST https://api.smartlyq.com/v1/profiles \
+  -H "Authorization: Bearer $SMARTLYQ_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"name": "Acme Coffee Co", "external_id": "cust_8412"}'
+```
+
+**2. Get a connect link and send it to them**
+
+```bash
+curl -X POST https://api.smartlyq.com/v1/profiles/42/connect-link \
+  -H "Authorization: Bearer $SMARTLYQ_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"platforms": ["facebook", "instagram", "linkedin"]}'
+```
+
+The response contains a `connect_url`. Your customer opens it in any browser - no account, no login - picks a platform, and approves access. The page updates live as accounts connect. Links are **single-use**: the first browser to open one claims it, and it is dead for anyone else. Default lifetime is 24 hours (`ttl` overridable up to 7 days).
+
+Prefer your own UI? `POST /profiles/{id}/connect/{platform}` returns a raw per-platform OAuth URL instead.
+
+**3. Operate inside the profile**
+
+Add the `X-Profile-Id` header to any regular endpoint and it acts on the profile's data instead of your own workspace:
+
+```bash
+curl -X POST https://api.smartlyq.com/v1/social/posts \
+  -H "Authorization: Bearer $SMARTLYQ_API_KEY" \
+  -H "X-Profile-Id: 42" \
+  -H "Content-Type: application/json" \
+  -d '{"content": "Fresh roast, first pour.", "platforms": ["instagram"]}'
+```
+
+Everything stays yours where it matters: billing, rate limits, and usage logs remain on **your** account and wallet - the profile is only a data boundary. Delegation requires the `profiles:manage` scope on the key; profile lifecycle uses `profiles:read` / `profiles:write`.
+
+## Billing
+
+Connected accounts inside profiles are billed monthly from your [API wallet](/guides/billing-and-credits), per account, with marginal bands:
+
+| Accounts | Price per account / month |
+| --- | --- |
+| 1 - 10 | $6 |
+| 11 - 100 | $3 |
+| 101+ | $1 |
+
+Example: 150 connected accounts = 10 x $6 + 90 x $3 + 50 x $1 = **$380/month**.
+
+- The count is a **snapshot on the 1st of each month (UTC)** across all your active profiles. No proration: an account connected mid-month is first billed the following month; a paused profile's accounts are not billed.
+- Charges appear in your wallet ledger as `API account billing: YYYY-MM (N accounts)`.
+- Check anytime with `GET /v1/me/account-billing`: live count, bands, estimated next charge, and history.
+
+**If a charge fails** (insufficient balance) you get an `account_billing.failed` webhook and the charge retries daily. After **7 days** unpaid, your profiles are paused (their accounts stop posting and stop billing) and auto-resume as soon as the outstanding charge succeeds after a top-up. Keep `balance.low` webhooks on to see it coming.
+
+## Webhooks
+
+Two events cover billing: `account_billing.charged` and `account_billing.failed`. On top of that, **every event that happens inside a profile also reaches your webhooks** - `account.connected`, `post.published`, `comment.received`, `message.received`, and the rest - with `profile_id` and `profile_workspace_id` added to the payload so you can route it to the right customer. See the [Webhooks guide](/guides/webhooks).
+
+## Lifecycle
+
+- `POST /profiles/{id}/pause` - suspend a customer (stops posting AND stops their accounts billing). `resume` undoes it.
+- `DELETE /profiles/{id}` with `{"confirm": "DELETE"}` - schedules async teardown of the profile workspace and its connections.
+- Profiles have no plan caps on connected accounts - the wallet is the natural limit. Creation is capped at 1000 active profiles per account (contact us to raise it).
+
+## Errors worth knowing
+
+| Code | Meaning |
+| --- | --- |
+| `PROFILES_NOT_ENABLED` (404) | Profiles are not enabled for your account yet |
+| `PROFILE_NOT_FOUND` (404) | The id does not exist or is not yours |
+| `PROFILE_PAUSED` (409) | Delegated call against a paused profile |
+| `INSUFFICIENT_SCOPE` (403) | Key lacks `profiles:manage` for `X-Profile-Id` |
