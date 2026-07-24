@@ -8553,7 +8553,7 @@
     "/workspaces/bulk": {
       "post": {
         "summary": "Bulk sub-account action",
-        "description": "Apply one lifecycle action - pause, resume, or disable_saas - to many client sub-accounts in a single call. **Requires an active SaaS plan**: the agency must have a connected, charges-enabled Stripe account able to bill its clients (our equivalent of GHL's SaaS Pro requirement); otherwise the call returns 403 SAAS_PLAN_REQUIRED. High-trust: requires the dedicated workspaces:bulk scope (separate from workspaces:write) because a mass action is high blast-radius. Applies per workspace and returns applied/failed counts plus a per-workspace results array; the id list is capped at 200. disable_saas cascades (cancels each subscription and refunds each sub-wallet to the agency) and is irreversible, so it also requires a typed confirmation.",
+        "description": "Apply one lifecycle action - pause, resume, or disable_saas - to many client sub-accounts in a single call. **Requires an active SaaS plan**: the agency must have a connected, charges-enabled Stripe account able to bill its clients; otherwise the call returns 403 SAAS_PLAN_REQUIRED. High-trust: requires the dedicated workspaces:bulk scope (separate from workspaces:write) because a mass action is high blast-radius. Applies per workspace and returns applied/failed counts plus a per-workspace results array; the id list is capped at 200. disable_saas cascades (cancels each subscription and refunds each sub-wallet to the agency) and is irreversible, so it also requires a typed confirmation.",
         "operationId": "bulkWorkspaceAction",
         "tags": [
           "Workspaces"
@@ -8914,7 +8914,7 @@
     "/contacts/{id}/enroll": {
       "post": {
         "summary": "Enroll a contact in an automation",
-        "description": "Enrol a contact into an active automation (GHL 'add to workflow'). Queues a run for that automation carrying the contact's context.",
+        "description": "Enrol a contact into an active automation. Queues a run for that automation carrying the contact's context.",
         "operationId": "enrollContact",
         "tags": [
           "CRM Contacts"
