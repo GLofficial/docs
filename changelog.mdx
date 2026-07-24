@@ -1,0 +1,170 @@
+---
+title: "Changelog"
+description: "New endpoints, improvements, and fixes to the SmartlyQ API"
+icon: "clock-rotate-left"
+---
+
+Product updates for the SmartlyQ Developer API, MCP server, and Developer Portal. All endpoints live at `https://api.smartlyq.com/v1`.
+
+<Update label="July 22, 2026" tags={["Social"]}>
+## More platform targets + pre-publish validation
+
+`POST /social/posts` and `POST /social/posts/schedule` now accept **10 platform targets**, adding Google Business, Threads, Bluesky, and Tumblr to the existing set. Every post now runs per-platform pre-publish validation (media formats, caption length, platform constraints), so invalid posts fail fast with an actionable `ValidationError` instead of failing at publish time.
+</Update>
+
+<Update label="July 16, 2026" tags={["Workspaces", "SaaS"]}>
+## SaaS plan reads + bulk sub-account actions
+
+Agency and SaaS builders can now read their billing configuration and act on many sub-accounts at once:
+
+- `GET /saas/plans` and `GET /saas/plans/{id}` - list the SaaS plans configured on your account
+- `GET /workspaces/{id}/subscription` - a workspace's current plan and status
+- `GET /workspaces/{id}/wallet` - a workspace's credit wallet balance
+- `POST /workspaces/bulk` - pause, resume, or delete many workspaces in one call (SaaS-plan gated)
+
+See the new [Agency sub-accounts &amp; SaaS guide](/guides/agency-saas).
+</Update>
+
+<Update label="July 15, 2026" tags={["Workspaces"]}>
+## Workspace lifecycle management
+
+Full workspace (sub-account) lifecycle on the public API:
+
+- `POST /workspaces` - provision a new sub-account
+- `GET /workspaces` and `GET /workspaces/{id}` - list and inspect
+- `POST /workspaces/{id}/pause` and `/resume` - suspend and restore access
+- `POST /workspaces/{id}/disable-saas` - detach a workspace from your SaaS plan
+- `DELETE /workspaces/{id}` - guarded delete with async teardown
+</Update>
+
+<Update label="July 15, 2026" tags={["CRM"]}>
+## CRM API: contacts, opportunities, custom fields
+
+The CRM is now fully scriptable:
+
+- Contacts: create, list, get, update, tag management, notes, `POST /contacts/{id}/enroll` (enroll in an automation), and `POST /contacts/{id}/messages` (log a message to the timeline)
+- Custom fields: `GET`/`POST /custom-fields`, `DELETE /custom-fields/{id}`
+- Pipelines and opportunities: full CRUD plus `POST /opportunities/{id}/status` for stage moves
+- Outbound CRM events are delivered through your existing [webhooks](/guides/webhooks)
+
+All CRM endpoints are also exposed as MCP tools.
+</Update>
+
+<Update label="July 14, 2026" tags={["Presentations"]}>
+## Presentations API
+
+Generate full AI slide decks from a single prompt:
+
+- `POST /presentations/generate` - builds a complete deck (3 to 12 slides, language and tone options) and returns the presentation id plus edit and share URLs
+- `GET /presentations`, `GET /presentations/{id}`, `DELETE /presentations/{id}`
+
+New scopes: `presentations:write` and `presentations:read`.
+</Update>
+
+<Update label="July 7, 2026" tags={["SEO"]}>
+## Async SEO lookups
+
+Long-running SEO operations (`/seo/site-audit`, `/seo/rank-history`, `/seo/brand-lookup`, `/seo/prompt-explorer`, `/seo/ai-audit`) now return `202 Accepted` with a job id instead of holding the connection open. Poll `GET /jobs/{job_id}` for the result. Hot reads are cached, so repeated lookups on the same target return faster.
+</Update>
+
+<Update label="July 6, 2026" tags={["SEO", "New"]}>
+## AI visibility endpoints
+
+Three new SEO endpoints for the AI-search era:
+
+- `POST /seo/ai-audit` - audit how visible a domain is to AI assistants; also delivers a PDF report by email
+- `POST /seo/brand-lookup` - how a brand appears across search and AI surfaces
+- `POST /seo/prompt-explorer` - discover the prompts where a domain is (or is not) cited
+</Update>
+
+<Update label="July 5, 2026" tags={["Videos", "Shorts"]}>
+## Shorts + video editing AI
+
+Turn long videos into ranked short clips, and use the editor's AI helpers directly:
+
+- `POST /shorts/generate` - split a long video (or a source URL) into ranked viral clips; poll `GET /shorts/{uid}`
+- `POST /videos/hook` - a scroll-stopping overlay line for a video
+- `POST /videos/broll-suggest` and `POST /videos/emphasis` - B-roll and emphasis suggestions from a word-level transcript
+- `POST /videos/viral-thumbnail` - generate a thumbnail from a title
+- `POST /content/caption` - platform-tuned social captions
+</Update>
+
+<Update label="July 4, 2026" tags={["Developer Portal"]}>
+## Logs overhaul
+
+The Developer Portal's Logs tab is now a unified request feed with endpoint, status, and platform filters, plus CSV export. Sanitized request payloads are captured for easier debugging.
+</Update>
+
+<Update label="July 3, 2026" tags={["Billing"]}>
+## Billing correctness hardening
+
+Wallet charges are now fully idempotent (safe retries with `Idempotency-Key` can never double-charge), refunds are serialized against the wallet row, and priced units fail closed. Billed requests that end in a `4xx`/`5xx` are automatically refunded to the original credit buckets.
+</Update>
+
+<Update label="June 28, 2026" tags={["Webhooks"]}>
+## Webhooks: unified event catalog + signed envelope
+
+Webhooks are now generally available with a unified 13-event catalog:
+
+`post.published` / `post.failed` / `post.partial`, `account.connected` / `account.disconnected` / `account.token_expired`, `comment.received`, `message.received`, `job.completed` / `job.failed`, `balance.low`, `balance.depleted`, `key.revoked`
+
+Every delivery carries a canonical envelope `{ id, event, created_at, data }` with headers `X-SmartlyQ-Event` and `X-SmartlyQ-Event-Id` (stable across retries), signed with `X-SmartlyQ-Signature` (HMAC-SHA256, timestamped). Deliveries retry 5 times with exponential backoff before dead-lettering. See the [Webhooks guide](/guides/webhooks).
+</Update>
+
+<Update label="June 27, 2026" tags={["SEO", "New"]}>
+## SEO API launch
+
+14 SEO endpoints under `/seo/*` with the new `seo:read` scope: keyword research, SERP analysis, keyword difficulty, ranked keywords, domain overview, competitors, backlinks summary, backlink prospects, referring domains, backlink anchors, spam score, rank history, site audit, and on-page audit.
+</Update>
+
+<Update label="June 13, 2026" tags={["Avatar Videos"]}>
+## Video Agent
+
+`POST /avatar-videos/agent` - give it only a prompt and the agent picks the avatar and voice, writes the script, and produces the finished avatar video.
+</Update>
+
+<Update label="June 12, 2026" tags={["Avatar Videos", "New"]}>
+## Avatar Videos API
+
+AI avatar video generation on the public API:
+
+- `GET /avatar-videos/avatars` and `GET /avatar-videos/voices` - browse the catalog
+- `POST /avatar-videos/generate` - script to talking-head video
+- `POST /avatar-videos/translate` - translate an existing video with lip-synced audio
+- `POST /avatar-videos/lipsync` - sync a video to a new audio track
+
+All async: poll `GET /jobs/{job_id}`.
+</Update>
+
+<Update label="June 8, 2026" tags={["Developer Portal", "Billing"]}>
+## Playground + automatic refunds
+
+- The in-app **API Playground** can now run real requests against any of your keys (scopes, billing, and rate limits all apply; write calls need explicit confirmation)
+- Charges are taken upfront and **automatically refunded** if the request fails
+- Wallet ledger rows now carry human-readable descriptions
+</Update>
+
+<Update label="June 6, 2026" tags={["Social", "Webhooks", "New"]}>
+## Headless connect for all 13 platforms
+
+End-to-end account connection without the SmartlyQ UI:
+
+- `GET /social/connect/{platform}` - start a headless OAuth connect for any of the 13 platforms and poll connection status
+- `GET`/`POST /webhooks` and `DELETE /webhooks/{id}` - manage webhook subscriptions from the API, including a deliveries index and dead-letter view
+- Post results now surface **per-platform publish failure reasons**
+- Error envelope extended with `retryable`, `fix`, and `docs_url` fields
+- Platform posting rate limits are enforced at create time with clear errors
+</Update>
+
+<Update label="June 5, 2026" tags={["Social", "New"]}>
+## Comments, DMs, and account lifecycle
+
+The social engagement surface arrives on `/v1`:
+
+- Comments: `GET /social/comments`, `POST .../reply`, `POST .../hide`, `DELETE /social/comments/{id}`
+- Inbox: `GET /social/conversations`, `GET`/`POST .../messages`, `POST .../read`
+- Accounts: `GET .../health`, `GET .../reconnect-url`, `POST .../pause`, `POST .../resume`, `DELETE /social/accounts/{id}`
+- `POST /social/posts/{post_id}/retry` - retry only the platforms that failed
+
+All list responses use the standard `data` + `pagination` envelope.
+</Update>
