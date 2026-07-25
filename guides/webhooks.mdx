@@ -6,40 +6,58 @@ description: "Receive real-time notifications when events happen."
 
 ## Overview
 
-Webhooks let your server receive HTTP POST callbacks when events occur in SmartlyQ — like a job completing or a social post being published.
+Webhooks let your server receive HTTP POST callbacks when events occur in SmartlyQ - a post publishing, a new comment or DM arriving, a contact being created, your wallet running low, and more. There are **25 events** across posting, accounts, inbox, jobs, billing, and CRM.
 
 ## Setting up webhooks
 
-1. Go to the [Developer Dashboard](https://app.smartlyq.com/my/developer)
-2. Navigate to the **Webhooks** tab
-3. Add an endpoint URL (must be HTTPS)
-4. Select the events you want to receive
+Two ways to register an endpoint (both HTTPS-only, public URLs):
 
-## Payload format
+- **Dashboard**: [Developer Dashboard](https://app.smartlyq.com/my/developer) → **Webhooks** tab → add an endpoint URL and select events.
+- **API**: `POST /webhooks` with `url` and an `events` array (see the [API reference](/api-reference/webhooks/create-webhook)). The response includes the signing `secret` - shown exactly once.
 
-All webhook payloads are JSON:
+Limits and safety: up to **10 active webhooks per workspace**; URLs must be public HTTPS endpoints (internal/private addresses are rejected at save time and re-checked at delivery time).
+
+## Delivery envelope
+
+Every delivery is JSON with the same envelope:
 
 ```json
 {
-  "event": "job.completed",
-  "timestamp": "2026-03-02T14:30:00Z",
+  "id": "evt_9f2c1a7d3b4e5f60718293a4",
+  "event": "post.published",
+  "created_at": "2026-07-26T14:30:00Z",
   "data": {
-    "job_id": "job_abc123",
-    "type": "article_generation",
-    "status": "completed",
-    "result": { ... }
+    "post_id": 12345,
+    "status": "published",
+    "platforms": [
+      { "platform": "instagram", "success": true },
+      { "platform": "twitter", "success": true }
+    ]
   }
 }
 ```
 
+- `id` is a **stable event identifier**: it is shared across fan-out to multiple endpoints and reused on every retry of the same delivery, so you can deduplicate at-least-once delivery. It is also echoed in the `X-SmartlyQ-Event-Id` header so you can dedupe without parsing the body.
+- `created_at` is UTC, ISO 8601.
+- `data` is the event-specific payload (catalog below).
+
+<Note>
+**Profiles fan-up:** if you use [Profiles](/guides/profiles) (sub-accounts for your end customers), events raised inside a profile's workspace are also delivered to **your** webhooks, with two extra fields added to `data`: `profile_id` and `profile_workspace_id`, so you can attribute the event to the right end customer.
+</Note>
+
+## Headers
+
+| Header | Value |
+|---|---|
+| `Content-Type` | `application/json` |
+| `X-SmartlyQ-Signature` | `t=<timestamp>,v1=<hmac>` (see below) |
+| `X-SmartlyQ-Event` | The event name, e.g. `post.published` |
+| `X-SmartlyQ-Event-Id` | The envelope's stable `id`, for deduplication |
+| `User-Agent` | `SmartlyQ-Webhook/1.0` |
+
 ## Verifying signatures
 
-Every delivery is signed. Two headers accompany each request:
-
-- `X-SmartlyQ-Signature` — `t=<timestamp>,v1=<hmac>`, where `<hmac>` is the HMAC-SHA256 of `<timestamp>.<raw-body>` keyed with your webhook secret.
-- `X-SmartlyQ-Event` — the event name (e.g. `job.completed`).
-
-Compute the HMAC over the timestamp and the **raw request body** joined with a `.`, then compare it against `v1`:
+`X-SmartlyQ-Signature` carries `t=<timestamp>,v1=<hmac>`, where `<hmac>` is the HMAC-SHA256 of `<timestamp>.<raw-body>` keyed with your webhook secret. The timestamp rotates on every attempt; the body (and `id`) stay the same.
 
 ```javascript
 const crypto = require("crypto");
@@ -61,20 +79,78 @@ function verifySignature(rawBody, signatureHeader, secret) {
 ```
 
 <Warning>
-Always verify the signature before processing a webhook. Unverified payloads may be spoofed. The signing secret is shown once, when you add the endpoint in the dashboard.
+Always verify the signature before processing a webhook. Unverified payloads may be spoofed. The signing secret is shown once, when you create the endpoint.
 </Warning>
 
 ## Retry policy
 
-If your endpoint returns a non-2xx status code, SmartlyQ retries delivery up to **5 times** with exponential backoff — the wait doubles each attempt (≈2, 4, 8, 16, 32 minutes). Deliveries still failing after the final attempt are dropped.
+- Non-2xx responses are retried up to **5 attempts** with exponential backoff (≈2, 4, 8, 16, 32 minutes).
+- If your endpoint answers `429` with a `Retry-After` header, we honor it (capped at 1 hour) instead of the standard backoff.
+- After the final attempt the delivery is marked **dead-letter** (it is not silently dropped - you can re-run it from the dashboard Logs).
+- **10 consecutive failures** flip the endpoint to `failing` and pause deliveries until you fix and re-enable it.
+- Delivery records are retained for **90 days**.
 
-## Available events
+## Event catalog
 
-| Event | Trigger |
-|-------|---------|
-| `job.completed` | An async job finished successfully |
-| `job.failed` | An async job failed |
-| `social.posted` | A social media post was published |
-| `social.failed` | A social media post failed to publish |
-| `chatbot.message` | A chatbot received a visitor message |
-| `wallet.low` | Wallet balance dropped below threshold |
+All registerable events. Registering an event name outside this catalog is rejected with a validation error.
+
+### Posting
+
+| Event | Fires when | `data` fields |
+|---|---|---|
+| `post.published` | Every platform target published | `post_id`, `status`, `platforms[]` (`platform`, `success`, and on failures `error` `{code, message, retryable}`) |
+| `post.partial` | Some platforms published, some failed | same as `post.published` |
+| `post.failed` | Every platform target failed | same as `post.published` |
+
+### Accounts
+
+| Event | Fires when | `data` fields |
+|---|---|---|
+| `account.connected` | A social account is connected or reactivated | `account_id`, `platform`, `account_name`, `account_username` |
+| `account.disconnected` | An account's connection was revoked/invalidated | `account_id`, `platform`, `account_name`, `reason` |
+| `account.token_expired` | An account's token expired (reconnect to resume) | `account_id`, `platform`, `account_name`, `reason` |
+
+### Inbox
+
+| Event | Fires when | `data` fields |
+|---|---|---|
+| `comment.received` | A new comment is ingested on one of your posts | `platform`, `account_id`, `social_post_id` (null for external posts), `remote_post_id`, `remote_comment_id`, `author_name`, `content`, `is_reply`, `commented_at` |
+| `message.received` | A new incoming DM is ingested | `platform`, `account_name`, `conversation_id`, `message_id`, `remote_message_id`, `sender_name`, `content`, `sent_at` |
+
+### Jobs
+
+| Event | Fires when | `data` fields |
+|---|---|---|
+| `job.completed` | An async job finished successfully | `job_id`, `type`, `status` |
+| `job.failed` | An async job failed | `job_id`, `type`, `status`, `error` |
+
+### Billing & keys
+
+| Event | Fires when | `data` fields |
+|---|---|---|
+| `balance.low` | Wallet balance crossed below the low threshold | `balance`, `threshold` |
+| `balance.depleted` | Wallet balance reached zero | `balance` |
+| `key.revoked` | An API key was revoked | `key_id`, `key_prefix`, `name` |
+| `wallet.recharge.succeeded` | Auto-recharge charged your card and credited the wallet | `amount`, `currency`, `balance_after` |
+| `wallet.recharge.failed` | Auto-recharge failed (or grace expired) | `amount`, `currency`, `error`, `balance`, `retry_after`; on grace-expiry pauses instead: `reason`, `profiles_paused`, `grace_days` |
+| `account_billing.charged` | Monthly per-account billing charged your wallet | `period`, `accounts`, `amount`, `balance_after` |
+| `account_billing.failed` | Monthly per-account billing could not charge | `period`, `accounts`, `amount_due`, `error`, `grace_days_remaining`; after grace: `profiles_paused` |
+
+### CRM
+
+CRM events fire regardless of whether the change came from the app or the API.
+
+| Event | Fires when | `data` fields |
+|---|---|---|
+| `contact.created` | A contact is created | `email`, `contact` `{id, email, name, first_name, last_name, company, phone, tags[], attributes{}}` |
+| `contact.updated` | A contact is updated | same as `contact.created` |
+| `contact.tag_added` | A tag is added to a contact | same as `contact.created`, plus `tag` |
+| `contact.tag_removed` | A tag is removed from a contact | same as `contact.created`, plus `tag` |
+| `deal.created` | An opportunity is created | `email`, `deal` `{id, name, email, value, stage, status, pipeline_id, assigned_user_id, stage_changed_at}` |
+| `deal.stage_changed` | An opportunity moved stage | same as `deal.created`, plus `deal.old_stage` |
+| `deal.won` | An opportunity was marked won | same as `deal.created` |
+| `deal.lost` | An opportunity was marked lost | same as `deal.created` |
+
+<Note>
+Machine-readable payload schemas for every event ship in the [OpenAPI spec](https://docs.smartlyq.com/openapi.json) under the standard OpenAPI 3.1 `webhooks` object, so SDK generators and AI agents can consume them.
+</Note>

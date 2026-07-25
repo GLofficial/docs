@@ -6,6 +6,18 @@ icon: "clock-rotate-left"
 
 Product updates for the SmartlyQ Developer API, MCP server, and Developer Portal. All endpoints live at `https://api.smartlyq.com/v1`.
 
+<Update label="July 26, 2026" tags={["Webhooks", "Docs"]}>
+## Webhooks: unified 25-event catalog with machine-readable schemas
+
+The webhook documentation is now a single source of truth, aligned with what the platform actually delivers.
+
+- The [Webhooks guide](/guides/webhooks) now documents the complete **25-event catalog** (posting, accounts, inbox, jobs, billing & keys, CRM) with the `data` fields each event carries
+- Every event now ships a **JSON payload schema** in the OpenAPI spec's standard `webhooks` object - SDK generators and AI agents can consume delivery shapes directly from [openapi.json](https://docs.smartlyq.com/openapi.json)
+- `POST /webhooks` now documents the exact allowed `events` values (enum) instead of a free-form string array
+- Corrected legacy event names that appeared in older docs (`social.posted` → `post.published`, `wallet.low` → `balance.low`); the delivery envelope is documented as `{id, event, created_at, data}` with the `X-SmartlyQ-Event-Id` dedupe header
+- Documented previously-missing delivery semantics: `Retry-After` honored on 429 (capped 1h), dead-letter after the 5th attempt, auto-pause after 10 consecutive failures, 90-day delivery retention, 10 webhooks per workspace
+</Update>
+
 <Update label="July 25, 2026" tags={["Profiles", "New"]}>
 ## Profiles: build your own multi-tenant product
 
