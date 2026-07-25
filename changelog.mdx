@@ -16,7 +16,7 @@ Profiles turn the SmartlyQ API into infrastructure for YOUR product: create a pr
 - `POST /profiles/{id}/connect/{platform}` - raw per-platform OAuth URLs for your own UI
 - `X-Profile-Id` header on existing endpoints - data scopes to the profile; billing, rate limits and logs stay on your account
 - `GET /me/account-billing` - live billable-account count and charge estimate
-- Per-account monthly billing from your API wallet: $6 each for accounts 1-10, $3 for 11-100, $1 from 101 up
+- Per-account monthly billing from your API wallet: \$6 each for accounts 1-10, \$3 for 11-100, \$1 from 101 up
 - New webhook events `account_billing.charged` / `account_billing.failed`, plus every in-profile event now fans up to your webhooks with `profile_id` attached
 - New scopes: `profiles:read`, `profiles:write`, `profiles:manage`
 

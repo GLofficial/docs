@@ -9369,7 +9369,7 @@
     "/me/account-billing": {
       "get": {
         "summary": "Account billing summary",
-        "description": "Live count of billable connected accounts across your profiles, the price bands, the estimated next monthly charge, and recent billing history. Accounts are billed per calendar month from your API wallet: $6 each for accounts 1-10, $3 for 11-100, $1 from 101 up, snapshotted on the 1st (UTC). Requires the profiles:read scope.",
+        "description": "Live count of billable connected accounts across your profiles, the price bands, the estimated next monthly charge, and recent billing history. Accounts are billed per calendar month from your API wallet: \\$6 each for accounts 1-10, \\$3 for 11-100, \\$1 from 101 up, snapshotted on the 1st (UTC). Requires the profiles:read scope.",
         "operationId": "getAccountBilling",
         "tags": [
           "Profiles"
