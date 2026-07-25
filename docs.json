@@ -254,18 +254,6 @@
                 ]
               },
               {
-                "group": "Avatar Videos",
-                "pages": [
-                  "GET /avatar-videos/avatars",
-                  "GET /avatar-videos/voices",
-                  "POST /avatar-videos/generate",
-                  "POST /avatar-videos/translate",
-                  "POST /avatar-videos/lipsync",
-                  "POST /avatar-videos/agent",
-                  "GET /avatar-videos/{uid}"
-                ]
-              },
-              {
                 "group": "Presentations",
                 "pages": [
                   "POST /presentations/generate",

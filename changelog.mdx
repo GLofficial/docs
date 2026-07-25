@@ -134,25 +134,6 @@ Every delivery carries a canonical envelope `{ id, event, created_at, data }` wi
 14 SEO endpoints under `/seo/*` with the new `seo:read` scope: keyword research, SERP analysis, keyword difficulty, ranked keywords, domain overview, competitors, backlinks summary, backlink prospects, referring domains, backlink anchors, spam score, rank history, site audit, and on-page audit.
 </Update>
 
-<Update label="June 13, 2026" tags={["Avatar Videos"]}>
-## Video Agent
-
-`POST /avatar-videos/agent` - give it only a prompt and the agent picks the avatar and voice, writes the script, and produces the finished avatar video.
-</Update>
-
-<Update label="June 12, 2026" tags={["Avatar Videos", "New"]}>
-## Avatar Videos API
-
-AI avatar video generation on the public API:
-
-- `GET /avatar-videos/avatars` and `GET /avatar-videos/voices` - browse the catalog
-- `POST /avatar-videos/generate` - script to talking-head video
-- `POST /avatar-videos/translate` - translate an existing video with lip-synced audio
-- `POST /avatar-videos/lipsync` - sync a video to a new audio track
-
-All async: poll `GET /jobs/{job_id}`.
-</Update>
-
 <Update label="June 8, 2026" tags={["Developer Portal", "Billing"]}>
 ## Playground + automatic refunds
 
