@@ -321,7 +321,13 @@
                   "GET /social/accounts/{account_id}/tiktok/creator-info",
                   "POST /social/accounts/{account_id}/pause",
                   "POST /social/accounts/{account_id}/resume",
-                  "DELETE /social/accounts/{account_id}"
+                  "DELETE /social/accounts/{account_id}",
+                  "POST /social/accounts/{account_id}/move",
+                  "GET /social/account-groups",
+                  "POST /social/account-groups",
+                  "GET /social/account-groups/{group_id}",
+                  "PUT /social/account-groups/{group_id}",
+                  "DELETE /social/account-groups/{group_id}"
                 ]
               },
               {

@@ -7,6 +7,13 @@ icon: "clock-rotate-left"
 Product updates for the SmartlyQ Developer API, MCP server, and Developer Portal. All endpoints live at `https://api.smartlyq.com/v1`.
 
 <Update label="July 26, 2026" tags={["Social", "New"]}>
+## Account groups and profile moves
+
+- **Account groups** - full CRUD under `/social/account-groups`: name a set of connected accounts (a client, a brand) and address it with one id. Up to 50 groups per workspace, 100 accounts per group; membership is validated against your workspace on every write.
+- **Move to profile** - `POST /social/accounts/{account_id}/move` relocates a connected account between your developer workspace and your profiles (`profile_id: 0` moves it back). Requires `social:write` + `profiles:manage`, developer context only, and refuses with 409 while the account has scheduled or in-flight posts.
+</Update>
+
+<Update label="July 26, 2026" tags={["Social", "New"]}>
 ## Account insights
 
 - **Bulk health** - `GET /social/accounts/health` reports every connected account's token health in one call: healthy / expiring / expired / paused tallies plus per-account detail. No more N+1 health polling.
