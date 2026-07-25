@@ -346,6 +346,13 @@
                 ]
               },
               {
+                "group": "Validation",
+                "pages": [
+                  "POST /social/validate/post",
+                  "POST /social/validate/media"
+                ]
+              },
+              {
                 "group": "Analytics",
                 "pages": [
                   "GET /analytics/overview",

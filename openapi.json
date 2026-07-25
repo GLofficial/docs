@@ -10709,6 +10709,221 @@
           }
         }
       }
+    },
+    "/social/validate/post": {
+      "post": {
+        "summary": "Validate post content",
+        "operationId": "validatePost",
+        "tags": [
+          "Social"
+        ],
+        "description": "Dry-run the same declarative checks the create path uses, WITHOUT creating anything: per-platform caption limits (each limit grounded in the platform handler or the platform's documented maximum), required-media rules (e.g. Instagram), and media extension screening. Free and unbilled. Platforms with no honestly-documented ceiling (Snapchat stories carry no caption; Tumblr documents no body cap) report limit: null. Requires scope `social:read`.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "platforms"
+                ],
+                "properties": {
+                  "content": {
+                    "type": "string",
+                    "description": "Post text to check."
+                  },
+                  "platforms": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "Target platforms, e.g. [\"twitter\", \"instagram\"]."
+                  },
+                  "media_urls": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "Media URLs the post would carry (used for required-media and extension checks)."
+                  }
+                }
+              },
+              "example": {
+                "content": "Launching today! 🚀",
+                "platforms": [
+                  "twitter",
+                  "instagram",
+                  "linkedin"
+                ],
+                "media_urls": [
+                  "https://cdn.example.com/launch.jpg"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Validation report",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [
+                        true
+                      ]
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "valid": {
+                          "type": "boolean"
+                        },
+                        "errors": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          },
+                          "description": "Human-readable, actionable problems (empty when valid)."
+                        },
+                        "platforms": {
+                          "type": "object",
+                          "additionalProperties": {
+                            "type": "object",
+                            "properties": {
+                              "characters": {
+                                "type": "integer"
+                              },
+                              "limit": {
+                                "type": "integer",
+                                "nullable": true,
+                                "description": "Caption limit, or null when the platform has no documented ceiling."
+                              },
+                              "within_limit": {
+                                "type": "boolean"
+                              },
+                              "requires_media": {
+                                "type": "boolean"
+                              },
+                              "media_ok": {
+                                "type": "boolean"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/RequestMeta"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      }
+    },
+    "/social/validate/media": {
+      "post": {
+        "summary": "Validate media URL",
+        "operationId": "validateMedia",
+        "tags": [
+          "Social"
+        ],
+        "description": "Checks that a media URL is publicly reachable and reports its content type, byte size, and detected kind (image/video). SSRF-guarded: private and internal hosts are rejected. Uses a HEAD request with a 1-byte ranged-GET fallback for CDNs that refuse HEAD. Free and unbilled. Requires scope `social:read`.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "url"
+                ],
+                "properties": {
+                  "url": {
+                    "type": "string",
+                    "format": "uri",
+                    "description": "Public http(s) media URL."
+                  }
+                }
+              },
+              "example": {
+                "url": "https://cdn.example.com/launch.jpg"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Media check",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [
+                        true
+                      ]
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "url": {
+                          "type": "string"
+                        },
+                        "reachable": {
+                          "type": "boolean"
+                        },
+                        "http_code": {
+                          "type": "integer"
+                        },
+                        "content_type": {
+                          "type": "string",
+                          "nullable": true
+                        },
+                        "size_bytes": {
+                          "type": "integer",
+                          "nullable": true
+                        },
+                        "type": {
+                          "type": "string",
+                          "enum": [
+                            "image",
+                            "video",
+                            "unknown"
+                          ]
+                        }
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/RequestMeta"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      }
     }
   },
   "components": {

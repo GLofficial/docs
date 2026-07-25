@@ -7,6 +7,17 @@ icon: "clock-rotate-left"
 Product updates for the SmartlyQ Developer API, MCP server, and Developer Portal. All endpoints live at `https://api.smartlyq.com/v1`.
 
 <Update label="July 26, 2026" tags={["Social", "New"]}>
+## Pre-flight validation
+
+Catch problems before they cost a publish attempt. Both endpoints are free, unbilled, and need only `social:read`.
+
+- **Validate a post** - `POST /social/validate/post` dry-runs the exact checks the create path uses and returns a per-platform report: character count vs. the platform's caption limit, required-media rules, and media extension screening. Nothing is created.
+- **Validate a media URL** - `POST /social/validate/media` confirms a URL is publicly reachable and reports its content type, byte size, and detected kind (image/video). Private and internal hosts are rejected.
+
+See the [Validation reference](/api-reference) for the full report shape.
+</Update>
+
+<Update label="July 26, 2026" tags={["Social", "New"]}>
 ## Posting queues and unpublish
 
 Two of the most-requested scheduling powers land in the API.
