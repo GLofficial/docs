@@ -869,6 +869,49 @@
           },
           "500": {
             "$ref": "#/components/responses/ServerError"
+          },
+          "409": {
+            "description": "Duplicate content within 24h",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [
+                        false
+                      ]
+                    },
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "enum": [
+                            "DUPLICATE_CONTENT"
+                          ]
+                        },
+                        "message": {
+                          "type": "string"
+                        },
+                        "details": {
+                          "type": "object",
+                          "properties": {
+                            "existing_post_id": {
+                              "type": "integer"
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/RequestMeta"
+                    }
+                  }
+                }
+              }
+            }
           }
         },
         "parameters": [
@@ -949,42 +992,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/SocialPostScheduleRequest",
-                "properties": {
-                  "queue_id": {
-                    "type": "integer",
-                    "description": "Schedule into a posting queue instead of a fixed time: the queue's next open slot is resolved server-side and the post occupies it. Mutually exclusive with scheduled_time."
-                  },
-                  "timezone": {
-                    "type": "string",
-                    "description": "IANA timezone scheduled_time is expressed in (default UTC). Ignored with queue_id (the queue's own timezone applies)."
-                  },
-                  "recycle": {
-                    "type": "object",
-                    "description": "Evergreen recycling: after this post publishes, the next occurrence is automatically scheduled interval_hours later, repeating until a bound is hit. A bound is REQUIRED - set max_repeats and/or until (no unbounded chains). Stop a chain anytime with DELETE /social/posts/{post_id}/recycle.",
-                    "required": [
-                      "interval_hours"
-                    ],
-                    "properties": {
-                      "interval_hours": {
-                        "type": "integer",
-                        "minimum": 1,
-                        "maximum": 8760,
-                        "description": "Hours between occurrences (1 to 8760 = 1 year)."
-                      },
-                      "max_repeats": {
-                        "type": "integer",
-                        "minimum": 1,
-                        "maximum": 100,
-                        "description": "Maximum number of automatic repeats after the original post."
-                      },
-                      "until": {
-                        "type": "string",
-                        "description": "UTC datetime (Y-m-d H:i:s) after which no further occurrences are scheduled. Must be within 2 years."
-                      }
-                    }
-                  }
-                }
+                "$ref": "#/components/schemas/SocialPostScheduleRequest"
               }
             }
           }
@@ -1020,6 +1028,49 @@
           },
           "500": {
             "$ref": "#/components/responses/ServerError"
+          },
+          "409": {
+            "description": "Duplicate content within 24h",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [
+                        false
+                      ]
+                    },
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "enum": [
+                            "DUPLICATE_CONTENT"
+                          ]
+                        },
+                        "message": {
+                          "type": "string"
+                        },
+                        "details": {
+                          "type": "object",
+                          "properties": {
+                            "existing_post_id": {
+                              "type": "integer"
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/RequestMeta"
+                    }
+                  }
+                }
+              }
+            }
           }
         },
         "parameters": [
@@ -11046,6 +11097,331 @@
           }
         }
       }
+    },
+    "/social/posts/bulk": {
+      "post": {
+        "summary": "Bulk schedule posts",
+        "operationId": "bulkSchedulePosts",
+        "tags": [
+          "Social"
+        ],
+        "description": "Schedule up to 50 posts in one call, from a JSON `posts` array or an inline `csv` string. Billed one post unit per row x platform. Any structural problem (missing fields, bad dates, in-batch duplicate rows) rejects the WHOLE batch with 422 before anything is created - and the charge is refunded. After that gate, row-level failures (e.g. a disconnected account, a 24h duplicate) are reported per row in the 201 response. Run the free dry-run first: POST /social/posts/bulk/validate. Requires scope `social:write`.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "posts": {
+                    "type": "array",
+                    "maxItems": 50,
+                    "description": "Up to 50 posts. Each row needs content, platforms, account_ids and scheduled_time.",
+                    "items": {
+                      "type": "object",
+                      "required": [
+                        "content",
+                        "platforms",
+                        "account_ids",
+                        "scheduled_time"
+                      ],
+                      "properties": {
+                        "content": {
+                          "type": "string"
+                        },
+                        "platforms": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "account_ids": {
+                          "type": "array",
+                          "items": {
+                            "type": "integer"
+                          }
+                        },
+                        "scheduled_time": {
+                          "type": "string",
+                          "description": "When to publish (interpreted in `timezone`, default UTC)."
+                        },
+                        "timezone": {
+                          "type": "string",
+                          "description": "Optional per-row IANA timezone override."
+                        },
+                        "media_urls": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "link": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  },
+                  "csv": {
+                    "type": "string",
+                    "description": "Alternative to posts: inline CSV with a header line. Columns: content, platforms, account_ids, scheduled_time, media_urls, link (list cells split on | or ,). Provide posts OR csv, not both."
+                  },
+                  "timezone": {
+                    "type": "string",
+                    "description": "Default timezone for rows without their own (IANA name, default UTC)."
+                  },
+                  "allow_duplicates": {
+                    "type": "boolean",
+                    "description": "Skip the 24h duplicate-content guard for this batch."
+                  }
+                }
+              },
+              "example": {
+                "posts": [
+                  {
+                    "content": "Big news Monday!",
+                    "platforms": [
+                      "twitter",
+                      "linkedin"
+                    ],
+                    "account_ids": [
+                      12,
+                      15
+                    ],
+                    "scheduled_time": "2026-08-03 09:00:00"
+                  },
+                  {
+                    "content": "Behind the scenes 🎬",
+                    "platforms": [
+                      "instagram"
+                    ],
+                    "account_ids": [
+                      18
+                    ],
+                    "scheduled_time": "2026-08-04 17:30:00",
+                    "media_urls": [
+                      "https://cdn.example.com/bts.jpg"
+                    ]
+                  }
+                ],
+                "timezone": "Europe/Athens"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Batch processed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [
+                        true
+                      ]
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "created": {
+                          "type": "integer"
+                        },
+                        "failed": {
+                          "type": "integer"
+                        },
+                        "results": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "row": {
+                                "type": "integer"
+                              },
+                              "post_id": {
+                                "type": "integer",
+                                "description": "Present on success."
+                              },
+                              "status": {
+                                "type": "string"
+                              },
+                              "scheduled_time": {
+                                "type": "string"
+                              },
+                              "error": {
+                                "type": "string",
+                                "description": "Present on row failure (e.g. DUPLICATE_CONTENT)."
+                              },
+                              "message": {
+                                "type": "string"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/RequestMeta"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "402": {
+            "$ref": "#/components/responses/InsufficientBalance"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      }
+    },
+    "/social/posts/bulk/validate": {
+      "post": {
+        "summary": "Validate a bulk batch",
+        "operationId": "validateBulkBatch",
+        "tags": [
+          "Social"
+        ],
+        "description": "Free dry-run of the same batch body as POST /social/posts/bulk: per-row structural checks, per-platform caption/media limits, and the 24h duplicate-content check. Nothing is created or billed. Requires scope `social:read`.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "posts": {
+                    "type": "array",
+                    "maxItems": 50,
+                    "description": "Up to 50 posts. Each row needs content, platforms, account_ids and scheduled_time.",
+                    "items": {
+                      "type": "object",
+                      "required": [
+                        "content",
+                        "platforms",
+                        "account_ids",
+                        "scheduled_time"
+                      ],
+                      "properties": {
+                        "content": {
+                          "type": "string"
+                        },
+                        "platforms": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "account_ids": {
+                          "type": "array",
+                          "items": {
+                            "type": "integer"
+                          }
+                        },
+                        "scheduled_time": {
+                          "type": "string",
+                          "description": "When to publish (interpreted in `timezone`, default UTC)."
+                        },
+                        "timezone": {
+                          "type": "string",
+                          "description": "Optional per-row IANA timezone override."
+                        },
+                        "media_urls": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "link": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  },
+                  "csv": {
+                    "type": "string",
+                    "description": "Alternative to posts: inline CSV with a header line. Columns: content, platforms, account_ids, scheduled_time, media_urls, link (list cells split on | or ,). Provide posts OR csv, not both."
+                  },
+                  "timezone": {
+                    "type": "string",
+                    "description": "Default timezone for rows without their own (IANA name, default UTC)."
+                  },
+                  "allow_duplicates": {
+                    "type": "boolean",
+                    "description": "Skip the 24h duplicate-content guard for this batch."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Batch report",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [
+                        true
+                      ]
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "valid": {
+                          "type": "boolean"
+                        },
+                        "rows": {
+                          "type": "integer"
+                        },
+                        "report": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "row": {
+                                "type": "integer"
+                              },
+                              "valid": {
+                                "type": "boolean"
+                              },
+                              "errors": {
+                                "type": "array",
+                                "items": {
+                                  "type": "string"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/RequestMeta"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -12098,6 +12474,10 @@
           "link": {
             "type": "string",
             "description": "URL to include with the post"
+          },
+          "allow_duplicates": {
+            "type": "boolean",
+            "description": "Skip the 24h duplicate-content guard. Without it, content identical to a post created in this workspace in the last 24 hours is rejected with 409 DUPLICATE_CONTENT (and the charge is refunded)."
           }
         }
       },
@@ -12106,8 +12486,7 @@
         "required": [
           "content",
           "platforms",
-          "account_ids",
-          "scheduled_time"
+          "account_ids"
         ],
         "properties": {
           "content": {
@@ -12155,8 +12534,46 @@
           "link": {
             "type": "string",
             "description": "URL to include with the post"
+          },
+          "queue_id": {
+            "type": "integer",
+            "description": "Schedule into a posting queue instead of a fixed time: the queue's next open slot is resolved server-side and the post occupies it. Mutually exclusive with scheduled_time."
+          },
+          "timezone": {
+            "type": "string",
+            "description": "IANA timezone scheduled_time is expressed in (default UTC). Ignored with queue_id (the queue's own timezone applies)."
+          },
+          "recycle": {
+            "type": "object",
+            "description": "Evergreen recycling: after this post publishes, the next occurrence is automatically scheduled interval_hours later, repeating until a bound is hit. A bound is REQUIRED - set max_repeats and/or until (no unbounded chains). Stop a chain anytime with DELETE /social/posts/{post_id}/recycle.",
+            "required": [
+              "interval_hours"
+            ],
+            "properties": {
+              "interval_hours": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 8760,
+                "description": "Hours between occurrences (1 to 8760 = 1 year)."
+              },
+              "max_repeats": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 100,
+                "description": "Maximum number of automatic repeats after the original post."
+              },
+              "until": {
+                "type": "string",
+                "description": "UTC datetime (Y-m-d H:i:s) after which no further occurrences are scheduled. Must be within 2 years."
+              }
+            }
+          },
+          "allow_duplicates": {
+            "type": "boolean",
+            "description": "Skip the 24h duplicate-content guard. Without it, content identical to a post created in this workspace in the last 24 hours is rejected with 409 DUPLICATE_CONTENT (and the charge is refunded)."
           }
-        }
+        },
+        "description": "Schedule request. Provide scheduled_time (with optional timezone) OR queue_id (next open slot), not both."
       },
       "SocialPostUpdateRequest": {
         "type": "object",

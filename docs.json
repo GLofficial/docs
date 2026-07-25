@@ -325,6 +325,8 @@
                 "pages": [
                   "POST /social/posts",
                   "POST /social/posts/schedule",
+                  "POST /social/posts/bulk",
+                  "POST /social/posts/bulk/validate",
                   "GET /social/posts",
                   "GET /social/posts/{post_id}",
                   "PATCH /social/posts/{post_id}",

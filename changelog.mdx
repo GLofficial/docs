@@ -7,6 +7,14 @@ icon: "clock-rotate-left"
 Product updates for the SmartlyQ Developer API, MCP server, and Developer Portal. All endpoints live at `https://api.smartlyq.com/v1`.
 
 <Update label="July 26, 2026" tags={["Social", "New"]}>
+## Bulk scheduling and duplicate protection
+
+- **Bulk schedule** - `POST /social/posts/bulk` schedules up to 50 posts in one call, from a JSON `posts` array or an inline `csv` string (header: content, platforms, account_ids, scheduled_time, media_urls, link). Billed one post unit per row x platform. A structural problem in any row rejects the whole batch with 422 before anything is created - and the charge is refunded.
+- **Free batch dry-run** - `POST /social/posts/bulk/validate` returns a per-row report (structure, per-platform caption/media limits, duplicate check) without creating or billing anything.
+- **24h duplicate-content guard** - `POST /social/posts` and `POST /social/posts/schedule` now reject content identical to a post created in the same workspace within the last 24 hours with `409 DUPLICATE_CONTENT` (charge refunded). Pass `allow_duplicates: true` to override. This catches retry loops and mis-wired crons before they spam your channels.
+</Update>
+
+<Update label="July 26, 2026" tags={["Social", "New"]}>
 ## Evergreen post recycling
 
 Keep your best content in rotation automatically.
