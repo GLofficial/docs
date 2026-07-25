@@ -7,6 +7,15 @@ icon: "clock-rotate-left"
 Product updates for the SmartlyQ Developer API, MCP server, and Developer Portal. All endpoints live at `https://api.smartlyq.com/v1`.
 
 <Update label="July 26, 2026" tags={["Social", "New"]}>
+## Account insights
+
+- **Bulk health** - `GET /social/accounts/health` reports every connected account's token health in one call: healthy / expiring / expired / paused tallies plus per-account detail. No more N+1 health polling.
+- **Follower stats** - `GET /social/accounts/follower-stats?days=30` returns daily follower history, growth, and growth percentage per account from the platform's analytics snapshots.
+- **Rename** - `PATCH /social/accounts/{account_id}` updates the account's display name.
+- **TikTok creator info** - `GET /social/accounts/{account_id}/tiktok/creator-info` surfaces live privacy levels, comment/duet/stitch availability, and max video duration - the fields TikTok requires you to show before posting.
+</Update>
+
+<Update label="July 26, 2026" tags={["Social", "New"]}>
 ## Bulk scheduling and duplicate protection
 
 - **Bulk schedule** - `POST /social/posts/bulk` schedules up to 50 posts in one call, from a JSON `posts` array or an inline `csv` string (header: content, platforms, account_ids, scheduled_time, media_urls, link). Billed one post unit per row x platform. A structural problem in any row rejects the whole batch with 422 before anything is created - and the charge is refunded.

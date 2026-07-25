@@ -311,10 +311,14 @@
                 "group": "Accounts",
                 "pages": [
                   "GET /social/accounts",
+                  "GET /social/accounts/health",
+                  "GET /social/accounts/follower-stats",
                   "POST /social/connect/{platform}",
                   "GET /social/connect/{platform}",
+                  "PATCH /social/accounts/{account_id}",
                   "GET /social/accounts/{account_id}/health",
                   "GET /social/accounts/{account_id}/reconnect-url",
+                  "GET /social/accounts/{account_id}/tiktok/creator-info",
                   "POST /social/accounts/{account_id}/pause",
                   "POST /social/accounts/{account_id}/resume",
                   "DELETE /social/accounts/{account_id}"
