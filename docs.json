@@ -330,6 +330,7 @@
                   "PATCH /social/posts/{post_id}",
                   "POST /social/posts/{post_id}/retry",
                   "POST /social/posts/{post_id}/unpublish",
+                  "DELETE /social/posts/{post_id}/recycle",
                   "DELETE /social/posts/{post_id}"
                 ]
               },

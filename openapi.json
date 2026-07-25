@@ -958,6 +958,31 @@
                   "timezone": {
                     "type": "string",
                     "description": "IANA timezone scheduled_time is expressed in (default UTC). Ignored with queue_id (the queue's own timezone applies)."
+                  },
+                  "recycle": {
+                    "type": "object",
+                    "description": "Evergreen recycling: after this post publishes, the next occurrence is automatically scheduled interval_hours later, repeating until a bound is hit. A bound is REQUIRED - set max_repeats and/or until (no unbounded chains). Stop a chain anytime with DELETE /social/posts/{post_id}/recycle.",
+                    "required": [
+                      "interval_hours"
+                    ],
+                    "properties": {
+                      "interval_hours": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 8760,
+                        "description": "Hours between occurrences (1 to 8760 = 1 year)."
+                      },
+                      "max_repeats": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 100,
+                        "description": "Maximum number of automatic repeats after the original post."
+                      },
+                      "until": {
+                        "type": "string",
+                        "description": "UTC datetime (Y-m-d H:i:s) after which no further occurrences are scheduled. Must be within 2 years."
+                      }
+                    }
                   }
                 }
               }
@@ -1002,7 +1027,7 @@
             "$ref": "#/components/parameters/ProfileHeader"
           }
         ],
-        "description": " Pass queue_id (instead of scheduled_time) to drop the post into a posting queue's next open slot."
+        "description": " Pass queue_id (instead of scheduled_time) to drop the post into a posting queue's next open slot. Supports evergreen recycling via the optional `recycle` object: each published occurrence automatically schedules the next one until the chain hits its bound."
       }
     },
     "/social/posts/{post_id}": {
@@ -10921,6 +10946,103 @@
           },
           "422": {
             "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      }
+    },
+    "/social/posts/{post_id}/recycle": {
+      "delete": {
+        "summary": "Stop recycling",
+        "operationId": "stopPostRecycle",
+        "tags": [
+          "Social"
+        ],
+        "description": "Stops an evergreen recycling chain: clears the recycle config on every post in the chain and cancels any not-yet-published auto-spawned occurrences back to draft. Works on any post in the chain (original or an occurrence). Unbilled. Requires scope `social:write`.",
+        "parameters": [
+          {
+            "name": "post_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Any post id in the recycling chain."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Chain stopped",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [
+                        true
+                      ]
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "stopped": {
+                          "type": "boolean"
+                        },
+                        "cancelled_occurrences": {
+                          "type": "integer",
+                          "description": "Scheduled future occurrences moved back to draft."
+                        }
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/RequestMeta"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "409": {
+            "description": "Post is not part of a recycling chain",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [
+                        false
+                      ]
+                    },
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "enum": [
+                            "NOT_RECYCLING"
+                          ]
+                        },
+                        "message": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/RequestMeta"
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }

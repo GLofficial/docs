@@ -7,6 +7,16 @@ icon: "clock-rotate-left"
 Product updates for the SmartlyQ Developer API, MCP server, and Developer Portal. All endpoints live at `https://api.smartlyq.com/v1`.
 
 <Update label="July 26, 2026" tags={["Social", "New"]}>
+## Evergreen post recycling
+
+Keep your best content in rotation automatically.
+
+- **Recycle on schedule** - `POST /social/posts/schedule` now accepts an optional `recycle` object: `{ interval_hours, max_repeats?, until? }`. After each occurrence publishes, the next one is scheduled automatically. A bound is required (`max_repeats` up to 100 and/or `until` up to 2 years out) - no unbounded chains.
+- **Stop a chain** - `DELETE /social/posts/{post_id}/recycle` clears the config across the whole chain and cancels any not-yet-published occurrences back to draft. Works from any post in the chain.
+- Occurrences inherit content, media, accounts, UTM tags, and approval status; `GET /social/posts/{post_id}` shows `recycle_count` and `recycle_parent_id` for lineage.
+</Update>
+
+<Update label="July 26, 2026" tags={["Social", "New"]}>
 ## Pre-flight validation
 
 Catch problems before they cost a publish attempt. Both endpoints are free, unbilled, and need only `social:read`.
