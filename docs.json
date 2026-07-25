@@ -132,6 +132,9 @@
                 "pages": [
                   "GET /webhooks",
                   "POST /webhooks",
+                  "PUT /webhooks/{id}",
+                  "POST /webhooks/{id}/test",
+                  "GET /webhooks/logs",
                   "DELETE /webhooks/{id}"
                 ]
               }

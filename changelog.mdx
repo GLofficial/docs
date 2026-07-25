@@ -6,6 +6,19 @@ icon: "clock-rotate-left"
 
 Product updates for the SmartlyQ Developer API, MCP server, and Developer Portal. All endpoints live at `https://api.smartlyq.com/v1`.
 
+<Update label="July 26, 2026" tags={["Webhooks", "New"]}>
+## Webhooks: update, test, and delivery logs via API
+
+Webhook endpoints can now be fully managed and debugged without opening the dashboard.
+
+- `PUT /webhooks/{id}` - change the URL or subscribed events, or pause/resume deliveries (`status: active | paused`); re-activating also recovers an endpoint auto-paused after repeated failures
+- `POST /webhooks/{id}/test` - sends a `webhook.test` event through the real signing pipeline and returns the result synchronously (`delivered`, `response_code`, response excerpt)
+- `GET /webhooks/logs` - paginated delivery log across your endpoints with the full envelope, response code/body excerpt, attempt count, and next retry time; filter by `webhook_id`, `event`, or `status`
+- `job.completed` / `job.failed` now actually fire - these events were in the catalog but had no emit point; every async job now emits exactly once on its terminal transition with `{job_id, type, status, error?}`
+- Stricter validation: `POST /webhooks` and `PUT /webhooks/{id}` reject unknown event names outright instead of silently dropping them
+- Guardrail: webhook routes reject the `X-Profile-Id` header - webhooks live on your developer workspace and receive profile events via fan-up
+</Update>
+
 <Update label="July 26, 2026" tags={["Webhooks", "Docs"]}>
 ## Webhooks: unified 25-event catalog with machine-readable schemas
 

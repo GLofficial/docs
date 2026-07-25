@@ -6595,6 +6595,156 @@
             "$ref": "#/components/responses/NotFound"
           }
         }
+      },
+      "put": {
+        "summary": "Update webhook",
+        "operationId": "updateWebhook",
+        "tags": [
+          "Webhooks"
+        ],
+        "description": "Update a webhook's `url`, `events`, or `status`. Only supplied fields change. `url` is re-validated (public HTTPS, SSRF-guarded); `events` must all come from the 25-event catalog (unknown names are rejected); setting `status` to `active` also recovers an endpoint auto-paused as `failing`. Requires scope `webhooks:write`. Not available under X-Profile-Id delegation - webhooks live on your developer workspace and receive profile events automatically (with profile_id attached).",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Webhook id."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "description": "Provide at least one field.",
+                "properties": {
+                  "url": {
+                    "type": "string",
+                    "format": "uri",
+                    "description": "Public HTTPS endpoint."
+                  },
+                  "events": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "enum": [
+                        "post.published",
+                        "post.partial",
+                        "post.failed",
+                        "account.connected",
+                        "account.disconnected",
+                        "account.token_expired",
+                        "comment.received",
+                        "message.received",
+                        "job.completed",
+                        "job.failed",
+                        "balance.low",
+                        "balance.depleted",
+                        "key.revoked",
+                        "wallet.recharge.succeeded",
+                        "wallet.recharge.failed",
+                        "account_billing.charged",
+                        "account_billing.failed",
+                        "contact.created",
+                        "contact.updated",
+                        "contact.tag_added",
+                        "contact.tag_removed",
+                        "deal.created",
+                        "deal.stage_changed",
+                        "deal.won",
+                        "deal.lost"
+                      ]
+                    },
+                    "description": "Full replacement list of subscribed events."
+                  },
+                  "status": {
+                    "type": "string",
+                    "enum": [
+                      "active",
+                      "paused"
+                    ],
+                    "description": "Pause or resume deliveries."
+                  }
+                }
+              },
+              "example": {
+                "events": [
+                  "post.published",
+                  "post.failed",
+                  "comment.received"
+                ],
+                "status": "active"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated webhook",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [
+                        true
+                      ]
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "integer"
+                        },
+                        "url": {
+                          "type": "string",
+                          "format": "uri"
+                        },
+                        "events": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "status": {
+                          "type": "string",
+                          "description": "active | paused | failing"
+                        },
+                        "last_triggered_at": {
+                          "type": "string",
+                          "format": "date-time",
+                          "nullable": true
+                        },
+                        "created_at": {
+                          "type": "string",
+                          "format": "date-time"
+                        }
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/RequestMeta"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
       }
     },
     "/social/connect/{platform}": {
@@ -9465,6 +9615,263 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/webhooks/logs": {
+      "get": {
+        "summary": "List webhook delivery logs",
+        "operationId": "listWebhookLogs",
+        "tags": [
+          "Webhooks"
+        ],
+        "description": "Paginated log of webhook delivery attempts across your endpoints, newest first (90-day retention). Each row carries the full delivery envelope, the destination's response code and a response-body excerpt, the attempt count, and the next retry time when pending. Requires scope `webhooks:read`. Not available under X-Profile-Id delegation - webhooks live on your developer workspace and receive profile events automatically (with profile_id attached).",
+        "parameters": [
+          {
+            "name": "webhook_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Filter to one webhook."
+          },
+          {
+            "name": "event",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Filter by event name (e.g. post.published)."
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "pending",
+                "delivered",
+                "dead_letter"
+              ]
+            },
+            "description": "Filter by delivery status."
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 1
+            }
+          },
+          {
+            "name": "per_page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 20,
+              "maximum": 100
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Delivery log",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [
+                        true
+                      ]
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "deliveries": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "integer"
+                              },
+                              "webhook_id": {
+                                "type": "integer"
+                              },
+                              "event": {
+                                "type": "string"
+                              },
+                              "event_id": {
+                                "type": "string",
+                                "description": "The envelope's stable evt_ id (matches X-SmartlyQ-Event-Id)."
+                              },
+                              "status": {
+                                "type": "string",
+                                "enum": [
+                                  "pending",
+                                  "delivered",
+                                  "dead_letter"
+                                ]
+                              },
+                              "attempt": {
+                                "type": "integer"
+                              },
+                              "response_code": {
+                                "type": "integer",
+                                "nullable": true
+                              },
+                              "response_body": {
+                                "type": "string",
+                                "nullable": true,
+                                "description": "First 500 chars of the destination's response."
+                              },
+                              "payload": {
+                                "type": "object",
+                                "nullable": true,
+                                "description": "The delivered envelope {id, event, created_at, data}."
+                              },
+                              "created_at": {
+                                "type": "string",
+                                "format": "date-time"
+                              },
+                              "delivered_at": {
+                                "type": "string",
+                                "format": "date-time",
+                                "nullable": true
+                              },
+                              "next_retry_at": {
+                                "type": "string",
+                                "format": "date-time",
+                                "nullable": true
+                              }
+                            }
+                          }
+                        },
+                        "pagination": {
+                          "type": "object",
+                          "properties": {
+                            "total": {
+                              "type": "integer"
+                            },
+                            "page": {
+                              "type": "integer"
+                            },
+                            "per_page": {
+                              "type": "integer"
+                            },
+                            "total_pages": {
+                              "type": "integer"
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/RequestMeta"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/webhooks/{id}/test": {
+      "post": {
+        "summary": "Send test webhook",
+        "operationId": "testWebhook",
+        "tags": [
+          "Webhooks"
+        ],
+        "description": "Synchronously sends a `webhook.test` delivery to the endpoint through the real signing pipeline (same headers and HMAC signature as production events) and returns the outcome. Works even when the endpoint is paused or failing. Test deliveries are never retried by the worker. Requires scope `webhooks:write`. Not available under X-Profile-Id delegation - webhooks live on your developer workspace and receive profile events automatically (with profile_id attached).",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Webhook id."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Test result",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [
+                        true
+                      ]
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "delivered": {
+                          "type": "boolean",
+                          "description": "True when the endpoint answered 2xx."
+                        },
+                        "event_id": {
+                          "type": "string"
+                        },
+                        "delivery_id": {
+                          "type": "integer"
+                        },
+                        "response_code": {
+                          "type": "integer",
+                          "nullable": true
+                        },
+                        "response_body": {
+                          "type": "string",
+                          "nullable": true
+                        }
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/RequestMeta"
+                    }
+                  }
+                },
+                "example": {
+                  "success": true,
+                  "data": {
+                    "delivered": true,
+                    "event_id": "evt_1a2b3c",
+                    "delivery_id": 9812,
+                    "response_code": 200,
+                    "response_body": "ok"
+                  },
+                  "meta": {
+                    "request_id": "req_abc123"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
           }
         }
       }
