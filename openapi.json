@@ -949,7 +949,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/SocialPostScheduleRequest"
+                "$ref": "#/components/schemas/SocialPostScheduleRequest",
+                "properties": {
+                  "queue_id": {
+                    "type": "integer",
+                    "description": "Schedule into a posting queue instead of a fixed time: the queue's next open slot is resolved server-side and the post occupies it. Mutually exclusive with scheduled_time."
+                  },
+                  "timezone": {
+                    "type": "string",
+                    "description": "IANA timezone scheduled_time is expressed in (default UTC). Ignored with queue_id (the queue's own timezone applies)."
+                  }
+                }
               }
             }
           }
@@ -991,7 +1001,8 @@
           {
             "$ref": "#/components/parameters/ProfileHeader"
           }
-        ]
+        ],
+        "description": " Pass queue_id (instead of scheduled_time) to drop the post into a posting queue's next open slot."
       }
     },
     "/social/posts/{post_id}": {
@@ -9872,6 +9883,829 @@
           },
           "404": {
             "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/social/queues": {
+      "get": {
+        "summary": "List queues",
+        "operationId": "listQueues",
+        "tags": [
+          "Social"
+        ],
+        "description": "List the workspace's posting queues (recurring weekly slot schedules). Requires scope `social:read`.",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [
+                        true
+                      ]
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "queues": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "integer"
+                              },
+                              "name": {
+                                "type": "string"
+                              },
+                              "slots": {
+                                "type": "object",
+                                "description": "Weekly slot map: keys Mon..Sun, values arrays of 24h \"HH:MM\" strings, e.g. {\"Mon\": [\"09:00\", \"15:00\"], \"Thu\": [\"10:30\"]}. Max 50 slots per queue.",
+                                "propertyNames": {
+                                  "enum": [
+                                    "Mon",
+                                    "Tue",
+                                    "Wed",
+                                    "Thu",
+                                    "Fri",
+                                    "Sat",
+                                    "Sun"
+                                  ]
+                                },
+                                "additionalProperties": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "string",
+                                    "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"
+                                  }
+                                }
+                              },
+                              "timezone": {
+                                "type": "string",
+                                "description": "IANA timezone the slots are interpreted in (default UTC)."
+                              },
+                              "is_active": {
+                                "type": "boolean"
+                              },
+                              "created_at": {
+                                "type": "string",
+                                "format": "date-time"
+                              },
+                              "updated_at": {
+                                "type": "string",
+                                "format": "date-time"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/RequestMeta"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      },
+      "post": {
+        "summary": "Create queue",
+        "operationId": "createQueue",
+        "tags": [
+          "Social"
+        ],
+        "description": "Create a posting queue. Posts join it via `POST /social/posts/schedule` with `queue_id`; each post takes the next open slot (FIFO). Max 20 queues per workspace. Requires scope `social:write`.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "name",
+                  "slots"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "maxLength": 100
+                  },
+                  "slots": {
+                    "type": "object",
+                    "description": "Weekly slot map: keys Mon..Sun, values arrays of 24h \"HH:MM\" strings, e.g. {\"Mon\": [\"09:00\", \"15:00\"], \"Thu\": [\"10:30\"]}. Max 50 slots per queue.",
+                    "propertyNames": {
+                      "enum": [
+                        "Mon",
+                        "Tue",
+                        "Wed",
+                        "Thu",
+                        "Fri",
+                        "Sat",
+                        "Sun"
+                      ]
+                    },
+                    "additionalProperties": {
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"
+                      }
+                    }
+                  },
+                  "timezone": {
+                    "type": "string",
+                    "description": "IANA timezone for the slots (default UTC)."
+                  },
+                  "is_active": {
+                    "type": "boolean",
+                    "default": true
+                  }
+                }
+              },
+              "example": {
+                "name": "Weekday mornings",
+                "slots": {
+                  "Mon": [
+                    "09:00"
+                  ],
+                  "Wed": [
+                    "09:00"
+                  ],
+                  "Fri": [
+                    "09:00",
+                    "15:00"
+                  ]
+                },
+                "timezone": "Europe/Madrid"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [
+                        true
+                      ]
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "integer"
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "slots": {
+                          "type": "object",
+                          "description": "Weekly slot map: keys Mon..Sun, values arrays of 24h \"HH:MM\" strings, e.g. {\"Mon\": [\"09:00\", \"15:00\"], \"Thu\": [\"10:30\"]}. Max 50 slots per queue.",
+                          "propertyNames": {
+                            "enum": [
+                              "Mon",
+                              "Tue",
+                              "Wed",
+                              "Thu",
+                              "Fri",
+                              "Sat",
+                              "Sun"
+                            ]
+                          },
+                          "additionalProperties": {
+                            "type": "array",
+                            "items": {
+                              "type": "string",
+                              "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"
+                            }
+                          }
+                        },
+                        "timezone": {
+                          "type": "string",
+                          "description": "IANA timezone the slots are interpreted in (default UTC)."
+                        },
+                        "is_active": {
+                          "type": "boolean"
+                        },
+                        "created_at": {
+                          "type": "string",
+                          "format": "date-time"
+                        },
+                        "updated_at": {
+                          "type": "string",
+                          "format": "date-time"
+                        }
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/RequestMeta"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      }
+    },
+    "/social/queues/{queue_id}": {
+      "get": {
+        "summary": "Get queue",
+        "operationId": "getQueue",
+        "tags": [
+          "Social"
+        ],
+        "description": "Fetch one queue, including its next open slot. Requires scope `social:read`.",
+        "parameters": [
+          {
+            "name": "queue_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Queue id."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [
+                        true
+                      ]
+                    },
+                    "data": {
+                      "allOf": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "integer"
+                            },
+                            "name": {
+                              "type": "string"
+                            },
+                            "slots": {
+                              "type": "object",
+                              "description": "Weekly slot map: keys Mon..Sun, values arrays of 24h \"HH:MM\" strings, e.g. {\"Mon\": [\"09:00\", \"15:00\"], \"Thu\": [\"10:30\"]}. Max 50 slots per queue.",
+                              "propertyNames": {
+                                "enum": [
+                                  "Mon",
+                                  "Tue",
+                                  "Wed",
+                                  "Thu",
+                                  "Fri",
+                                  "Sat",
+                                  "Sun"
+                                ]
+                              },
+                              "additionalProperties": {
+                                "type": "array",
+                                "items": {
+                                  "type": "string",
+                                  "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"
+                                }
+                              }
+                            },
+                            "timezone": {
+                              "type": "string",
+                              "description": "IANA timezone the slots are interpreted in (default UTC)."
+                            },
+                            "is_active": {
+                              "type": "boolean"
+                            },
+                            "created_at": {
+                              "type": "string",
+                              "format": "date-time"
+                            },
+                            "updated_at": {
+                              "type": "string",
+                              "format": "date-time"
+                            }
+                          }
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "next_slot": {
+                              "type": "string",
+                              "nullable": true,
+                              "description": "Next open slot, UTC 'Y-m-d H:i:s', or null when the queue has no open slots in the next 60 days."
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/RequestMeta"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      },
+      "put": {
+        "summary": "Update queue",
+        "operationId": "updateQueue",
+        "tags": [
+          "Social"
+        ],
+        "description": "Update name, slots, timezone, or active state. Only supplied fields change; already-queued posts keep their resolved times. Requires scope `social:write`.",
+        "parameters": [
+          {
+            "name": "queue_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Queue id."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "description": "Provide at least one field.",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "maxLength": 100
+                  },
+                  "slots": {
+                    "type": "object",
+                    "description": "Weekly slot map: keys Mon..Sun, values arrays of 24h \"HH:MM\" strings, e.g. {\"Mon\": [\"09:00\", \"15:00\"], \"Thu\": [\"10:30\"]}. Max 50 slots per queue.",
+                    "propertyNames": {
+                      "enum": [
+                        "Mon",
+                        "Tue",
+                        "Wed",
+                        "Thu",
+                        "Fri",
+                        "Sat",
+                        "Sun"
+                      ]
+                    },
+                    "additionalProperties": {
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"
+                      }
+                    }
+                  },
+                  "timezone": {
+                    "type": "string"
+                  },
+                  "is_active": {
+                    "type": "boolean"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [
+                        true
+                      ]
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "integer"
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "slots": {
+                          "type": "object",
+                          "description": "Weekly slot map: keys Mon..Sun, values arrays of 24h \"HH:MM\" strings, e.g. {\"Mon\": [\"09:00\", \"15:00\"], \"Thu\": [\"10:30\"]}. Max 50 slots per queue.",
+                          "propertyNames": {
+                            "enum": [
+                              "Mon",
+                              "Tue",
+                              "Wed",
+                              "Thu",
+                              "Fri",
+                              "Sat",
+                              "Sun"
+                            ]
+                          },
+                          "additionalProperties": {
+                            "type": "array",
+                            "items": {
+                              "type": "string",
+                              "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"
+                            }
+                          }
+                        },
+                        "timezone": {
+                          "type": "string",
+                          "description": "IANA timezone the slots are interpreted in (default UTC)."
+                        },
+                        "is_active": {
+                          "type": "boolean"
+                        },
+                        "created_at": {
+                          "type": "string",
+                          "format": "date-time"
+                        },
+                        "updated_at": {
+                          "type": "string",
+                          "format": "date-time"
+                        }
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/RequestMeta"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete queue",
+        "operationId": "deleteQueue",
+        "tags": [
+          "Social"
+        ],
+        "description": "Delete a queue. Posts already scheduled through it keep their resolved times. Requires scope `social:write`.",
+        "parameters": [
+          {
+            "name": "queue_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Queue id."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Deleted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [
+                        true
+                      ]
+                    },
+                    "data": {
+                      "type": "null"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/RequestMeta"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/social/queues/{queue_id}/next-slot": {
+      "get": {
+        "summary": "Get next open slot",
+        "operationId": "getQueueNextSlot",
+        "tags": [
+          "Social"
+        ],
+        "description": "The next unoccupied slot in the queue (UTC). For preview only - to actually schedule into the queue, pass `queue_id` to `POST /social/posts/schedule` (that call resolves and occupies the slot atomically). Requires scope `social:read`.",
+        "parameters": [
+          {
+            "name": "queue_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Queue id."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [
+                        true
+                      ]
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "queue_id": {
+                          "type": "integer"
+                        },
+                        "next_slot": {
+                          "type": "string",
+                          "nullable": true,
+                          "description": "UTC 'Y-m-d H:i:s', or null when full for the next 60 days."
+                        },
+                        "timezone": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/RequestMeta"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/social/queues/{queue_id}/preview": {
+      "get": {
+        "summary": "Preview upcoming slots",
+        "operationId": "previewQueueSlots",
+        "tags": [
+          "Social"
+        ],
+        "description": "The next N open slots (default 10, max 50), continuing the same walk `next-slot` uses. Requires scope `social:read`.",
+        "parameters": [
+          {
+            "name": "queue_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Queue id."
+          },
+          {
+            "name": "count",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 10,
+              "maximum": 50
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [
+                        true
+                      ]
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "queue_id": {
+                          "type": "integer"
+                        },
+                        "count": {
+                          "type": "integer"
+                        },
+                        "slots": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          },
+                          "description": "UTC 'Y-m-d H:i:s' values, ascending."
+                        },
+                        "timezone": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/RequestMeta"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/social/posts/{post_id}/unpublish": {
+      "post": {
+        "summary": "Unpublish post",
+        "operationId": "unpublishPost",
+        "tags": [
+          "Social"
+        ],
+        "description": "Delete a PUBLISHED post from its native platforms while keeping the SmartlyQ record - its status flips to `unpublished`. Optional `platforms` restricts which networks are removed. Supported for deletion: Threads, Facebook, LinkedIn, YouTube, X/Twitter, Pinterest, Tumblr, Bluesky, Google Business (Instagram, TikTok and Snapchat expose no delete API - those targets are reported as skipped). If any attempted native delete fails, nothing changes on our side and per-platform errors are returned so you can retry. Drafts and scheduled posts should use `DELETE /social/posts/{post_id}` instead. Requires scope `social:write`.",
+        "parameters": [
+          {
+            "name": "post_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Post id."
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "platforms": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "Restrict native deletion to these platforms. Omit to remove from every platform the post published to."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Unpublished",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [
+                        true
+                      ]
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "post_id": {
+                          "type": "integer"
+                        },
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "unpublished"
+                          ]
+                        },
+                        "platforms": {
+                          "type": "object",
+                          "additionalProperties": true,
+                          "description": "Per-platform deletion results."
+                        }
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/RequestMeta"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "502": {
+            "description": "One or more native deletes failed; the post is unchanged. The error details carry per-platform results.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [
+                        false
+                      ]
+                    },
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "enum": [
+                            "PLATFORM_DELETE_FAILED"
+                          ]
+                        },
+                        "message": {
+                          "type": "string"
+                        },
+                        "details": {
+                          "type": "object"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }

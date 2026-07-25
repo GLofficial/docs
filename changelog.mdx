@@ -6,6 +6,21 @@ icon: "clock-rotate-left"
 
 Product updates for the SmartlyQ Developer API, MCP server, and Developer Portal. All endpoints live at `https://api.smartlyq.com/v1`.
 
+<Update label="July 26, 2026" tags={["Social", "New"]}>
+## Posting queues and unpublish
+
+Two of the most-requested scheduling powers land in the API.
+
+**Posting queues** - define a recurring weekly slot schedule once, then drop posts into it without computing times:
+
+- `GET/POST /social/queues`, `GET/PUT/DELETE /social/queues/{queue_id}` - manage queues (slot map `{"Mon": ["09:00"], ...}` + IANA timezone)
+- `GET /social/queues/{queue_id}/next-slot` and `/preview?count=N` - see upcoming open slots
+- `POST /social/posts/schedule` now takes `queue_id` instead of `scheduled_time`: the next open slot is resolved server-side and the post occupies it (FIFO), so concurrent calls fill consecutive slots
+- Bonus: `scheduled_time` now honors an optional `timezone` field (previously UTC-only)
+
+**Unpublish** - `POST /social/posts/{post_id}/unpublish` deletes a published post from its native platforms while keeping the record (status becomes `unpublished`). Optional `platforms` array restricts targets; per-platform results are returned, and if any native delete fails nothing changes so you can retry. Supported: Threads, Facebook, LinkedIn, YouTube, X, Pinterest, Tumblr, Bluesky, Google Business.
+</Update>
+
 <Update label="July 26, 2026" tags={["Webhooks", "New"]}>
 ## Webhooks: update, test, and delivery logs via API
 

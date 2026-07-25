@@ -329,7 +329,20 @@
                   "GET /social/posts/{post_id}",
                   "PATCH /social/posts/{post_id}",
                   "POST /social/posts/{post_id}/retry",
+                  "POST /social/posts/{post_id}/unpublish",
                   "DELETE /social/posts/{post_id}"
+                ]
+              },
+              {
+                "group": "Queues",
+                "pages": [
+                  "GET /social/queues",
+                  "POST /social/queues",
+                  "GET /social/queues/{queue_id}",
+                  "PUT /social/queues/{queue_id}",
+                  "DELETE /social/queues/{queue_id}",
+                  "GET /social/queues/{queue_id}/next-slot",
+                  "GET /social/queues/{queue_id}/preview"
                 ]
               },
               {
