@@ -6,6 +6,18 @@ icon: "clock-rotate-left"
 
 Product updates for the SmartlyQ Developer API, MCP server, and Developer Portal. All endpoints live at `https://api.smartlyq.com/v1`.
 
+<Update label="July 26, 2026" tags={["Social", "New"]}>
+## Per-platform lookups
+
+Five account-level lookups so integrations can compose with real platform data - all `social:read`:
+
+- **Pinterest boards** - `GET /social/accounts/{account_id}/pinterest/boards`
+- **YouTube playlists** - `GET /social/accounts/{account_id}/youtube/playlists`
+- **Instagram publishing limit** - `GET /social/accounts/{account_id}/instagram/publishing-limit` (daily quota total/remaining)
+- **Google Business performance** - `GET /social/accounts/{account_id}/gmb/performance?days=28` (impressions by surface, deltas, daily series)
+- **Google Business search keywords** - `GET /social/accounts/{account_id}/gmb/search-keywords`
+</Update>
+
 <Update label="July 26, 2026" tags={["CRM", "New"]}>
 ## Automations API + contact bulk import
 
