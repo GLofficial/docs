@@ -326,6 +326,7 @@
                 "pages": [
                   "GET /social/accounts",
                   "GET /social/accounts/health",
+                  "GET /social/accounts/{account_id}/insights",
                   "GET /social/accounts/follower-stats",
                   "POST /social/connect/{platform}",
                   "GET /social/connect/{platform}",
@@ -370,6 +371,9 @@
                   "PATCH /social/posts/{post_id}",
                   "POST /social/posts/{post_id}/retry",
                   "POST /social/posts/{post_id}/unpublish",
+                  "POST /social/posts/{post_id}/edit",
+                  "POST /social/posts/{post_id}/update-metadata",
+                  "POST /social/posts/sync-external",
                   "DELETE /social/posts/{post_id}/recycle",
                   "DELETE /social/posts/{post_id}"
                 ]

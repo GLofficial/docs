@@ -1180,7 +1180,8 @@
           "500": {
             "$ref": "#/components/responses/ServerError"
           }
-        }
+        },
+        "description": " Posts imported by external sync carry status 'external' - filter with ?status=external."
       }
     },
     "/social/posts/schedule": {
@@ -21831,6 +21832,643 @@
                   "data": {
                     "tweet_id": "1815349823401570000",
                     "retweeted": false
+                  },
+                  "meta": {
+                    "request_id": "req_9f3a2b1c-7d4e-4a08-b2c6-5e1f8a9d0c34",
+                    "timestamp": "2026-07-26T09:41:22Z"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "502": {
+            "description": "Platform rejected the request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [
+                        false
+                      ]
+                    },
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "enum": [
+                            "PLATFORM_ERROR"
+                          ]
+                        },
+                        "message": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/RequestMeta"
+                    }
+                  }
+                },
+                "example": {
+                  "success": false,
+                  "error": {
+                    "code": "PLATFORM_ERROR",
+                    "message": "The platform rejected the request."
+                  },
+                  "meta": {
+                    "request_id": "req_9f3a2b1c-7d4e-4a08-b2c6-5e1f8a9d0c34",
+                    "timestamp": "2026-07-26T09:41:22Z"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/social/posts/{post_id}/edit": {
+      "post": {
+        "summary": "Edit published post",
+        "operationId": "editPublishedPost",
+        "tags": [
+          "Social"
+        ],
+        "description": "Edits a post that has ALREADY been published, natively on the platform. Honest per-platform support: Facebook page posts work today; X's edit API is paid-tier-only and Reddit's needs a re-auth scope - those report unsupported per platform instead of failing the call. The SmartlyQ record keeps its original text for multi-platform posts. Requires scope `social:write`.",
+        "parameters": [
+          {
+            "name": "post_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "content"
+                ],
+                "properties": {
+                  "content": {
+                    "type": "string",
+                    "description": "Replacement text."
+                  },
+                  "platforms": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "Restrict to these platforms (default: all the post published to)."
+                  }
+                }
+              },
+              "example": {
+                "content": "UPDATE: doors open at 7pm, not 6pm!",
+                "platforms": [
+                  "facebook"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Edit results",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [
+                        true
+                      ]
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "results": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "platform": {
+                                "type": "string"
+                              },
+                              "remote_post_id": {
+                                "type": "string"
+                              },
+                              "edited": {
+                                "type": "boolean"
+                              },
+                              "error": {
+                                "type": "string"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/RequestMeta"
+                    }
+                  }
+                },
+                "example": {
+                  "success": true,
+                  "data": {
+                    "results": [
+                      {
+                        "platform": "facebook",
+                        "remote_post_id": "1234567890_987654",
+                        "edited": true
+                      }
+                    ]
+                  },
+                  "meta": {
+                    "request_id": "req_9f3a2b1c-7d4e-4a08-b2c6-5e1f8a9d0c34",
+                    "timestamp": "2026-07-26T09:41:22Z"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "409": {
+            "$ref": "#/components/responses/Conflict"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "502": {
+            "description": "Platform rejected the request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [
+                        false
+                      ]
+                    },
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "enum": [
+                            "PLATFORM_ERROR"
+                          ]
+                        },
+                        "message": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/RequestMeta"
+                    }
+                  }
+                },
+                "example": {
+                  "success": false,
+                  "error": {
+                    "code": "PLATFORM_ERROR",
+                    "message": "The platform rejected the request."
+                  },
+                  "meta": {
+                    "request_id": "req_9f3a2b1c-7d4e-4a08-b2c6-5e1f8a9d0c34",
+                    "timestamp": "2026-07-26T09:41:22Z"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/social/posts/{post_id}/update-metadata": {
+      "post": {
+        "summary": "Update YouTube metadata",
+        "operationId": "updatePostMetadata",
+        "tags": [
+          "Social"
+        ],
+        "description": "Post-publish updates for the post's YouTube leg: title, description, tags (snippet is fetched and merged so nothing else changes), add to a playlist, and/or set a custom thumbnail from a public URL (max 2MB). Requires scope `social:write`.",
+        "parameters": [
+          {
+            "name": "post_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string",
+                    "maxLength": 100
+                  },
+                  "description": {
+                    "type": "string",
+                    "maxLength": 5000
+                  },
+                  "tags": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "maxItems": 60
+                  },
+                  "playlist_id": {
+                    "type": "string"
+                  },
+                  "thumbnail_url": {
+                    "type": "string",
+                    "format": "uri"
+                  }
+                }
+              },
+              "example": {
+                "title": "The launch, one week later",
+                "playlist_id": "PL9tY0BWXOZFvE",
+                "thumbnail_url": "https://cdn.example.com/thumb.png"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [
+                        true
+                      ]
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "video_id": {
+                          "type": "string",
+                          "example": "dQw4w9WgXcQ"
+                        },
+                        "updated": {
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "enum": [
+                              "snippet",
+                              "playlist",
+                              "thumbnail"
+                            ]
+                          }
+                        }
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/RequestMeta"
+                    }
+                  }
+                },
+                "example": {
+                  "success": true,
+                  "data": {
+                    "video_id": "dQw4w9WgXcQ",
+                    "updated": [
+                      "snippet",
+                      "playlist"
+                    ]
+                  },
+                  "meta": {
+                    "request_id": "req_9f3a2b1c-7d4e-4a08-b2c6-5e1f8a9d0c34",
+                    "timestamp": "2026-07-26T09:41:22Z"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "409": {
+            "$ref": "#/components/responses/Conflict"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "502": {
+            "description": "Platform rejected the request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [
+                        false
+                      ]
+                    },
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "enum": [
+                            "PLATFORM_ERROR"
+                          ]
+                        },
+                        "message": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/RequestMeta"
+                    }
+                  }
+                },
+                "example": {
+                  "success": false,
+                  "error": {
+                    "code": "PLATFORM_ERROR",
+                    "message": "The platform rejected the request."
+                  },
+                  "meta": {
+                    "request_id": "req_9f3a2b1c-7d4e-4a08-b2c6-5e1f8a9d0c34",
+                    "timestamp": "2026-07-26T09:41:22Z"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/social/posts/sync-external": {
+      "post": {
+        "summary": "Sync external posts",
+        "operationId": "syncExternalPosts",
+        "tags": [
+          "Social"
+        ],
+        "description": "On-demand import of posts published natively on the platform (outside SmartlyQ) for one account - facebook, instagram, threads, youtube or tiktok. Imported posts appear in GET /social/posts with status 'external', with analytics snapshots. Discovery is a per-account opt-in: pass enable: true the first time, or the call returns 409. Requires scope `social:write`.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "account_id"
+                ],
+                "properties": {
+                  "account_id": {
+                    "type": "integer"
+                  },
+                  "limit": {
+                    "type": "integer",
+                    "default": 50,
+                    "maximum": 100
+                  },
+                  "enable": {
+                    "type": "boolean",
+                    "description": "Opt the account into external-post discovery."
+                  }
+                }
+              },
+              "example": {
+                "account_id": 128,
+                "enable": true
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Synced",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [
+                        true
+                      ]
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "posts_synced": {
+                          "type": "integer",
+                          "example": 12
+                        },
+                        "enabled": {
+                          "type": "boolean",
+                          "example": true
+                        }
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/RequestMeta"
+                    }
+                  }
+                },
+                "example": {
+                  "success": true,
+                  "data": {
+                    "posts_synced": 12,
+                    "enabled": true
+                  },
+                  "meta": {
+                    "request_id": "req_9f3a2b1c-7d4e-4a08-b2c6-5e1f8a9d0c34",
+                    "timestamp": "2026-07-26T09:41:22Z"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "409": {
+            "$ref": "#/components/responses/Conflict"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "502": {
+            "description": "Platform rejected the request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [
+                        false
+                      ]
+                    },
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "enum": [
+                            "PLATFORM_ERROR"
+                          ]
+                        },
+                        "message": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/RequestMeta"
+                    }
+                  }
+                },
+                "example": {
+                  "success": false,
+                  "error": {
+                    "code": "PLATFORM_ERROR",
+                    "message": "The platform rejected the request."
+                  },
+                  "meta": {
+                    "request_id": "req_9f3a2b1c-7d4e-4a08-b2c6-5e1f8a9d0c34",
+                    "timestamp": "2026-07-26T09:41:22Z"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/social/accounts/{account_id}/insights": {
+      "get": {
+        "summary": "Live account insights",
+        "operationId": "accountInsights",
+        "tags": [
+          "Social"
+        ],
+        "description": "LIVE account metrics straight from the platform (followers, following, posts, profile views, impressions, reach, engagements, new followers - whatever the platform exposes), via the same per-platform providers the daily analytics sync uses. Works for every connected platform with an analytics provider. Requires scope `analytics:read`.",
+        "parameters": [
+          {
+            "name": "account_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Live metrics",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [
+                        true
+                      ]
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "account_id": {
+                          "type": "integer",
+                          "example": 128
+                        },
+                        "platform": {
+                          "type": "string",
+                          "example": "instagram"
+                        },
+                        "metrics": {
+                          "type": "object",
+                          "example": {
+                            "followers": 10432,
+                            "following": 512,
+                            "posts_count": 284,
+                            "impressions": 48210,
+                            "reach": 30125,
+                            "engagements": 2411,
+                            "new_followers": 96
+                          }
+                        }
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/RequestMeta"
+                    }
+                  }
+                },
+                "example": {
+                  "success": true,
+                  "data": {
+                    "account_id": 128,
+                    "platform": "instagram",
+                    "metrics": {
+                      "followers": 10432,
+                      "following": 512,
+                      "posts_count": 284,
+                      "impressions": 48210,
+                      "reach": 30125,
+                      "engagements": 2411,
+                      "new_followers": 96
+                    }
                   },
                   "meta": {
                     "request_id": "req_9f3a2b1c-7d4e-4a08-b2c6-5e1f8a9d0c34",

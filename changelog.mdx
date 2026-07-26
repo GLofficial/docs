@@ -7,6 +7,15 @@ icon: "clock-rotate-left"
 Product updates for the SmartlyQ Developer API, MCP server, and Developer Portal. All endpoints live at `https://api.smartlyq.com/v1`.
 
 <Update label="July 26, 2026" tags={["Social", "New"]}>
+## Edit published posts, external sync, live insights
+
+- **Edit published** - `POST /social/posts/{post_id}/edit` edits the post natively on the platform. Facebook works today; X (paid-tier API) and Reddit (extra scope) report unsupported per platform instead of failing.
+- **YouTube metadata** - `POST /social/posts/{post_id}/update-metadata` updates title/description/tags, adds to a playlist, and sets a custom thumbnail after publish.
+- **External post sync** - `POST /social/posts/sync-external` imports posts published natively on Facebook, Instagram, Threads, YouTube or TikTok (per-account opt-in); they appear in `GET /social/posts?status=external` with analytics.
+- **Live account insights** - `GET /social/accounts/{account_id}/insights` returns platform-fresh follower/impression/reach/engagement metrics for every provider-backed platform.
+</Update>
+
+<Update label="July 26, 2026" tags={["Social", "New"]}>
 ## Per-platform post options, X retweets, story insights, safe retries
 
 - **platform_options** - create, schedule, and bulk rows now accept the same per-platform options object the web composer uses: TikTok privacy/duet/stitch, per-platform caption overrides, custom video thumbnails, and more. Publish handlers consume it directly.
