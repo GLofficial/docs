@@ -4868,6 +4868,74 @@
             "$ref": "#/components/responses/ValidationError"
           }
         }
+      },
+      "delete": {
+        "summary": "Disconnect a social account",
+        "operationId": "disconnectSocialAccount",
+        "tags": [
+          "Social"
+        ],
+        "parameters": [
+          {
+            "name": "account_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Connected account id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [
+                        true
+                      ]
+                    },
+                    "data": {
+                      "type": "null",
+                      "description": "No payload on success."
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/RequestMeta"
+                    }
+                  }
+                },
+                "example": {
+                  "success": true,
+                  "data": null,
+                  "meta": {
+                    "request_id": "req_abc123",
+                    "timestamp": "2026-03-01T16:00:00Z"
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
       }
     },
     "/social/accounts/{account_id}/health": {
@@ -13241,7 +13309,7 @@
                       }
                     },
                     "pagination": {
-                      "$ref": "#/components/schemas/Pagination"
+                      "$ref": "#/components/schemas/PaginationMeta"
                     },
                     "meta": {
                       "$ref": "#/components/schemas/RequestMeta"
@@ -13709,7 +13777,7 @@
                       }
                     },
                     "pagination": {
-                      "$ref": "#/components/schemas/Pagination"
+                      "$ref": "#/components/schemas/PaginationMeta"
                     },
                     "meta": {
                       "$ref": "#/components/schemas/RequestMeta"
