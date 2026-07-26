@@ -104,7 +104,7 @@ All registerable events. Registering an event name outside this catalog is rejec
 
 | Event | Fires when | `data` fields |
 |---|---|---|
-| `post.published` | Every platform target published | `post_id`, `status`, `platforms[]` (`platform`, `success`, and on failures `error` `{code, message, retryable}`) |
+| `post.published` | Every platform target published | `post_id`, `status`, `platforms[]` (`platform`, `success`; on failures `error` `{code, message, retryable}` plus, when the failure came from SmartlyQ's own pre-publish checks, `error.detail` with the exact human-readable reason, e.g. `"Twitter/X caption is 312 characters; the limit is 280. Trim 32 characters and retry."`; when media was auto-fixed before publishing, `transcoded[]` lists what was converted, e.g. `"Video was vp9/webm; converted to H.264/AAC MP4."`) |
 | `post.partial` | Some platforms published, some failed | same as `post.published` |
 | `post.failed` | Every platform target failed | same as `post.published` |
 

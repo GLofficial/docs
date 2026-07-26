@@ -7,6 +7,16 @@ icon: "clock-rotate-left"
 Product updates for the SmartlyQ Developer API, MCP server, and Developer Portal. All endpoints live at `https://api.smartlyq.com/v1`.
 
 <Update label="July 26, 2026" tags={["Social", "New"]}>
+## Auto-transcode, publish progress, and exact failure reasons
+
+One `POST /social/posts` call now does more of the hard work invisibly:
+
+- **Auto-transcode** - media that a platform would reject for a fixable reason is converted automatically before publishing: video that isn't H.264/AAC MP4 is re-encoded (web-optimized, moov-front), frame rates are brought into each platform's documented range (raised to 30fps below TikTok/Instagram's 23fps floor, capped at 60fps), oversize videos are shrunk under the platform's byte cap, and images in formats a platform rejects are converted (e.g. WEBP to PNG for LinkedIn). What was fixed is reported per platform in the post's `post_urls._transcodes` and in the `transcoded[]` list on `post.published` / `post.partial` / `post.failed` webhook payloads. Changes that would alter your content - trimming duration, cropping aspect ratios - are never made automatically; those still return a precise error telling you what to change.
+- **Publish progress** - posts now expose `publish_stage` (`validating` → `processing_media` → `publishing`) while a publish is running, so `GET /social/posts/{id}` shows where a slow publish is instead of a bare `processing`.
+- **Exact failure reasons, end to end** - a failed post always carries its reason now: whole-post failures persist an explanation in `post_urls._errors`, immediate (non-scheduled) posts store per-platform permalinks and errors just like scheduled ones, and webhook failure payloads include `error.detail` with the exact pre-publish reason (e.g. `"Twitter/X caption is 312 characters; the limit is 280. Trim 32 characters and retry."`) whenever the failure came from SmartlyQ's own checks.
+</Update>
+
+<Update label="July 26, 2026" tags={["Social", "New"]}>
 ## Rich DMs, comment-to-DM automations, connection selection, deep insights
 
 - **Structured DMs** - `POST /social/conversations/{id}/messages` now takes `buttons` (Facebook button template, up to 3 links) and `quick_replies` (Facebook + Instagram chips, up to 13), plus a typing indicator at `POST .../typing`.

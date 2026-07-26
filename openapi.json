@@ -28622,6 +28622,26 @@
           "created_at": {
             "type": "string",
             "format": "date-time"
+          },
+          "publish_stage": {
+            "type": "string",
+            "nullable": true,
+            "enum": [
+              "validating",
+              "processing_media",
+              "publishing"
+            ],
+            "description": "Live progress inside a publish run: validating (pre-publish checks), processing_media (auto-transcode inspecting/converting media), publishing (dispatching to platforms). null when the post is idle or has reached a final status."
+          },
+          "post_urls": {
+            "type": "object",
+            "description": "Per-platform permalinks of the published posts, keyed by platform (arrays of URLs). Two reserved keys: _errors holds per-platform failure reasons (plus _post for a whole-post failure), and _transcodes lists what auto-transcode fixed per platform (e.g. 'Frame rate was 15fps (below the 23fps minimum); raised to 30fps.').",
+            "additionalProperties": true
+          },
+          "post_ids": {
+            "type": "object",
+            "description": "Per-platform remote post IDs assigned by each platform, keyed by platform.",
+            "additionalProperties": true
           }
         }
       },
