@@ -380,6 +380,8 @@
                   "GET /analytics/inbox/source-breakdown",
                   "GET /analytics/inbox/response-time",
                   "GET /analytics/inbox/top-accounts",
+                  "GET /analytics/inbox/conversations",
+                  "GET /analytics/inbox/conversations/{conversation_id}",
                   "GET /analytics/accounts/{account_id}"
                 ]
               },
@@ -428,6 +430,9 @@
                 "group": "Direct Messages",
                 "pages": [
                   "GET /social/conversations",
+                  "GET /social/conversations/search",
+                  "GET /social/conversations/{conversation_id}",
+                  "PATCH /social/conversations/{conversation_id}",
                   "GET /social/conversations/{conversation_id}/messages",
                   "POST /social/conversations/{conversation_id}/messages",
                   "POST /social/conversations/{conversation_id}/read"

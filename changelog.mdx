@@ -6,6 +6,15 @@ icon: "clock-rotate-left"
 
 Product updates for the SmartlyQ Developer API, MCP server, and Developer Portal. All endpoints live at `https://api.smartlyq.com/v1`.
 
+<Update label="July 26, 2026" tags={["Social", "New"]}>
+## Inbox: search, detail, archive
+
+- **Search** - `GET /social/conversations/search?q=` scans participant names and message content across the whole inbox and returns the latest matching message per conversation.
+- **Detail** - `GET /social/conversations/{conversation_id}` adds a single-conversation view with incoming/outgoing counts.
+- **Archive** - `PATCH /social/conversations/{conversation_id}` with `{ "status": "archived" }` (or `"open"` to restore).
+- **Drill-down analytics** - `GET /analytics/inbox/conversations` (+ `/{conversation_id}`) closes out the inbox analytics suite with per-conversation volume and response times.
+</Update>
+
 <Update label="July 26, 2026" tags={["Reviews", "New"]}>
 ## Reviews API
 
