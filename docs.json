@@ -329,6 +329,16 @@
                   "GET /social/accounts",
                   "GET /social/accounts/health",
                   "GET /social/accounts/{account_id}/insights",
+                  "GET /social/accounts/{account_id}/connect-options",
+                  "POST /social/accounts/{account_id}/connect-select",
+                  "GET /social/accounts/{account_id}/messenger/menu",
+                  "PUT /social/accounts/{account_id}/messenger/menu",
+                  "DELETE /social/accounts/{account_id}/messenger/menu",
+                  "GET /social/accounts/{account_id}/instagram/ice-breakers",
+                  "PUT /social/accounts/{account_id}/instagram/ice-breakers",
+                  "DELETE /social/accounts/{account_id}/instagram/ice-breakers",
+                  "GET /social/accounts/{account_id}/facebook/page-insights",
+                  "GET /social/accounts/{account_id}/instagram/audience",
                   "GET /social/accounts/follower-stats",
                   "POST /social/connect/{platform}",
                   "GET /social/connect/{platform}",
@@ -493,6 +503,7 @@
                 "pages": [
                   "GET /social/comments",
                   "POST /social/comments/{comment_id}/reply",
+                  "POST /social/comments/{comment_id}/private-reply",
                   "POST /social/comments/{comment_id}/hide",
                   "DELETE /social/comments/{comment_id}"
                 ]
@@ -506,7 +517,8 @@
                   "PATCH /social/conversations/{conversation_id}",
                   "GET /social/conversations/{conversation_id}/messages",
                   "POST /social/conversations/{conversation_id}/messages",
-                  "POST /social/conversations/{conversation_id}/read"
+                  "POST /social/conversations/{conversation_id}/read",
+                  "POST /social/conversations/{conversation_id}/typing"
                 ]
               }
             ]

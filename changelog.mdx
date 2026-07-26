@@ -7,6 +7,16 @@ icon: "clock-rotate-left"
 Product updates for the SmartlyQ Developer API, MCP server, and Developer Portal. All endpoints live at `https://api.smartlyq.com/v1`.
 
 <Update label="July 26, 2026" tags={["Social", "New"]}>
+## Rich DMs, comment-to-DM automations, connection selection, deep insights
+
+- **Structured DMs** - `POST /social/conversations/{id}/messages` now takes `buttons` (Facebook button template, up to 3 links) and `quick_replies` (Facebook + Instagram chips, up to 13), plus a typing indicator at `POST .../typing`.
+- **Comment-to-DM** - `POST /social/comments/{comment_id}/private-reply` DMs the comment's author (Meta private replies, FB + IG). New `comment_created` automation trigger + `action.private_reply` runner action: build "comment X gets an automatic DM" flows in the automation builder.
+- **Messaging surfaces** - Messenger persistent menu and Instagram ice breakers, full CRUD under the account.
+- **Connection selection** - `GET .../connect-options` + `POST .../connect-select` re-point a Google Business connection at any location of its parent account; platforms with entity-bound tokens report why they can't switch without reconnect.
+- **Deep insights** - `GET .../facebook/page-insights` (any Meta page metric, passthrough) and `GET .../instagram/audience` (follower demographics by city/country/age/gender).
+</Update>
+
+<Update label="July 26, 2026" tags={["Social", "New"]}>
 ## Subreddit eligibility, X mentions, contact channels
 
 - **Subreddit check** - `GET /social/accounts/{account_id}/reddit/subreddits/{subreddit}` returns the community's rules of engagement plus a computed `can_post` verdict for your connected account (banned? restricted? what submission kinds?).
