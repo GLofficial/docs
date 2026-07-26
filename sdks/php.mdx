@@ -1,0 +1,82 @@
+---
+title: "PHP SDK"
+icon: "php"
+description: "The official SmartlyQ SDK for PHP."
+---
+
+<Info>
+**Install:** `composer require smartlyq/sdk` · [GitHub](https://github.com/SmartlyQ/smartlyq-php) · [Packagist](https://packagist.org/packages/smartlyq/sdk) · PHP 8.1+, zero runtime dependencies (ext-curl).
+</Info>
+
+## Quickstart
+
+```php
+<?php
+require 'vendor/autoload.php';
+
+use Smartlyq\SmartlyQ;
+
+$sq = new SmartlyQ('sqk_live_...'); // or new SmartlyQ() to read SMARTLYQ_API_KEY
+
+// Who am I?
+$me = $sq->account->getMe();
+
+// Publish a social post
+$post = $sq->social->createPost([
+    'text' => 'Hello from the SmartlyQ SDK!',
+    'account_ids' => ['acc_123'],
+]);
+
+// Generate an image with AI
+$image = $sq->images->generate(['prompt' => 'A minimalist product shot of a smart speaker']);
+```
+
+Every API resource is a property on the client - `$sq->social`, `$sq->images`, `$sq->videos`, `$sq->articles`, `$sq->seo`, `$sq->contacts`, `$sq->chatbots`, `$sq->captain`, `$sq->workspaces`, `$sq->profiles`, and the rest. Methods return decoded associative arrays.
+
+## Configuration
+
+```php
+$sq = new SmartlyQ('sqk_live_...', [
+    'timeout'     => 60,  // per-request timeout (seconds)
+    'max_retries' => 2,   // automatic retries on 429/5xx
+]);
+```
+
+Per-request options are the last argument of every method:
+
+```php
+$sq->social->createPost($body, [
+    'idempotency_key' => 'my-unique-key', // safe retries for writes
+    'profile_id'      => 'prof_123',      // act on behalf of a managed Profile
+]);
+```
+
+## Async jobs
+
+Generation endpoints return a job - poll it until it completes (see [Async jobs](/guides/async-jobs)):
+
+```php
+$result = $sq->videos->generate(['prompt' => 'A 5s product teaser']);
+$jobId = $result['data']['job_id'];
+
+$job = $sq->jobs->get($jobId);
+while (in_array($job['data']['status'], ['queued', 'processing'])) {
+    sleep(3);
+    $job = $sq->jobs->get($jobId);
+}
+print_r($job['data']['result']);
+```
+
+## Error handling
+
+```php
+use Smartlyq\SmartlyQError;
+
+try {
+    $sq->articles->generate(['topic' => 'AI trends']);
+} catch (SmartlyQError $e) {
+    echo $e->getStatusCode() . ' ' . $e->getErrorCode() . ' ' . $e->getMessage() . ' ' . $e->getRequestId();
+}
+```
+
+The full method reference lives in the [repository README](https://github.com/SmartlyQ/smartlyq-php#api-reference); request and response schemas are in the [API Reference](/api-reference).

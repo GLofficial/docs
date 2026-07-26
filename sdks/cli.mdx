@@ -1,0 +1,61 @@
+---
+title: "CLI"
+icon: "terminal"
+description: "Every SmartlyQ API operation as a shell command."
+---
+
+<Info>
+**Install:** `npm install -g @smartlyqofficial/cli` · [GitHub](https://github.com/SmartlyQ/smartlyq-cli) · [npm](https://www.npmjs.com/package/@smartlyqofficial/cli) · Node 18+.
+</Info>
+
+The `smartlyq` command mirrors the SDK surface one-to-one: `smartlyq <resource> <method>`. Perfect for shell scripts, cron jobs, CI pipelines, and quick one-offs without writing code.
+
+## Login
+
+```bash
+smartlyq login    # prompts for your API key, stores it in ~/.smartlyq/config.json
+```
+
+Or skip login and use `--api-key` / the `SMARTLYQ_API_KEY` environment variable. Precedence: flag > environment > config file. `smartlyq logout` removes the stored key.
+
+## Usage
+
+```bash
+# Who am I?
+smartlyq account get-me
+
+# Publish a social post
+smartlyq social create-post --data '{"text":"Hello from the CLI!","account_ids":["acc_123"]}'
+
+# Generate an image, then poll the job
+smartlyq images generate --data '{"prompt":"A minimalist product shot of a smart speaker"}'
+smartlyq jobs get job_abc123
+
+# List draft articles, page 2
+smartlyq articles list --query 'status=draft&page=2'
+
+# SEO keyword research
+smartlyq seo keyword-research --data '{"keyword":"social media scheduling"}'
+
+# Body from a file, or from stdin
+smartlyq social create-post --data @post.json
+cat post.json | smartlyq social create-post --data -
+```
+
+Discover everything from the built-in help: `smartlyq --help` lists resources, `smartlyq social --help` lists its commands, and `smartlyq social create-post --help` shows arguments and the underlying endpoint.
+
+## Flags
+
+| Flag | Purpose |
+| --- | --- |
+| `--data <json>` | Request body - inline JSON, `@file.json`, or `-` for stdin |
+| `--query 'k=v&k2=v2'` | Query parameters (also accepts JSON) |
+| `--profile <id>` | Act on behalf of a managed [Profile](/guides/profiles) |
+| `--idempotency-key <key>` | Safe retries for writes |
+| `--api-key <key>` | Override the stored/env API key |
+| `--output json\|pretty` | Output format (default `pretty`) |
+| `--timeout <ms>` | Per-request timeout |
+
+## Errors and exit codes
+
+API errors print to stderr as `Error <status> <code>: <message> (request <id>)` and exit with code `1`, so failures propagate correctly in scripts and CI.

@@ -1,0 +1,85 @@
+---
+title: "Node.js SDK"
+icon: "node-js"
+description: "The official SmartlyQ SDK for Node.js and TypeScript."
+---
+
+<Info>
+**Install:** `npm install @smartlyqofficial/node` · [GitHub](https://github.com/SmartlyQ/smartlyq-node) · [npm](https://www.npmjs.com/package/@smartlyqofficial/node) · Node 18+, zero dependencies, full TypeScript types.
+</Info>
+
+## Quickstart
+
+```typescript
+import SmartlyQ from '@smartlyqofficial/node';
+
+const sq = new SmartlyQ({ apiKey: process.env.SMARTLYQ_API_KEY });
+// or: new SmartlyQ('sqk_live_...')
+
+// Who am I?
+const me = await sq.account.getMe();
+
+// Publish a social post
+const post = await sq.social.createPost({
+  text: 'Hello from the SmartlyQ SDK!',
+  account_ids: ['acc_123'],
+});
+
+// Generate an image with AI
+const image = await sq.images.generate({
+  prompt: 'A minimalist product shot of a smart speaker',
+});
+```
+
+Every API resource is a property on the client - `sq.social`, `sq.images`, `sq.videos`, `sq.articles`, `sq.seo`, `sq.contacts`, `sq.chatbots`, `sq.captain`, `sq.workspaces`, `sq.profiles`, and the rest - with fully typed request and response shapes generated from the OpenAPI spec.
+
+## Configuration
+
+```typescript
+const sq = new SmartlyQ({
+  apiKey: 'sqk_live_...',   // or set SMARTLYQ_API_KEY
+  timeout: 60_000,           // per-request timeout (ms)
+  maxRetries: 2,             // automatic retries on 429/5xx
+});
+```
+
+Per-request options are the last argument of every method:
+
+```typescript
+await sq.social.createPost(body, {
+  idempotencyKey: 'my-unique-key',  // safe retries for writes
+  profileId: 'prof_123',            // act on behalf of a managed Profile
+  timeout: 10_000,
+});
+```
+
+## Async jobs
+
+Generation endpoints return a job - poll it until it completes (see [Async jobs](/guides/async-jobs)):
+
+```typescript
+const { data } = await sq.videos.generate({ prompt: 'A 5s product teaser' });
+
+let job = await sq.jobs.get(data.job_id);
+while (['queued', 'processing'].includes(job.data.status)) {
+  await new Promise((r) => setTimeout(r, 3000));
+  job = await sq.jobs.get(data.job_id);
+}
+console.log(job.data.result);
+```
+
+## Error handling
+
+```typescript
+import { SmartlyQError } from '@smartlyqofficial/node';
+
+try {
+  await sq.articles.generate({ topic: 'AI trends' });
+} catch (err) {
+  if (err instanceof SmartlyQError) {
+    console.error(err.status, err.code, err.message, err.requestId);
+  }
+}
+```
+
+The full method reference lives in the [repository README](https://github.com/SmartlyQ/smartlyq-node#api-reference); request and response schemas are in the [API Reference](/api-reference).

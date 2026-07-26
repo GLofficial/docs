@@ -1,0 +1,110 @@
+---
+title: "Go SDK"
+icon: "golang"
+description: "The official SmartlyQ SDK for Go."
+---
+
+<Info>
+**Install:** `go get github.com/SmartlyQ/smartlyq-go` · [GitHub](https://github.com/SmartlyQ/smartlyq-go) · [pkg.go.dev](https://pkg.go.dev/github.com/SmartlyQ/smartlyq-go) · Go 1.22+, standard library only.
+</Info>
+
+## Quickstart
+
+```go
+package main
+
+import (
+	"context"
+	"encoding/json"
+	"fmt"
+
+	smartlyq "github.com/SmartlyQ/smartlyq-go"
+)
+
+func main() {
+	client := smartlyq.NewClient("sqk_live_...") // or smartlyq.NewClient("") to read SMARTLYQ_API_KEY
+	ctx := context.Background()
+
+	// Who am I?
+	me, err := client.Account.GetMe(ctx, nil)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(string(me.Data))
+
+	// Publish a social post
+	post, err := client.Social.CreatePost(ctx, map[string]any{
+		"text":        "Hello from the SmartlyQ SDK!",
+		"account_ids": []string{"acc_123"},
+	}, nil)
+	if err != nil {
+		panic(err)
+	}
+
+	var created struct {
+		ID string `json:"id"`
+	}
+	json.Unmarshal(post.Data, &created)
+}
+```
+
+Every API resource is a field on the client - `client.Social`, `client.Images`, `client.Videos`, `client.Articles`, `client.SEO`, `client.Contacts`, `client.Chatbots`, `client.Captain`, `client.Workspaces`, `client.Profiles`, and the rest. Responses come back as an `Envelope` whose `Data` field is raw JSON you unmarshal into your own types.
+
+## Configuration
+
+```go
+client := smartlyq.NewClient("sqk_live_...",
+	smartlyq.WithTimeout(60*time.Second),
+	smartlyq.WithMaxRetries(2), // automatic retries on 429/5xx
+)
+```
+
+Per-request options are the last argument of every method:
+
+```go
+client.Social.CreatePost(ctx, body, &smartlyq.RequestOptions{
+	IdempotencyKey: "my-unique-key", // safe retries for writes
+	ProfileID:      "prof_123",      // act on behalf of a managed Profile
+})
+```
+
+## Async jobs
+
+Generation endpoints return a job - poll it until it completes (see [Async jobs](/guides/async-jobs)):
+
+```go
+res, _ := client.Videos.Generate(ctx, map[string]any{"prompt": "A 5s product teaser"}, nil)
+
+var gen struct {
+	JobID string `json:"job_id"`
+}
+json.Unmarshal(res.Data, &gen)
+
+for {
+	job, _ := client.Jobs.Get(ctx, gen.JobID, nil)
+	var j struct {
+		Status string          `json:"status"`
+		Result json.RawMessage `json:"result"`
+	}
+	json.Unmarshal(job.Data, &j)
+	if j.Status != "queued" && j.Status != "processing" {
+		fmt.Println(string(j.Result))
+		break
+	}
+	time.Sleep(3 * time.Second)
+}
+```
+
+## Error handling
+
+```go
+_, err := client.Articles.Generate(ctx, map[string]any{"topic": "AI trends"}, nil)
+if err != nil {
+	var apiErr *smartlyq.APIError
+	if errors.As(err, &apiErr) {
+		fmt.Println(apiErr.StatusCode, apiErr.Code, apiErr.Message, apiErr.RequestID)
+	}
+}
+```
+
+The full method reference lives in the [repository README](https://github.com/SmartlyQ/smartlyq-go#api-reference); request and response schemas are in the [API Reference](/api-reference).

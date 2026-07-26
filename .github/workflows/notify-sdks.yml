@@ -1,0 +1,63 @@
+name: Notify SDKs
+
+# When openapi.json changes on main, tell the SDK repos to regenerate.
+# The CLI is dispatched LAST, after the Node SDK republishes, because the
+# CLI regenerates against the published @smartlyqofficial/node package -
+# dispatching it too early makes its endpoint tests fail on commands the
+# published SDK does not have yet.
+#
+# Requires the SDK_DISPATCH_TOKEN secret (a GitHub token with access to the
+# SmartlyQ SDK repos). Until it is set, this workflow no-ops successfully.
+
+on:
+  push:
+    branches: [main]
+    paths: [openapi.json]
+  workflow_dispatch: {}
+
+concurrency:
+  group: notify-sdks
+  cancel-in-progress: true
+
+jobs:
+  dispatch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Dispatch SDK regenerations
+        env:
+          TOKEN: ${{ secrets.SDK_DISPATCH_TOKEN }}
+        run: |
+          if [ -z "$TOKEN" ]; then
+            echo "SDK_DISPATCH_TOKEN not configured - skipping (daily crons in the SDK repos still apply)."
+            exit 0
+          fi
+
+          dispatch() {
+            curl -sf -X POST \
+              -H "Authorization: Bearer $TOKEN" \
+              -H "Accept: application/vnd.github+json" \
+              "https://api.github.com/repos/SmartlyQ/$1/dispatches" \
+              -d '{"event_type":"openapi-updated"}' \
+              && echo "dispatched $1"
+          }
+
+          NODE_BEFORE=$(curl -s https://registry.npmjs.org/@smartlyqofficial%2Fnode | jq -r '."dist-tags".latest')
+
+          for repo in smartlyq-node smartlyq-python smartlyq-go smartlyq-php; do
+            dispatch "$repo" || echo "WARN: dispatch to $repo failed"
+          done
+
+          # Wait (max ~20 min) for the Node SDK to republish before the CLI.
+          echo "Node SDK currently $NODE_BEFORE - waiting for republish before CLI dispatch..."
+          for i in $(seq 1 40); do
+            sleep 30
+            NODE_NOW=$(curl -s https://registry.npmjs.org/@smartlyqofficial%2Fnode | jq -r '."dist-tags".latest')
+            if [ "$NODE_NOW" != "$NODE_BEFORE" ]; then
+              echo "Node SDK republished: $NODE_BEFORE -> $NODE_NOW"
+              break
+            fi
+          done
+
+          # Dispatch the CLI either way - if the Node SDK genuinely had no
+          # changes to publish, the CLI regen will match it and pass.
+          dispatch smartlyq-cli || echo "WARN: dispatch to smartlyq-cli failed"

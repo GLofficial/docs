@@ -1,0 +1,52 @@
+---
+title: "SDKs & CLI"
+icon: "cubes"
+description: "Official SmartlyQ client libraries for Node.js, Python, Go, and PHP, plus a full-featured CLI."
+---
+
+Official client libraries for the SmartlyQ API. Every SDK covers the **full API surface** - social posting and scheduling, AI content generation (articles, images, video, audio, presentations), SEO research, CRM, chatbots, profiles, workspaces, and more - with the same resource-based method names in every language.
+
+All SDKs are generated from the [OpenAPI spec](https://docs.smartlyq.com/openapi.json) and update automatically when the API gains new endpoints, so they are never behind the API Reference.
+
+## Official SDKs
+
+<CardGroup cols={2}>
+
+<Card title="Node.js" icon="node-js" href="/sdks/node">
+`npm install @smartlyqofficial/node` - TypeScript types for every request and response, zero dependencies.
+</Card>
+
+<Card title="Python" icon="python" href="/sdks/python">
+`pip install smartlyq` - clean snake_case client on httpx, context-manager friendly.
+</Card>
+
+<Card title="Go" icon="golang" href="/sdks/go">
+`go get github.com/SmartlyQ/smartlyq-go` - context-first, zero dependencies, standard library only.
+</Card>
+
+<Card title="PHP" icon="php" href="/sdks/php">
+`composer require smartlyq/sdk` - PSR-4, PHP 8.1+, zero runtime dependencies.
+</Card>
+
+</CardGroup>
+
+## CLI
+
+<Card title="SmartlyQ CLI" icon="terminal" href="/sdks/cli">
+`npm install -g @smartlyqofficial/cli` - every API operation as a shell command: `smartlyq social create-post`, `smartlyq images generate`, `smartlyq seo keyword-research`, and more. Great for scripts, cron jobs, and CI.
+</Card>
+
+## Building an AI agent instead?
+
+The [MCP server](/mcp-server) exposes the same API as tools for Claude, Cursor, ChatGPT, and any MCP-compatible client - usually the fastest integration for agents. The SDKs are the right choice when you are writing code.
+
+## Shared behavior
+
+Every SDK ships the same batteries:
+
+- **Authentication** via `Authorization: Bearer sqk_live_...` - pass the key to the constructor or set the `SMARTLYQ_API_KEY` environment variable.
+- **Automatic retries** with exponential backoff on `429` and `5xx`, honoring `Retry-After`.
+- **Idempotency keys** for safely retrying writes.
+- **Profile scoping** - act on behalf of a managed [Profile](/guides/profiles) by setting the profile option (sent as `X-Profile-Id`).
+- **Typed errors** carrying the HTTP status, error `code`, message, and `request_id` for support.
+- **Sandbox keys** (`sqk_test_...`) work everywhere - simulated responses, no charges.

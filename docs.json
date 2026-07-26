@@ -66,6 +66,17 @@
           "authentication",
           "ai-agents",
           "mcp-server",
+          {
+            "group": "SDKs & CLI",
+            "pages": [
+              "sdks/overview",
+              "sdks/node",
+              "sdks/python",
+              "sdks/go",
+              "sdks/php",
+              "sdks/cli"
+            ]
+          },
           "guides/webhooks",
           {
             "group": "Guides",
