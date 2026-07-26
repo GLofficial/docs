@@ -7,6 +7,16 @@ icon: "clock-rotate-left"
 Product updates for the SmartlyQ Developer API, MCP server, and Developer Portal. All endpoints live at `https://api.smartlyq.com/v1`.
 
 <Update label="July 26, 2026" tags={["Social", "New"]}>
+## Subreddit eligibility, X mentions, contact channels
+
+- **Subreddit check** - `GET /social/accounts/{account_id}/reddit/subreddits/{subreddit}` returns the community's rules of engagement plus a computed `can_post` verdict for your connected account (banned? restricted? what submission kinds?).
+- **X mentions** - `GET /social/accounts/{account_id}/x/mentions` lists recent posts mentioning the account, with engagement metrics.
+- **Contact channels** - `GET /contacts/{id}/channels` shows which channels a contact actually communicates on, with volume and last activity.
+- **Custom field update** - `PATCH /custom-fields/{id}` edits a field definition (the key stays immutable).
+- **Place-action update** - `PATCH /social/accounts/{account_id}/gmb/place-actions` changes a link's URI in place.
+</Update>
+
+<Update label="July 26, 2026" tags={["Social", "New"]}>
 ## Google Business Profile management
 
 Sixteen endpoints under `/social/accounts/{account_id}/gmb/*`, riding the connection's existing permissions: list all locations, read and update business info (hours, phone, categories, description) with field masks, manage attributes (with a metadata endpoint that tells you what this location supports), publish and remove photos, edit structured food menus, manage place-action links (order/reserve/appointment), and inspect verification state and options. Bodies are passthroughs of Google's resource shapes - every Google field works without waiting for us.

@@ -166,6 +166,7 @@
                   "PATCH /contacts/{id}",
                   "POST /contacts/{id}/tags",
                   "DELETE /contacts/{id}/tags",
+                  "GET /contacts/{id}/channels",
                   "GET /contacts/{id}/notes",
                   "POST /contacts/{id}/notes",
                   "POST /contacts/{id}/enroll",
@@ -177,6 +178,7 @@
                 "pages": [
                   "GET /custom-fields",
                   "POST /custom-fields",
+                  "PATCH /custom-fields/{id}",
                   "DELETE /custom-fields/{id}"
                 ]
               },
@@ -341,12 +343,14 @@
                   "GET /social/accounts/{account_id}/gmb/search-keywords",
                   "GET /social/accounts/{account_id}/instagram/stories",
                   "GET /social/accounts/{account_id}/instagram/stories/{story_id}/insights",
+                  "GET /social/accounts/{account_id}/x/mentions",
                   "POST /social/accounts/{account_id}/x/retweets",
                   "DELETE /social/accounts/{account_id}/x/retweets/{tweet_id}",
                   "GET /social/accounts/{account_id}/facebook/post-reactions",
                   "GET /social/accounts/{account_id}/reddit/search",
                   "GET /social/accounts/{account_id}/reddit/feed",
                   "GET /social/accounts/{account_id}/reddit/subreddits",
+                  "GET /social/accounts/{account_id}/reddit/subreddits/{subreddit}",
                   "GET /social/accounts/{account_id}/reddit/subreddits/{subreddit}/rules",
                   "POST /social/accounts/{account_id}/pause",
                   "POST /social/accounts/{account_id}/resume",
@@ -375,6 +379,7 @@
                   "PUT /social/accounts/{account_id}/gmb/food-menus",
                   "GET /social/accounts/{account_id}/gmb/place-actions",
                   "POST /social/accounts/{account_id}/gmb/place-actions",
+                  "PATCH /social/accounts/{account_id}/gmb/place-actions",
                   "DELETE /social/accounts/{account_id}/gmb/place-actions",
                   "GET /social/accounts/{account_id}/gmb/verifications",
                   "POST /social/accounts/{account_id}/gmb/verifications/options"
