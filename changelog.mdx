@@ -6,6 +6,18 @@ icon: "clock-rotate-left"
 
 Product updates for the SmartlyQ Developer API, MCP server, and Developer Portal. All endpoints live at `https://api.smartlyq.com/v1`.
 
+<Update label="July 26, 2026" tags={["Analytics", "New"]}>
+## Analytics that answer questions
+
+Five derived endpoints, all computed from the snapshots SmartlyQ already collects - fast, unbilled, `analytics:read`:
+
+- **Daily metrics** - `GET /analytics/daily-metrics`: per-day aggregates + platform breakdown + posts published.
+- **Best time to post** - `GET /analytics/best-time?timezone=...`: 7x24 engagement heatmap and your top 5 slots.
+- **Post timeline** - `GET /analytics/posts/{post_id}/timeline`: every metric snapshot for one post, per platform.
+- **Content decay** - `GET /analytics/content-decay`: average share of final engagement by post age (day 0-13).
+- **Posting frequency** - `GET /analytics/posting-frequency`: weekly post count vs average engagement.
+</Update>
+
 <Update label="July 26, 2026" tags={["Social", "New"]}>
 ## Account groups and profile moves
 

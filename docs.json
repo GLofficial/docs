@@ -370,6 +370,11 @@
                 "pages": [
                   "GET /analytics/overview",
                   "GET /analytics/posts",
+                  "GET /analytics/posts/{post_id}/timeline",
+                  "GET /analytics/daily-metrics",
+                  "GET /analytics/best-time",
+                  "GET /analytics/content-decay",
+                  "GET /analytics/posting-frequency",
                   "GET /analytics/accounts/{account_id}"
                 ]
               },
