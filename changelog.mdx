@@ -7,6 +7,14 @@ icon: "clock-rotate-left"
 Product updates for the SmartlyQ Developer API, MCP server, and Developer Portal. All endpoints live at `https://api.smartlyq.com/v1`.
 
 <Update label="July 26, 2026" tags={["Social", "New"]}>
+## Reddit research tools, Instagram stories, Facebook reactions
+
+- **Reddit** - four research endpoints under `/social/accounts/{account_id}/reddit/`: `search` (optionally restricted to a subreddit), `feed` (hot/new/top/rising), `subreddits` (your subscriptions), and `subreddits/{subreddit}/rules` - check the rules before you submit.
+- **Instagram stories** - `GET /social/accounts/{account_id}/instagram/stories` lists the account's currently live stories.
+- **Facebook reactions** - `GET /social/accounts/{account_id}/facebook/post-reactions` returns the per-type breakdown (like, love, wow, haha, sad, angry, care) for any published post.
+</Update>
+
+<Update label="July 26, 2026" tags={["Social", "New"]}>
 ## Per-platform lookups
 
 Five account-level lookups so integrations can compose with real platform data - all `social:read`:
