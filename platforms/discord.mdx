@@ -10,7 +10,7 @@ description: "Discord support in the SmartlyQ API: limits, post types, capabilit
 | **Caption limit** | 2,000 characters |
 | **Post types** | Text, image (up to 10 as embeds) |
 | **Capabilities** | Publish |
-| **Connect** | Dashboard only — authorize SmartlyQ on your server and pick the channel; posting runs through the created channel webhook |
+| **Connect** | Headless (`POST /v1/social/connect/discord`) or dashboard — authorize SmartlyQ on your server and pick the channel; posting runs through the created channel webhook |
 | **Tokens** | Webhooks don't expire; posting stops only if the webhook is deleted on the server |
 
 Posts publish through a **channel webhook** on your server. Images attach as embeds (up to 10 per message). When your workspace has a default brand, posts appear under the brand's name and logo instead of the webhook's stock identity.

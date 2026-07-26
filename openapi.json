@@ -7878,10 +7878,11 @@
                 "reddit",
                 "snapchat",
                 "tumblr",
-                "gmb"
+                "gmb",
+                "discord"
               ]
             },
-            "description": "Platform to connect. All 13 platforms are supported (use `twitter` for X, `gmb` for Google Business)."
+            "description": "Platform to connect. All 14 OAuth platforms are supported (use `twitter` for X, `gmb` for Google Business; `discord` runs the server-webhook authorize flow). Telegram is the one exception - it is a bot-token connect done from the dashboard, with no authorize URL to mint."
           },
           {
             "$ref": "#/components/parameters/ProfileHeader"

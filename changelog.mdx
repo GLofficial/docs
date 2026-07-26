@@ -14,7 +14,7 @@ Two new `platforms` targets on `POST /social/posts` and `POST /social/posts/sche
 - **`telegram`** - publishes through your own bot (created with [@BotFather](https://t.me/BotFather)) to its channel or group: text up to 4,096 characters, single media or 2-10-item albums sent by URL. Connected from the dashboard's Social Accounts page.
 - **`discord`** - publishes through a channel webhook on your server: text up to 2,000 characters, up to 10 images as embeds, posting under your workspace brand's name and logo when one is set.
 
-Both platforms respect the same pre-publish validation, auto-transcode, progress states, and webhook events as every other target. See the new [Telegram](/platforms/telegram) and [Discord](/platforms/discord) platform pages.
+Both platforms respect the same pre-publish validation, auto-transcode, progress states, and webhook events as every other target. Discord also supports [headless connect](/guides/connecting-accounts) (`POST /social/connect/discord`) - its server-webhook authorize flow works from your own UI like any OAuth platform. See the new [Telegram](/platforms/telegram) and [Discord](/platforms/discord) platform pages.
 </Update>
 
 <Update label="July 26, 2026" tags={["Social", "New"]}>
