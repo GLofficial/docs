@@ -6,6 +6,15 @@ icon: "clock-rotate-left"
 
 Product updates for the SmartlyQ Developer API, MCP server, and Developer Portal. All endpoints live at `https://api.smartlyq.com/v1`.
 
+<Update label="July 27, 2026" tags={["Social", "New"]}>
+## Connect Telegram by API, Discord headlessly
+
+Every platform can now be connected without the SmartlyQ dashboard:
+
+- **Telegram credential connect** - `POST /social/connect/telegram` with `{ "bot_token", "chat" }` connects the channel immediately (Telegram has no OAuth; this is the same verify-then-save flow as the dashboard modal: bot verified with Telegram, posting rights required, private chats rejected, plan limit enforced, token encrypted at rest). Built for agencies automating workspace onboarding.
+- **Discord headless connect** - `POST /social/connect/discord` mints the server-webhook authorize URL like any OAuth platform.
+</Update>
+
 <Update label="July 26, 2026" tags={["Social", "New"]}>
 ## Telegram and Discord publishing
 

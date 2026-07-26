@@ -14,7 +14,16 @@ The simplest path — and the only one for most platforms — is the [Developer 
 
 ## 2. Headless connect (your own UI)
 
-**Every OAuth platform** can be connected from your own app — Facebook, Instagram, X (Twitter), LinkedIn, YouTube, TikTok, Threads, Bluesky, Pinterest, Reddit, Snapchat, Tumblr, Google Business, and Discord (its server-webhook authorize flow works the same way) — without sending the user through the SmartlyQ dashboard. Telegram is the one exception: it is a bot-token connect (no OAuth flow), done once from the dashboard's Social Accounts page, and then fully usable through the API.
+**Every OAuth platform** can be connected from your own app — Facebook, Instagram, X (Twitter), LinkedIn, YouTube, TikTok, Threads, Bluesky, Pinterest, Reddit, Snapchat, Tumblr, Google Business, and Discord (its server-webhook authorize flow works the same way) — without sending the user through the SmartlyQ dashboard. Telegram is the one non-OAuth platform - it connects with credentials instead of an authorize link. Call the same endpoint with the bot's token and target chat in the body, and the account connects **immediately** (no `connect_url`, nothing for the user to open):
+
+```bash
+curl -X POST https://api.smartlyq.com/v1/social/connect/telegram \
+  -H "Authorization: Bearer sqk_live_xxxxxxxxxxxx" \
+  -H "Content-Type: application/json" \
+  -d '{ "bot_token": "123456:AA...", "chat": "@yourchannel" }'
+```
+
+The token is verified with Telegram before saving (the bot must exist and have posting rights in that chat; private chats are rejected), the plan's account limit is enforced, and the token is stored encrypted. A `201` returns the connected `account`; failures return typed errors (`VALIDATION_ERROR`, `PROVIDER_NOT_CONFIGURED`, `LIMIT_REACHED`).
 
 <Steps>
 <Step title="Request a connect link">

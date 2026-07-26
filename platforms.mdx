@@ -22,17 +22,17 @@ SmartlyQ publishes to and manages every platform below through a single API. One
 | <Icon icon="snapchat" iconType="brands" /> **Snapchat** | <Icon icon="check" color="#16a34a" /> | <Icon icon="minus" color="#cbd5e1" /> | <Icon icon="minus" color="#cbd5e1" /> | <Icon icon="minus" color="#cbd5e1" /> | <Icon icon="check" color="#16a34a" /> |
 | <Icon icon="tumblr" iconType="brands" /> **Tumblr** | <Icon icon="check" color="#16a34a" /> | <Icon icon="minus" color="#cbd5e1" /> | <Icon icon="minus" color="#cbd5e1" /> | <Icon icon="minus" color="#cbd5e1" /> | <Icon icon="check" color="#16a34a" /> |
 | <Icon icon="google" iconType="brands" /> **Google Business** | <Icon icon="check" color="#16a34a" /> | <Icon icon="minus" color="#cbd5e1" /> ² | <Icon icon="minus" color="#cbd5e1" /> | <Icon icon="minus" color="#cbd5e1" /> | <Icon icon="check" color="#16a34a" /> |
-| <Icon icon="telegram" iconType="brands" /> **Telegram** | <Icon icon="check" color="#16a34a" /> | <Icon icon="minus" color="#cbd5e1" /> | <Icon icon="minus" color="#cbd5e1" /> | <Icon icon="minus" color="#cbd5e1" /> | <Icon icon="minus" color="#cbd5e1" /> ³ |
+| <Icon icon="telegram" iconType="brands" /> **Telegram** | <Icon icon="check" color="#16a34a" /> | <Icon icon="minus" color="#cbd5e1" /> | <Icon icon="minus" color="#cbd5e1" /> | <Icon icon="minus" color="#cbd5e1" /> | <Icon icon="check" color="#16a34a" /> ³ |
 | <Icon icon="discord" iconType="brands" /> **Discord** | <Icon icon="check" color="#16a34a" /> | <Icon icon="minus" color="#cbd5e1" /> | <Icon icon="minus" color="#cbd5e1" /> | <Icon icon="minus" color="#cbd5e1" /> | <Icon icon="check" color="#16a34a" /> |
 
 <Info>
 <Icon icon="check" color="#16a34a" /> supported &nbsp;·&nbsp; <Icon icon="minus" color="#cbd5e1" /> not available through the API.<br />
 ¹ Pinterest comments support fetch + reply, but **not** hide or delete. <br />
 ² Google Business per-post analytics were deprecated by Google; location-level metrics aren't exposed here.<br />
-³ Telegram is a bot-token connect (no OAuth flow), done once from the dashboard's Social Accounts page - so headless connect doesn't apply to it.
+³ Telegram is a credential connect, not OAuth: `POST /v1/social/connect/telegram` with `bot_token` + `chat` in the body connects immediately (no authorize URL) - or do it once from the dashboard's Social Accounts page.
 </Info>
 
-- **Headless connect** lets you connect a *new* account from your own UI via `POST /v1/social/connect/{platform}` — supported on **every platform above except Telegram** (Discord included - its server-webhook authorize flow works headlessly). Poll `GET /v1/social/connect/{state_token}` to learn when the user finished. You can still connect from the [Developer Dashboard](https://app.smartlyq.com/my/developer). See [Connecting accounts](/guides/connecting-accounts).
+- **Headless connect** lets you connect a *new* account from your own UI via `POST /v1/social/connect/{platform}` — supported on **every platform above** - 14 via OAuth `connect_url` (Discord included: its server-webhook authorize flow works headlessly), and Telegram via credential connect (`bot_token` + `chat` in the body, connects immediately). Poll `GET /v1/social/connect/{state_token}` to learn when the user finished. You can still connect from the [Developer Dashboard](https://app.smartlyq.com/my/developer). See [Connecting accounts](/guides/connecting-accounts).
 - **Direct messages** are actively synced for Facebook, Instagram, and X. Meta platforms enforce a **24-hour reply window** — you can only message a user within 24 hours of their last message.
 
 ## Platform details
