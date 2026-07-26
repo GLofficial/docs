@@ -112,7 +112,9 @@
           "platforms/reddit",
           "platforms/snapchat",
           "platforms/tumblr",
-          "platforms/google-business"
+          "platforms/google-business",
+          "platforms/telegram",
+          "platforms/discord"
         ]
       },
       {

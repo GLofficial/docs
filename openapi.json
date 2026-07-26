@@ -28399,10 +28399,12 @@
                 "gmb",
                 "threads",
                 "bluesky",
-                "tumblr"
+                "tumblr",
+                "telegram",
+                "discord"
               ]
             },
-            "description": "Target platforms. Use `twitter` for X and `gmb` for Google Business."
+            "description": "Target platforms. Use `twitter` for X and `gmb` for Google Business. `telegram` posts via the workspace's connected bot (created with @BotFather); `discord` posts via the connected server webhook. Both are connected in the dashboard's Social Accounts page."
           },
           "account_ids": {
             "type": "array",
@@ -28466,10 +28468,12 @@
                 "gmb",
                 "threads",
                 "bluesky",
-                "tumblr"
+                "tumblr",
+                "telegram",
+                "discord"
               ]
             },
-            "description": "Target platforms. Use `twitter` for X and `gmb` for Google Business."
+            "description": "Target platforms. Use `twitter` for X and `gmb` for Google Business. `telegram` posts via the workspace's connected bot (created with @BotFather); `discord` posts via the connected server webhook. Both are connected in the dashboard's Social Accounts page."
           },
           "account_ids": {
             "type": "array",
@@ -28567,10 +28571,12 @@
                 "gmb",
                 "threads",
                 "bluesky",
-                "tumblr"
+                "tumblr",
+                "telegram",
+                "discord"
               ]
             },
-            "description": "Target platforms. Use `twitter` for X and `gmb` for Google Business."
+            "description": "Target platforms. Use `twitter` for X and `gmb` for Google Business. `telegram` posts via the workspace's connected bot (created with @BotFather); `discord` posts via the connected server webhook. Both are connected in the dashboard's Social Accounts page."
           },
           "account_ids": {
             "type": "array",

@@ -1,0 +1,18 @@
+---
+title: "Telegram"
+icon: "telegram"
+iconType: "brands"
+description: "Telegram support in the SmartlyQ API: limits, post types, capabilities, and how to connect."
+---
+
+| | |
+|---|---|
+| **Caption limit** | 4,096 characters (text posts) · 1,024 as a media caption |
+| **Post types** | Text, image, video, album (2–10 mixed items) |
+| **Capabilities** | Publish |
+| **Connect** | Dashboard only — paste your bot token (from [@BotFather](https://t.me/BotFather)) and pick the target channel/group |
+| **Tokens** | Bot tokens don't expire; posting stops only if the bot is removed from the chat |
+
+Posts publish through **your own bot** to the channel or group it belongs to. Media is sent by URL — Telegram fetches it itself, which caps images at ~5 MB and video at ~20 MB (oversize video is auto-shrunk by SmartlyQ's transcode step where possible). A caption longer than 1,024 characters on a media post is delivered as the media followed by a separate text message.
+
+See [all platforms](/platforms) for the capability matrix and media rules.
