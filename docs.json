@@ -74,6 +74,7 @@
               "sdks/python",
               "sdks/go",
               "sdks/php",
+              "sdks/chat-sdk-adapter",
               "sdks/cli"
             ]
           },

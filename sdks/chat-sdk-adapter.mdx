@@ -1,0 +1,67 @@
+---
+title: "Chat SDK Adapter"
+icon: "comments"
+description: "Build a multi-platform chatbot on the SmartlyQ unified inbox."
+---
+
+<Info>
+**Install:** `npm install @smartlyqofficial/chat-sdk-adapter` · [GitHub](https://github.com/SmartlyQ/smartlyq-chat-sdk-adapter) · [npm](https://www.npmjs.com/package/@smartlyqofficial/chat-sdk-adapter) · Node 18+.
+</Info>
+
+SmartlyQ's unified inbox aggregates DMs and comments from every connected social account and fires signed [webhooks](/guides/webhooks). This adapter turns those webhooks into a chatbot pipeline: it **verifies** each delivery, **normalizes** it into one message shape, and hands it to your handler code with **reply helpers** wired to the SmartlyQ API.
+
+**Write once - it works on every platform your accounts cover.**
+
+<Note>
+Want a chatbot without writing code? SmartlyQ has a built-in [chatbot builder](/api-reference/chatbots/create-chatbot) with an inbox bridge - train it in the dashboard and skip the adapter. This package is for developers who want full code-level control.
+</Note>
+
+## Three steps to a multi-platform chatbot
+
+**1. Get your API key** - from the Developer Dashboard; set it as `SMARTLYQ_API_KEY`.
+
+**2. Create a webhook** subscribed to `message.received` and `comment.received`, pointed at your app. Save the `whsec_...` signing secret.
+
+**3. Add the adapter:**
+
+```typescript
+// app/api/smartlyq/route.ts (Next.js App Router)
+import { createAdapter, toFetchHandler } from '@smartlyqofficial/chat-sdk-adapter';
+
+const adapter = createAdapter({
+  webhookSecret: process.env.SMARTLYQ_WEBHOOK_SECRET!,
+})
+  .onMessage(async ({ message, thread }) => {
+    // Every DM from every platform lands here, normalized.
+    const history = await thread.fetchMessages();
+    const answer = await yourModel.respond(message.text, history);
+    await thread.post(answer);
+  })
+  .onComment(async ({ comment, reply }) => {
+    if (!comment.isReply) {
+      await reply(`Thanks ${comment.authorName ?? 'friend'}!`);
+    }
+  });
+
+export const POST = toFetchHandler(adapter);
+```
+
+Using Express? Mount with a **raw** body (signature verification needs the exact bytes):
+
+```typescript
+app.post('/webhooks/smartlyq', express.raw({ type: '*/*' }), toNodeHandler(adapter));
+```
+
+## What you get in a handler
+
+| Context | Fields |
+| --- | --- |
+| `message` | `threadId`, `conversationId`, `platform`, `senderName`, `text`, `sentAt`, ids |
+| `thread` | `post(text)` - reply into the conversation · `fetchMessages()` - recent history |
+| `comment` | `platform`, `authorName`, `text`, `isReply`, remote ids |
+| `reply(text)` | Replies publicly to the comment (internal id resolved automatically) |
+| `raw` | The untouched webhook envelope |
+
+## Security
+
+Every delivery is checked against your signing secret (HMAC-SHA256, `X-SmartlyQ-Signature`, 5-minute replay window) before your handlers run; unverified requests are rejected with a 401. Events other than the two chat events are acknowledged and ignored, so your endpoint never causes webhook retries.
