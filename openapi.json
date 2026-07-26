@@ -24039,7 +24039,7 @@
         "tags": [
           "Social"
         ],
-        "description": "The location's structured food menus (sections, items, prices). Requires a connected Google Business account; bodies/responses are honest passthroughs of Google's resource shapes, so every Google field works. Requires scope `social:read`.",
+        "description": "The location's structured food menus (sections, items, prices). ONLY available for food-serving business categories (restaurants, cafes, bakeries...) - Google returns a precondition error for other business types, which we pass through as a clear 502. Requires a connected Google Business account; bodies/responses are honest passthroughs of Google's resource shapes, so every Google field works. Requires scope `social:read`.",
         "parameters": [
           {
             "name": "account_id",
@@ -24171,7 +24171,7 @@
         "tags": [
           "Social"
         ],
-        "description": "Replaces the structured menus with the given Google FoodMenu objects. Requires a connected Google Business account; bodies/responses are honest passthroughs of Google's resource shapes, so every Google field works. Requires scope `social:write`.",
+        "description": "Replaces the structured menus with the given Google FoodMenu objects. ONLY available for food-serving business categories - other business types get Google's precondition error passed through. Requires a connected Google Business account; bodies/responses are honest passthroughs of Google's resource shapes, so every Google field works. Requires scope `social:write`.",
         "parameters": [
           {
             "name": "account_id",
