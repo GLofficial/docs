@@ -1,0 +1,109 @@
+---
+title: "Platform Options"
+icon: "sliders"
+description: "Every per-platform option you can set on a post, per platform."
+---
+
+`platform_options` is an object keyed by platform that rides along on `POST /social/posts`, `/social/posts/schedule`, and bulk rows - the same payload the SmartlyQ composer uses, so anything below works identically from the API. Unknown keys are ignored; you never break a post by sending extra fields.
+
+```json
+{
+  "content": "Global caption",
+  "platforms": ["instagram", "youtube", "reddit"],
+  "account_ids": [12, 34, 56],
+  "platform_options": {
+    "instagram": { "share_to_story": true, "first_comments": ["Link in bio!"] },
+    "youtube":   { "title": "My video", "privacy": "unlisted", "tags": ["howto", "smartlyq"] },
+    "reddit":    { "subreddit": "test", "title": "Show & tell", "flair_id": "abc-123" }
+  }
+}
+```
+
+**Universal keys** (every platform): `content` - overrides the global caption for that platform only.
+
+**Scheduling stagger** (schedule endpoint): any platform may carry its own `scheduled_time` - see the note on the schedule endpoint. One call, each network at its own moment.
+
+## Per-platform keys
+
+### Instagram
+| Key | Effect |
+|---|---|
+| `type` | Post format selection (feed/reel/story routing) |
+| `share_to_story` | Also publish the media as a story |
+| `share_to_feed` | Reels: whether the reel also appears in the main feed (Instagram's default when omitted) |
+| `first_comments` | Up to 5 comments posted right after publishing (`first_comment` legacy singular works) |
+| `_thumbnail.url` / `_thumbnail.timestamp_ms` | Reel cover image, or cover frame at an offset |
+
+### YouTube
+| Key | Effect |
+|---|---|
+| `title` | Video title (defaults derived from content) |
+| `privacy` | `public` · `private` · `unlisted` |
+| `made_for_kids` | COPPA audience declaration (default false) |
+| `tags` | Array of video tags/keywords |
+| `category_id` | Numeric YouTube category (default 22, People & Blogs) |
+| `contains_synthetic_media` | AI-generated/altered content disclosure - only sent when you set it |
+| `_thumbnail.url` | Custom video thumbnail |
+
+### TikTok
+| Key | Effect |
+|---|---|
+| `visibility` | Privacy level (required by TikTok) |
+| `allow_comments` / `allow_duet` / `allow_stitch` | Interaction toggles |
+| `branded_content` / `your_brand` | Commercial-content disclosure flags |
+| `auto_add_music`, `photo_cover_index`, `photo_title` | Photo-post extras |
+| `_thumbnail.timestamp_ms` | Video cover frame offset |
+
+### Reddit
+| Key | Effect |
+|---|---|
+| `subreddit` | Target subreddit (overrides the account default) |
+| `title` | Post title |
+| `flair_id` / `flair_text` | Assign a link flair from the subreddit's catalog (`flair_text` only for editable-text flairs) |
+
+Posting a link instead of a self post is automatic when the post carries media suited to it. Check a community first with `GET /social/accounts/{account_id}/reddit/subreddits/{subreddit}` (rules + `can_post` verdict).
+
+### Facebook
+`type` (feed/reel/story routing), `first_comments`, `_thumbnail.url` (video cover).
+
+### LinkedIn
+`title` (video/document posts), `first_comments`, `_thumbnail.url`. Document (PDF) posts publish via the document pipeline automatically.
+
+### X (Twitter)
+`content` override and `media_urls` per platform; `first_comments` publish as replies to the new post.
+
+### Threads
+`reply_control` - who can reply; `first_comments`.
+
+### Google Business
+| Key | Effect |
+|---|---|
+| `post_type` | `STANDARD` · `EVENT` · `OFFER` |
+| `event_title`, `event_start_date`, `event_end_date`, `event_start_time`, `event_end_time` | Event posts |
+| `offer_coupon`, `offer_redeem_url`, `offer_terms` | Offer posts |
+| `cta_type`, `cta_url` | Call-to-action button |
+| `language_code` | Post language |
+
+### Pinterest
+`title`, `board_id`, `link` (destination), `alt_text`; video cover via a second media item or `_thumbnail.url`.
+
+### Snapchat
+`surface` (story / spotlight), `save_to_profile`, `title` (saved stories, ≤45 chars), `description` + `locale` (spotlight).
+
+### Telegram
+| Key | Effect |
+|---|---|
+| `parse_mode` | `HTML` · `Markdown` · `MarkdownV2` text formatting |
+| `silent` | Deliver without a notification sound |
+| `disable_link_preview` | Suppress the URL preview (text posts) |
+| `protect_content` | Block forwarding/saving of the message |
+
+### Tumblr
+`tags` (array).
+
+### Bluesky / Discord
+`content` override only - links, mentions and previews are handled automatically.
+
+## First comments summary
+
+`first_comments` (array, max 5) is supported on **Facebook, Instagram, X, LinkedIn, Threads, and Reddit**. Other platforms ignore it.

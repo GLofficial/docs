@@ -7,6 +7,14 @@ icon: "clock-rotate-left"
 Product updates for the SmartlyQ Developer API, MCP server, and Developer Portal. All endpoints live at `https://api.smartlyq.com/v1`.
 
 <Update label="July 27, 2026" tags={["Social", "New"]}>
+## Idempotent creates, per-platform stagger, richer platform options
+
+- **Idempotency keys** - send `X-Idempotency-Key` (or `X-Request-Id`) on `POST /social/posts` / `/schedule`; a retry with the same key returns the original post (`200`, `idempotent_replay: true`) instead of double-posting. Backed by a unique constraint, so even concurrent retries can't create twice. Works alongside the existing 24-hour duplicate-content guard (`409 DUPLICATE_CONTENT` + `allow_duplicates`). New [Idempotency guide](/guides/idempotency).
+- **Per-platform stagger** - on the schedule endpoint, any platform can carry its own `scheduled_time` inside `platform_options`: one call, each network publishing at its own moment (response lists the created `staggered[]` legs).
+- **Platform options, documented and extended** - new [Platform options guide](/guides/platform-options) covering every per-platform key. Newly added: Telegram `parse_mode`/`silent`/`disable_link_preview`/`protect_content`, Reddit `flair_id`/`flair_text`, YouTube `tags`/`category_id`/`contains_synthetic_media` (AI disclosure), Instagram `share_to_feed` for Reels.
+</Update>
+
+<Update label="July 27, 2026" tags={["Social", "New"]}>
 ## Connect Telegram by API, Discord headlessly
 
 Every platform can now be connected without the SmartlyQ dashboard:

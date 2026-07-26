@@ -83,6 +83,8 @@
             "group": "Guides",
             "pages": [
               "guides/connecting-accounts",
+              "guides/idempotency",
+              "guides/platform-options",
               "guides/workspaces",
               "guides/profiles",
               "guides/agency-saas",
