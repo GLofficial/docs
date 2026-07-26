@@ -12,17 +12,38 @@ SmartlyQ's unified inbox aggregates DMs and comments from every connected social
 
 **Write once - it works on every platform your accounts cover.**
 
+```mermaid
+flowchart LR
+    subgraph P [Platforms]
+        A[Instagram]
+        B[Facebook]
+        C[X]
+        D[TikTok]
+        E[LinkedIn]
+    end
+    P --> I["SmartlyQ unified inbox"]
+    I -- "signed webhook<br/>message.received<br/>comment.received" --> AD["@smartlyqofficial/<br/>chat-sdk-adapter<br/><i>verify - normalize - route</i>"]
+    AD --> BOT["Your bot<br/>onMessage / onComment"]
+    BOT -- "thread.post() / reply()" --> I
+```
+
 <Note>
 Want a chatbot without writing code? SmartlyQ has a built-in [chatbot builder](/api-reference/chatbots/create-chatbot) with an inbox bridge - train it in the dashboard and skip the adapter. This package is for developers who want full code-level control.
 </Note>
 
 ## Three steps to a multi-platform chatbot
 
-**1. Get your API key** - from the Developer Dashboard; set it as `SMARTLYQ_API_KEY`.
-
-**2. Create a webhook** subscribed to `message.received` and `comment.received`, pointed at your app. Save the `whsec_...` signing secret.
-
-**3. Add the adapter:**
+<Steps>
+<Step title="Get your API key">
+Create an API key in the Developer Dashboard and set it as `SMARTLYQ_API_KEY`.
+</Step>
+<Step title="Create a webhook">
+Subscribe it to `message.received` and `comment.received`, pointed at your app. Save the `whsec_...` signing secret it returns - see the [webhooks guide](/guides/webhooks).
+</Step>
+<Step title="Add the adapter">
+Install `@smartlyqofficial/chat-sdk-adapter` and wire your handlers:
+</Step>
+</Steps>
 
 ```typescript
 // app/api/smartlyq/route.ts (Next.js App Router)

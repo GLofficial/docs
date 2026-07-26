@@ -1,50 +1,113 @@
 ---
 title: "SDKs & CLI"
 icon: "cubes"
-description: "Official SmartlyQ client libraries for Node.js, Python, Go, and PHP, plus a full-featured CLI."
+description: "Official SmartlyQ client libraries for Node.js, Python, Go, and PHP - plus a CLI and a chatbot adapter."
 ---
 
 Official client libraries for the SmartlyQ API. Every SDK covers the **full API surface** - social posting and scheduling, AI content generation (articles, images, video, audio, presentations), SEO research, CRM, chatbots, profiles, workspaces, and more - with the same resource-based method names in every language.
 
-All SDKs are generated from the [OpenAPI spec](https://docs.smartlyq.com/openapi.json) and update automatically when the API gains new endpoints, so they are never behind the API Reference.
+All SDKs are generated from the [OpenAPI spec](https://docs.smartlyq.com/openapi.json) and republish automatically when the API gains new endpoints, so they are never behind the API Reference.
 
 ## Official SDKs
 
 <CardGroup cols={2}>
 
 <Card title="Node.js" icon="node-js" href="/sdks/node">
-`npm install @smartlyqofficial/node` - TypeScript types for every request and response, zero dependencies.
+`npm install @smartlyqofficial/node`
+
+TypeScript types for every request and response. Zero dependencies, native fetch, Node 18+.
 </Card>
 
 <Card title="Python" icon="python" href="/sdks/python">
-`pip install smartlyq` - clean snake_case client on httpx, context-manager friendly.
+`pip install smartlyq`
+
+Clean snake_case client on httpx. Context-manager friendly, Python 3.9+.
 </Card>
 
 <Card title="Go" icon="golang" href="/sdks/go">
-`go get github.com/SmartlyQ/smartlyq-go` - context-first, zero dependencies, standard library only.
+`go get github.com/SmartlyQ/smartlyq-go`
+
+Context-first, standard library only, zero dependencies. Go 1.22+.
 </Card>
 
 <Card title="PHP" icon="php" href="/sdks/php">
-`composer require smartlyq/sdk` - PSR-4, PHP 8.1+, zero runtime dependencies.
+`composer require smartlyq/sdk`
+
+PSR-4, zero runtime dependencies, PHP 8.1+.
+</Card>
+
+<Card title="CLI" icon="terminal" href="/sdks/cli">
+`npm install -g @smartlyqofficial/cli`
+
+Every API operation as a shell command - perfect for scripts, cron jobs, and CI.
+</Card>
+
+<Card title="Chat SDK Adapter" icon="comments" href="/sdks/chat-sdk-adapter">
+`npm install @smartlyqofficial/chat-sdk-adapter`
+
+Build a multi-platform chatbot on the unified inbox. Write once - works on every connected platform.
 </Card>
 
 </CardGroup>
 
-## CLI
+## One surface, every language
 
-<Card title="SmartlyQ CLI" icon="terminal" href="/sdks/cli">
-`npm install -g @smartlyqofficial/cli` - every API operation as a shell command: `smartlyq social create-post`, `smartlyq images generate`, `smartlyq seo keyword-research`, and more. Great for scripts, cron jobs, and CI.
-</Card>
+The method names mirror each other across every SDK - learn it once, use it anywhere:
 
-## Chat SDK Adapter
+<CodeGroup>
 
-<Card title="Chat SDK Adapter" icon="comments" href="/sdks/chat-sdk-adapter">
-`npm install @smartlyqofficial/chat-sdk-adapter` - build a multi-platform chatbot on the unified inbox: verified webhooks in, normalized messages to your handlers, replies out. Write once, works on every connected platform.
-</Card>
+```typescript Node.js
+import SmartlyQ from '@smartlyqofficial/node';
+
+const sq = new SmartlyQ({ apiKey: process.env.SMARTLYQ_API_KEY });
+
+const post = await sq.social.createPost({
+  text: 'Hello from SmartlyQ!',
+  account_ids: ['acc_123'],
+});
+```
+
+```python Python
+from smartlyq import SmartlyQ
+
+sq = SmartlyQ()  # reads SMARTLYQ_API_KEY
+
+post = sq.social.create_post({
+    "text": "Hello from SmartlyQ!",
+    "account_ids": ["acc_123"],
+})
+```
+
+```go Go
+client := smartlyq.NewClient("") // reads SMARTLYQ_API_KEY
+
+post, err := client.Social.CreatePost(ctx, map[string]any{
+	"text":        "Hello from SmartlyQ!",
+	"account_ids": []string{"acc_123"},
+}, nil)
+```
+
+```php PHP
+$sq = new Smartlyq\SmartlyQ(); // reads SMARTLYQ_API_KEY
+
+$post = $sq->social->createPost([
+    'text' => 'Hello from SmartlyQ!',
+    'account_ids' => ['acc_123'],
+]);
+```
+
+```bash CLI
+smartlyq social create-post \
+  --data '{"text":"Hello from SmartlyQ!","account_ids":["acc_123"]}'
+```
+
+</CodeGroup>
 
 ## Building an AI agent instead?
 
-The [MCP server](/mcp-server) exposes the same API as tools for Claude, Cursor, ChatGPT, and any MCP-compatible client - usually the fastest integration for agents. The SDKs are the right choice when you are writing code.
+<Card title="MCP Server" icon="plug" href="/mcp-server">
+The hosted **Model Context Protocol** server exposes the same API as tools for Claude, Cursor, ChatGPT, and any MCP client - usually the fastest integration for agents. The SDKs are the right choice when you are writing code.
+</Card>
 
 ## Shared behavior
 
