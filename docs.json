@@ -339,6 +339,9 @@
                   "GET /social/accounts/{account_id}/gmb/performance",
                   "GET /social/accounts/{account_id}/gmb/search-keywords",
                   "GET /social/accounts/{account_id}/instagram/stories",
+                  "GET /social/accounts/{account_id}/instagram/stories/{story_id}/insights",
+                  "POST /social/accounts/{account_id}/x/retweets",
+                  "DELETE /social/accounts/{account_id}/x/retweets/{tweet_id}",
                   "GET /social/accounts/{account_id}/facebook/post-reactions",
                   "GET /social/accounts/{account_id}/reddit/search",
                   "GET /social/accounts/{account_id}/reddit/feed",
@@ -415,6 +418,7 @@
                 "pages": [
                   "GET /reviews",
                   "POST /reviews/{review_id}/reply",
+                  "DELETE /reviews/{review_id}/reply",
                   "POST /reviews/sync"
                 ]
               },

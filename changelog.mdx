@@ -7,6 +7,16 @@ icon: "clock-rotate-left"
 Product updates for the SmartlyQ Developer API, MCP server, and Developer Portal. All endpoints live at `https://api.smartlyq.com/v1`.
 
 <Update label="July 26, 2026" tags={["Social", "New"]}>
+## Per-platform post options, X retweets, story insights, safe retries
+
+- **platform_options** - create, schedule, and bulk rows now accept the same per-platform options object the web composer uses: TikTok privacy/duet/stitch, per-platform caption overrides, custom video thumbnails, and more. Publish handlers consume it directly.
+- **X engagement** - `POST /social/accounts/{account_id}/x/retweets` and its DELETE counterpart retweet/un-retweet with the connected account.
+- **Story insights** - `GET .../instagram/stories/{story_id}/insights` with a passthrough `metrics` parameter.
+- **Delete review reply** - `DELETE /reviews/{review_id}/reply` removes the reply on Google Business.
+- **Idempotency, documented** - every write endpoint has always honored `X-Idempotency-Key` (24h replay window, never double-billed); it is now documented in the API intro.
+</Update>
+
+<Update label="July 26, 2026" tags={["Social", "New"]}>
 ## Reddit research tools, Instagram stories, Facebook reactions
 
 - **Reddit** - four research endpoints under `/social/accounts/{account_id}/reddit/`: `search` (optionally restricted to a subreddit), `feed` (hot/new/top/rising), `subreddits` (your subscriptions), and `subreddits/{subreddit}/rules` - check the rules before you submit.
