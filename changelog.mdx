@@ -6,6 +6,16 @@ icon: "clock-rotate-left"
 
 Product updates for the SmartlyQ Developer API, MCP server, and Developer Portal. All endpoints live at `https://api.smartlyq.com/v1`.
 
+<Update label="July 26, 2026" tags={["Reviews", "New"]}>
+## Reviews API
+
+Reputation Management is now scriptable:
+
+- **List** - `GET /reviews` with rating / reply-status / account filters.
+- **Reply** - `POST /reviews/{review_id}/reply` publishes your reply on Google Business.
+- **Sync** - `POST /reviews/sync` pulls fresh reviews on demand, per account or workspace-wide.
+</Update>
+
 <Update label="July 26, 2026" tags={["Analytics", "New"]}>
 ## Inbox analytics
 

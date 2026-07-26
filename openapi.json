@@ -13067,6 +13067,332 @@
           }
         }
       }
+    },
+    "/reviews": {
+      "get": {
+        "summary": "List reviews",
+        "operationId": "listReviews",
+        "tags": [
+          "Reviews"
+        ],
+        "description": "Google Business reviews synced into SmartlyQ's Reputation Management, newest first. Filter by rating, reply status, or account. Requires scope `social:read`.",
+        "parameters": [
+          {
+            "name": "account_id",
+            "in": "query",
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Limit to one connected Google Business account."
+          },
+          {
+            "name": "rating",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 5
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "pending",
+                "replied"
+              ]
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 1
+            }
+          },
+          {
+            "name": "per_page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 20,
+              "maximum": 100
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Reviews",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [
+                        true
+                      ]
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "integer"
+                          },
+                          "account_id": {
+                            "type": "integer"
+                          },
+                          "author_name": {
+                            "type": "string"
+                          },
+                          "author_photo": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "rating": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 5
+                          },
+                          "comment": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "created_at": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "reply_comment": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "reply_at": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "reply_source": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "status": {
+                            "type": "string",
+                            "enum": [
+                              "pending",
+                              "replied"
+                            ]
+                          }
+                        }
+                      }
+                    },
+                    "pagination": {
+                      "$ref": "#/components/schemas/Pagination"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/RequestMeta"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/reviews/{review_id}/reply": {
+      "post": {
+        "summary": "Reply to review",
+        "operationId": "replyToReview",
+        "tags": [
+          "Reviews"
+        ],
+        "description": "Publishes a reply to the review on Google Business. Requires scope `social:write`.",
+        "parameters": [
+          {
+            "name": "review_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "comment"
+                ],
+                "properties": {
+                  "comment": {
+                    "type": "string",
+                    "maxLength": 4000
+                  }
+                }
+              },
+              "example": {
+                "comment": "Thank you for the kind words! We look forward to seeing you again."
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Replied",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [
+                        true
+                      ]
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "replied": {
+                          "type": "boolean"
+                        },
+                        "review_id": {
+                          "type": "integer"
+                        }
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/RequestMeta"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "502": {
+            "description": "Google rejected the reply",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [
+                        false
+                      ]
+                    },
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "enum": [
+                            "PLATFORM_ERROR"
+                          ]
+                        },
+                        "message": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/RequestMeta"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/reviews/sync": {
+      "post": {
+        "summary": "Sync reviews",
+        "operationId": "syncReviews",
+        "tags": [
+          "Reviews"
+        ],
+        "description": "Pulls fresh reviews from Google Business on demand - one account (account_id) or every connected GBP account in the workspace. Requires scope `social:write`.",
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "account_id": {
+                    "type": "integer",
+                    "description": "Optional: sync only this connected account."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Synced",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [
+                        true
+                      ]
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "synced": {
+                          "type": "integer",
+                          "description": "Reviews inserted or updated."
+                        }
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/RequestMeta"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
     }
   },
   "components": {

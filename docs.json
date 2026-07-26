@@ -384,6 +384,14 @@
                 ]
               },
               {
+                "group": "Reviews",
+                "pages": [
+                  "GET /reviews",
+                  "POST /reviews/{review_id}/reply",
+                  "POST /reviews/sync"
+                ]
+              },
+              {
                 "group": "Media",
                 "pages": [
                   "POST /media/upload-url",
