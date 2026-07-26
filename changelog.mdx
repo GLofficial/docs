@@ -6,6 +6,14 @@ icon: "clock-rotate-left"
 
 Product updates for the SmartlyQ Developer API, MCP server, and Developer Portal. All endpoints live at `https://api.smartlyq.com/v1`.
 
+<Update label="July 26, 2026" tags={["CRM", "New"]}>
+## Automations API + contact bulk import
+
+- **Operate your automations** - new `/automations` group: list and inspect automations built in the visual builder, activate/pause them, queue a manual run with `POST /automations/{automation_id}/trigger` (optional JSON payload), and read run history down to per-step execution logs.
+- **Bulk import** - `POST /contacts/bulk` imports up to 100 contacts through the same email/phone upsert as single create - re-importing a file is idempotent, with per-row created/updated/failed results.
+- **Delete** - `DELETE /contacts/{id}` soft-deletes (recoverable from Deleted contacts in the app).
+</Update>
+
 <Update label="July 26, 2026" tags={["Social", "New"]}>
 ## Inbox: search, detail, archive
 

@@ -147,8 +147,10 @@
                 "group": "Contacts",
                 "pages": [
                   "POST /contacts",
+                  "POST /contacts/bulk",
                   "GET /contacts",
                   "GET /contacts/{id}",
+                  "DELETE /contacts/{id}",
                   "PATCH /contacts/{id}",
                   "POST /contacts/{id}/tags",
                   "DELETE /contacts/{id}/tags",
@@ -391,6 +393,18 @@
                   "GET /reviews",
                   "POST /reviews/{review_id}/reply",
                   "POST /reviews/sync"
+                ]
+              },
+              {
+                "group": "Automations",
+                "pages": [
+                  "GET /automations",
+                  "GET /automations/{automation_id}",
+                  "POST /automations/{automation_id}/activate",
+                  "POST /automations/{automation_id}/deactivate",
+                  "POST /automations/{automation_id}/trigger",
+                  "GET /automations/{automation_id}/runs",
+                  "GET /automations/{automation_id}/runs/{run_id}"
                 ]
               },
               {
