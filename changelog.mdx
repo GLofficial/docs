@@ -6,6 +6,12 @@ icon: "clock-rotate-left"
 
 Product updates for the SmartlyQ Developer API, MCP server, and Developer Portal. All endpoints live at `https://api.smartlyq.com/v1`.
 
+<Update label="July 26, 2026" tags={["Webhooks", "Fixed"]}>
+## Webhooks scopes are now grantable
+
+The `/webhooks` endpoints require the `webhooks:read` / `webhooks:write` scopes - but the key-creation surfaces never offered them, so freshly created keys received `403 INSUFFICIENT_SCOPE` on every webhook call. The scope picker in the Developer Dashboard (and the OAuth catalog) now includes both. **Existing keys are unchanged**: edit your key's scopes or create a new key to pick up webhook access.
+</Update>
+
 <Update label="July 26, 2026" tags={["Social", "New"]}>
 ## Edit published posts, external sync, live insights
 
