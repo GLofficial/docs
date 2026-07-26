@@ -375,6 +375,11 @@
                   "GET /analytics/best-time",
                   "GET /analytics/content-decay",
                   "GET /analytics/posting-frequency",
+                  "GET /analytics/inbox/volume",
+                  "GET /analytics/inbox/heatmap",
+                  "GET /analytics/inbox/source-breakdown",
+                  "GET /analytics/inbox/response-time",
+                  "GET /analytics/inbox/top-accounts",
                   "GET /analytics/accounts/{account_id}"
                 ]
               },

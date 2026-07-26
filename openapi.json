@@ -12656,6 +12656,417 @@
           }
         }
       }
+    },
+    "/analytics/inbox/volume": {
+      "get": {
+        "summary": "Inbox volume",
+        "operationId": "inboxVolume",
+        "tags": [
+          "Analytics"
+        ],
+        "description": "Daily incoming/outgoing message counts plus new conversations started, across the social inbox. Requires scope `analytics:read`.",
+        "parameters": [
+          {
+            "name": "days",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 30,
+              "minimum": 1,
+              "maximum": 365
+            },
+            "description": "Window in days."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Volume",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [
+                        true
+                      ]
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "days": {
+                          "type": "integer"
+                        },
+                        "daily": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "date": {
+                                "type": "string"
+                              },
+                              "incoming": {
+                                "type": "integer"
+                              },
+                              "outgoing": {
+                                "type": "integer"
+                              },
+                              "new_conversations": {
+                                "type": "integer"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/RequestMeta"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/analytics/inbox/heatmap": {
+      "get": {
+        "summary": "Inbox heatmap",
+        "operationId": "inboxHeatmap",
+        "tags": [
+          "Analytics"
+        ],
+        "description": "Incoming messages bucketed by weekday and hour (in your timezone) - when your audience actually writes to you. Requires scope `analytics:read`.",
+        "parameters": [
+          {
+            "name": "days",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 30,
+              "minimum": 1,
+              "maximum": 365
+            },
+            "description": "Window in days."
+          },
+          {
+            "name": "timezone",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "default": "UTC"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Heatmap",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [
+                        true
+                      ]
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "days": {
+                          "type": "integer"
+                        },
+                        "timezone": {
+                          "type": "string"
+                        },
+                        "sample": {
+                          "type": "integer"
+                        },
+                        "heatmap": {
+                          "type": "object",
+                          "description": "weekday -> array of 24 hourly counts"
+                        }
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/RequestMeta"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      }
+    },
+    "/analytics/inbox/source-breakdown": {
+      "get": {
+        "summary": "Inbox source breakdown",
+        "operationId": "inboxSourceBreakdown",
+        "tags": [
+          "Analytics"
+        ],
+        "description": "Active conversations and message volume per platform. Requires scope `analytics:read`.",
+        "parameters": [
+          {
+            "name": "days",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 30,
+              "minimum": 1,
+              "maximum": 365
+            },
+            "description": "Window in days."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Breakdown",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [
+                        true
+                      ]
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "days": {
+                          "type": "integer"
+                        },
+                        "platforms": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "platform": {
+                                "type": "string"
+                              },
+                              "conversations": {
+                                "type": "integer"
+                              },
+                              "incoming": {
+                                "type": "integer"
+                              },
+                              "outgoing": {
+                                "type": "integer"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/RequestMeta"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/analytics/inbox/response-time": {
+      "get": {
+        "summary": "Inbox response time",
+        "operationId": "inboxResponseTime",
+        "tags": [
+          "Analytics"
+        ],
+        "description": "How fast you answer: for every incoming message answered by a later reply in the same conversation, the wait - average, median, and a histogram (under_15m, 15m_1h, 1h_4h, 4h_24h, over_24h). Requires scope `analytics:read`.",
+        "parameters": [
+          {
+            "name": "days",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 30,
+              "minimum": 1,
+              "maximum": 365
+            },
+            "description": "Window in days."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response times",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [
+                        true
+                      ]
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "days": {
+                          "type": "integer"
+                        },
+                        "answered": {
+                          "type": "integer"
+                        },
+                        "avg_response_seconds": {
+                          "type": "integer",
+                          "nullable": true
+                        },
+                        "median_response_seconds": {
+                          "type": "integer",
+                          "nullable": true
+                        },
+                        "histogram": {
+                          "type": "object",
+                          "properties": {
+                            "under_15m": {
+                              "type": "integer"
+                            },
+                            "15m_1h": {
+                              "type": "integer"
+                            },
+                            "1h_4h": {
+                              "type": "integer"
+                            },
+                            "4h_24h": {
+                              "type": "integer"
+                            },
+                            "over_24h": {
+                              "type": "integer"
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/RequestMeta"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/analytics/inbox/top-accounts": {
+      "get": {
+        "summary": "Inbox top accounts",
+        "operationId": "inboxTopAccounts",
+        "tags": [
+          "Analytics"
+        ],
+        "description": "Your busiest connected accounts by incoming messages. Requires scope `analytics:read`.",
+        "parameters": [
+          {
+            "name": "days",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 30,
+              "minimum": 1,
+              "maximum": 365
+            },
+            "description": "Window in days."
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 10,
+              "minimum": 1,
+              "maximum": 50
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Top accounts",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [
+                        true
+                      ]
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "days": {
+                          "type": "integer"
+                        },
+                        "accounts": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "account_id": {
+                                "type": "integer"
+                              },
+                              "platform": {
+                                "type": "string"
+                              },
+                              "account_name": {
+                                "type": "string",
+                                "nullable": true
+                              },
+                              "conversations": {
+                                "type": "integer"
+                              },
+                              "incoming": {
+                                "type": "integer"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/RequestMeta"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
     }
   },
   "components": {
