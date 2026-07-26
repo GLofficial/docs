@@ -6,6 +6,12 @@ icon: "clock-rotate-left"
 
 Product updates for the SmartlyQ Developer API, MCP server, and Developer Portal. All endpoints live at `https://api.smartlyq.com/v1`.
 
+<Update label="July 26, 2026" tags={["Social", "New"]}>
+## Google Business Profile management
+
+Sixteen endpoints under `/social/accounts/{account_id}/gmb/*`, riding the connection's existing permissions: list all locations, read and update business info (hours, phone, categories, description) with field masks, manage attributes (with a metadata endpoint that tells you what this location supports), publish and remove photos, edit structured food menus, manage place-action links (order/reserve/appointment), and inspect verification state and options. Bodies are passthroughs of Google's resource shapes - every Google field works without waiting for us.
+</Update>
+
 <Update label="July 26, 2026" tags={["Webhooks", "Fixed"]}>
 ## Webhooks scopes are now grantable
 

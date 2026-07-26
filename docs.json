@@ -360,6 +360,27 @@
                 ]
               },
               {
+                "group": "Google Business",
+                "pages": [
+                  "GET /social/accounts/{account_id}/gmb/locations",
+                  "GET /social/accounts/{account_id}/gmb/location",
+                  "PATCH /social/accounts/{account_id}/gmb/location",
+                  "GET /social/accounts/{account_id}/gmb/attributes",
+                  "GET /social/accounts/{account_id}/gmb/attributes/metadata",
+                  "PUT /social/accounts/{account_id}/gmb/attributes",
+                  "GET /social/accounts/{account_id}/gmb/media",
+                  "POST /social/accounts/{account_id}/gmb/media",
+                  "DELETE /social/accounts/{account_id}/gmb/media",
+                  "GET /social/accounts/{account_id}/gmb/food-menus",
+                  "PUT /social/accounts/{account_id}/gmb/food-menus",
+                  "GET /social/accounts/{account_id}/gmb/place-actions",
+                  "POST /social/accounts/{account_id}/gmb/place-actions",
+                  "DELETE /social/accounts/{account_id}/gmb/place-actions",
+                  "GET /social/accounts/{account_id}/gmb/verifications",
+                  "POST /social/accounts/{account_id}/gmb/verifications/options"
+                ]
+              },
+              {
                 "group": "Posts",
                 "pages": [
                   "POST /social/posts",
