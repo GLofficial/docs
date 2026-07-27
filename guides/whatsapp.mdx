@@ -72,3 +72,20 @@ See the [Webhooks guide](/guides/webhooks). Inbound messages also populate the i
 ## Phone numbers
 
 `GET /v1/whatsapp/phone-numbers?account_id=42` lists the numbers on the connection's WhatsApp Business Account with their display number, verified name, and quality rating.
+
+## Limits & restrictions
+
+WhatsApp messaging is governed by both Meta's platform rules and your SmartlyQ plan. Knowing these avoids surprises:
+
+**Meta (platform) rules — enforced by WhatsApp:**
+
+- **24-hour customer service window** — free-form `text` and `media` messages are only deliverable within 24 hours of the customer's last message to you. Outside it, you must use an approved `template`. A `502` on a session message almost always means the window has closed.
+- **Messaging tiers** — a new number can start ~250 unique customers per 24 hours, rising to 1K → 10K → 100K → unlimited as your volume and quality grow. Meta raises the tier automatically.
+- **Quality rating** — each number carries a green / yellow / red rating. Too many blocks or reports lowers it and can throttle or restrict the number, so keep messaging relevant and opt-in.
+- **Template categories** — templates are `MARKETING`, `UTILITY`, or `AUTHENTICATION`, and each must be approved by Meta before it can be sent. Marketing templates are subject to per-user frequency caps.
+- **Throughput** — Meta accepts roughly 80 messages/second per number by default. SmartlyQ paces sends under this automatically so a burst can't trip the throttle.
+
+**SmartlyQ (plan) limits:**
+
+- **Monthly message cap** — each plan includes a monthly WhatsApp send allowance. When it's reached, `POST /whatsapp/messages` returns `429 LIMIT_REACHED` until the next month or a plan upgrade. This is separate from Meta's tiers.
+- **Connected numbers** count toward your plan's connected-account limit, like any other channel.
