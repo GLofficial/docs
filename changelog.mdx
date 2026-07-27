@@ -6,6 +6,18 @@ icon: "clock-rotate-left"
 
 Product updates for the SmartlyQ Developer API, MCP server, and Developer Portal. All endpoints live at `https://api.smartlyq.com/v1`.
 
+<Update label="July 27, 2026" tags={["Webhooks", "New"]}>
+## 10 new webhook events
+
+The event catalog grows from 25 to 35, covering lifecycle moments you could already act on internally but couldn't subscribe to:
+
+- **Posting** - `post.scheduled` (a post was queued for later), `post.cancelled` (a scheduled post was deleted before publishing), `post.recycled` (a recycling chain spawned its next occurrence), and `post.external.created` / `post.external.updated` for posts authored natively on the platform and picked up by external sync.
+- **Inbox** - `message.sent` (outbound DM delivered), `conversation.started` (a new thread opened), `reaction.received` (an emoji reaction added or removed).
+- **Reviews** - `review.new` and `review.updated` for Google Business reviews and replies.
+
+All fire from both the app and the API where applicable, carry the same signed, deduplicatable envelope as every other event, and are subscribable from the dashboard, the API, and MCP. See the [Webhooks guide](/guides/webhooks).
+</Update>
+
 <Update label="July 27, 2026" tags={["Social", "New"]}>
 ## Idempotent creates, per-platform stagger, richer platform options
 

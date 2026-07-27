@@ -6,7 +6,7 @@ description: "Receive real-time notifications when events happen."
 
 ## Overview
 
-Webhooks let your server receive HTTP POST callbacks when events occur in SmartlyQ - a post publishing, a new comment or DM arriving, a contact being created, your wallet running low, and more. There are **25 events** across posting, accounts, inbox, jobs, billing, and CRM.
+Webhooks let your server receive HTTP POST callbacks when events occur in SmartlyQ - a post publishing, a new comment or DM arriving, a contact being created, your wallet running low, and more. There are **35 events** across posting, accounts, inbox, reviews, jobs, billing, and CRM.
 
 ## Setting up webhooks
 
@@ -107,6 +107,11 @@ All registerable events. Registering an event name outside this catalog is rejec
 | `post.published` | Every platform target published | `post_id`, `status`, `platforms[]` (`platform`, `success`; on failures `error` `{code, message, retryable}` plus, when the failure came from SmartlyQ's own pre-publish checks, `error.detail` with the exact human-readable reason, e.g. `"Twitter/X caption is 312 characters; the limit is 280. Trim 32 characters and retry."`; when media was auto-fixed before publishing, `transcoded[]` lists what was converted, e.g. `"Video was vp9/webm; converted to H.264/AAC MP4."`) |
 | `post.partial` | Some platforms published, some failed | same as `post.published` |
 | `post.failed` | Every platform target failed | same as `post.published` |
+| `post.scheduled` | A post was accepted and queued for a future publish | `post_id`, `status`, `scheduled_at`, `platforms[]` |
+| `post.cancelled` | A scheduled post was cancelled before publishing | `post_id`, `status` |
+| `post.recycled` | A recycling chain spawned a new occurrence of a post | `post_id` (the new occurrence), `recycled_from`, `status`, `scheduled_at` |
+| `post.external.created` | A post authored natively on the platform (not via SmartlyQ) was detected by external sync | `post_id`, `platform`, `remote_id`, `status` (`external`) |
+| `post.external.updated` | A synced native post's text or media changed on the platform | same as `post.external.created` |
 
 ### Accounts
 
@@ -122,6 +127,16 @@ All registerable events. Registering an event name outside this catalog is rejec
 |---|---|---|
 | `comment.received` | A new comment is ingested on one of your posts | `platform`, `account_id`, `social_post_id` (null for external posts), `remote_post_id`, `remote_comment_id`, `author_name`, `content`, `is_reply`, `commented_at` |
 | `message.received` | A new incoming DM is ingested | `platform`, `account_name`, `conversation_id`, `message_id`, `remote_message_id`, `sender_name`, `content`, `sent_at` |
+| `message.sent` | An outbound DM was delivered from the inbox (via app or API) | `platform`, `conversation_id`, `message_id`, `remote_message_id`, `content` |
+| `conversation.started` | A new inbox conversation was opened with a contact | `platform`, `conversation_id`, `participant_name` |
+| `reaction.received` | A participant added or removed an emoji reaction on a message | `platform`, `action` (`added`/`removed`), `emoji`, `conversation_id`, `message_id`, `remote_message_id` |
+
+### Reviews
+
+| Event | Fires when | `data` fields |
+|---|---|---|
+| `review.new` | A new review was posted on a connected account (Google Business) | `review_id`, `account_id`, `platform`, `rating`, `author_name`, `content`, `created_at` |
+| `review.updated` | A review was edited, or you posted/removed a reply | same as `review.new`, plus `reply` when present |
 
 ### Jobs
 
