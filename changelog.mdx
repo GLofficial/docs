@@ -6,6 +6,19 @@ icon: "clock-rotate-left"
 
 Product updates for the SmartlyQ Developer API, MCP server, and Developer Portal. All endpoints live at `https://api.smartlyq.com/v1`.
 
+<Update label="July 27, 2026" tags={["WhatsApp", "New"]}>
+## WhatsApp Business messaging (Phase 1)
+
+SmartlyQ now connects to the **WhatsApp Business Cloud API**:
+
+- **Connect** a WhatsApp Business number - `POST /social/connect/whatsapp` with `{ waba_id, phone_number_id, access_token }`.
+- **Send** - `POST /whatsapp/messages`: text and media (session messages, inside the 24-hour window) and approved templates (any time).
+- **Receive** - inbound messages and delivery receipts arrive on your webhooks and populate the in-app Inbox. New events: `message.delivered`, `message.read`, `message.failed` (joining `message.received`).
+- **Manage** - list/create message templates (`/whatsapp/templates`), read/update the business profile (`/whatsapp/business-profile`), and list phone numbers (`/whatsapp/phone-numbers`).
+
+See the new [WhatsApp guide](/guides/whatsapp). Flows, calling, groups and interactive buttons are planned for a later phase.
+</Update>
+
 <Update label="July 27, 2026" tags={["Social", "New"]}>
 ## X reply threads with media
 

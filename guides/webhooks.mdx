@@ -6,7 +6,7 @@ description: "Receive real-time notifications when events happen."
 
 ## Overview
 
-Webhooks let your server receive HTTP POST callbacks when events occur in SmartlyQ - a post publishing, a new comment or DM arriving, a contact being created, your wallet running low, and more. There are **35 events** across posting, accounts, inbox, reviews, jobs, billing, and CRM.
+Webhooks let your server receive HTTP POST callbacks when events occur in SmartlyQ - a post publishing, a new comment or DM arriving, a contact being created, your wallet running low, and more. There are **38 events** across posting, accounts, inbox, reviews, jobs, billing, and CRM.
 
 ## Setting up webhooks
 
@@ -130,6 +130,9 @@ All registerable events. Registering an event name outside this catalog is rejec
 | `message.sent` | An outbound DM was delivered from the inbox (via app or API) | `platform`, `conversation_id`, `message_id`, `remote_message_id`, `content` |
 | `conversation.started` | A new inbox conversation was opened with a contact | `platform`, `conversation_id`, `participant_name` |
 | `reaction.received` | A participant added or removed an emoji reaction on a message | `platform`, `action` (`added`/`removed`), `emoji`, `conversation_id`, `message_id`, `remote_message_id` |
+| `message.delivered` | An outbound message reached the recipient (WhatsApp) | `platform`, `remote_message_id`, `status` |
+| `message.read` | The recipient opened an outbound message (WhatsApp) | `platform`, `remote_message_id`, `status` |
+| `message.failed` | An outbound message failed to deliver (WhatsApp) | `platform`, `remote_message_id`, `status`, `error` `{code, title, message}` |
 
 ### Reviews
 

@@ -1,0 +1,74 @@
+---
+title: "WhatsApp"
+icon: "whatsapp"
+iconType: "brands"
+description: "Send and receive WhatsApp Business messages through the SmartlyQ API."
+---
+
+SmartlyQ connects to the **WhatsApp Business Cloud API** (Meta), so you can send session and template messages, receive inbound messages and delivery receipts via webhooks, and manage templates and the business profile.
+
+## Connect a number
+
+WhatsApp is a credential connect (no OAuth redirect). Supply your WhatsApp Business Account id, the phone number id, and a Meta system-user access token:
+
+```bash
+curl -X POST https://api.smartlyq.com/v1/social/connect/whatsapp \
+  -H "Authorization: Bearer sqk_live_xxxxxxxxxxxx" \
+  -H "Content-Type: application/json" \
+  -d '{ "waba_id": "1234567890", "phone_number_id": "9876543210", "access_token": "EAAG..." }'
+```
+
+The token is verified against the number and stored encrypted; the connected number appears in `GET /v1/social/accounts` (platform `whatsapp`). Its `id` is the `account_id` you pass to every WhatsApp call below.
+
+## Send a message
+
+`POST /v1/whatsapp/messages`. There are three message kinds, and **which you can send depends on the 24-hour window**:
+
+- **`text`** and **`media`** are *session* messages - deliverable only within 24 hours of the customer's last message to you.
+- **`template`** (an approved HSM) is the only kind deliverable *outside* that window.
+
+```json Text (session)
+{ "account_id": 42, "to": "+14155551234", "type": "text", "text": "Thanks for reaching out!" }
+```
+
+```json Template (any time)
+{
+  "account_id": 42, "to": "+14155551234", "type": "template",
+  "template": { "name": "order_update", "language": "en_US",
+    "components": [{ "type": "body", "parameters": [{ "type": "text", "text": "#A1234" }] }] }
+}
+```
+
+```json Media (session)
+{ "account_id": 42, "to": "+14155551234", "type": "media",
+  "media": { "kind": "image", "link": "https://cdn.example.com/receipt.png", "caption": "Your receipt" } }
+```
+
+A `502` means WhatsApp rejected it - most commonly sending a session message outside the 24-hour window (send a template instead).
+
+## Receive messages
+
+Inbound messages and delivery receipts arrive on **your webhooks**, not by polling (the Cloud API has no message-history endpoint). Subscribe to:
+
+| Event | Fires when |
+|---|---|
+| `message.received` | A customer sends you a message (lands in your inbox too) |
+| `message.delivered` | Your outbound message reached the recipient |
+| `message.read` | The recipient opened your message |
+| `message.failed` | Your outbound message failed, with the platform error |
+
+See the [Webhooks guide](/guides/webhooks). Inbound messages also populate the in-app Inbox automatically.
+
+## Templates
+
+- `GET /v1/whatsapp/templates?account_id=42` - list templates and their approval status.
+- `POST /v1/whatsapp/templates` - submit a new template (`name`, `category` = `MARKETING`/`UTILITY`/`AUTHENTICATION`, `language`, `components`) for Meta approval.
+
+## Business profile
+
+- `GET /v1/whatsapp/business-profile?account_id=42` - read about/address/email/websites/vertical.
+- `PATCH /v1/whatsapp/business-profile` - update any of those fields.
+
+## Phone numbers
+
+`GET /v1/whatsapp/phone-numbers?account_id=42` lists the numbers on the connection's WhatsApp Business Account with their display number, verified name, and quality rating.

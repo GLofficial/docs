@@ -85,6 +85,7 @@
               "guides/connecting-accounts",
               "guides/idempotency",
               "guides/platform-options",
+              "guides/whatsapp",
               "guides/workspaces",
               "guides/profiles",
               "guides/agency-saas",
@@ -502,6 +503,17 @@
                   "DELETE /urls/{url_id}"
                 ]
               }
+            ]
+          },
+          {
+            "group": "WhatsApp",
+            "pages": [
+              "POST /whatsapp/messages",
+              "GET /whatsapp/templates",
+              "POST /whatsapp/templates",
+              "GET /whatsapp/business-profile",
+              "PATCH /whatsapp/business-profile",
+              "GET /whatsapp/phone-numbers"
             ]
           },
           {
