@@ -26,10 +26,11 @@ Either way, the token is verified against the number and stored encrypted; the c
 
 ## Send a message
 
-`POST /v1/whatsapp/messages`. There are three message kinds, and **which you can send depends on the 24-hour window**:
+`POST /v1/whatsapp/messages`. Eight message kinds, and **which you can send depends on the 24-hour window**:
 
-- **`text`** and **`media`** are *session* messages - deliverable only within 24 hours of the customer's last message to you.
+- **`text`**, **`media`**, **`interactive_buttons`**, **`interactive_list`**, **`location`**, and **`contacts`** are *session* messages - deliverable only within 24 hours of the customer's last message to you.
 - **`template`** (an approved HSM) is the only kind deliverable *outside* that window.
+- **`reaction`** reacts to (or removes a reaction from) a message you already sent or received.
 
 ```json Text (session)
 { "account_id": 42, "to": "+14155551234", "type": "text", "text": "Thanks for reaching out!" }
@@ -49,6 +50,79 @@ Either way, the token is verified against the number and stored encrypted; the c
 ```
 
 A `502` means WhatsApp rejected it - most commonly sending a session message outside the 24-hour window (send a template instead).
+
+For `media.kind: "audio"`, SmartlyQ automatically transcodes the file to WhatsApp's voice-note format (OGG/Opus) when it isn't already one of `ogg`/`oga`/`aac`/`m4a`/`mp3`/`amr` - so a browser-recorded clip still renders as a playable voice note, not a generic file attachment. This happens transparently; no extra parameter needed.
+
+### Interactive buttons and lists
+
+Buttons and lists let the customer respond by tapping instead of typing - their tap arrives as a normal inbound message on your webhook (`message.received`), same as any reply.
+
+```json Interactive buttons (up to 3)
+{
+  "account_id": 42, "to": "+14155551234", "type": "interactive_buttons",
+  "text": "Your order #A1234 is ready. What would you like to do?",
+  "buttons": [
+    { "id": "confirm", "title": "Confirm" },
+    { "id": "reschedule", "title": "Reschedule" },
+    { "id": "cancel", "title": "Cancel" }
+  ]
+}
+```
+
+```json Interactive list (up to 10 rows)
+{
+  "account_id": 42, "to": "+14155551234", "type": "interactive_list",
+  "text": "Pick a time slot for your appointment.", "button_text": "View slots",
+  "sections": [
+    { "title": "Tomorrow", "rows": [
+      { "id": "slot_10", "title": "10:00 AM", "description": "45 min available" },
+      { "id": "slot_14", "title": "2:00 PM", "description": "45 min available" }
+    ] }
+  ]
+}
+```
+
+Button titles are capped at 20 characters, list row titles at 24, and row descriptions at 72 - Meta's own limits, enforced server-side.
+
+### Location and contact cards
+
+```json Location pin
+{
+  "account_id": 42, "to": "+14155551234", "type": "location",
+  "location": { "latitude": 37.7749, "longitude": -122.4194, "name": "Store pickup counter", "address": "123 Market St, San Francisco, CA" }
+}
+```
+
+```json Contact card
+{
+  "account_id": 42, "to": "+14155551234", "type": "contacts",
+  "contacts": [{ "name": { "formatted_name": "Support Team", "first_name": "Support" }, "phones": [{ "phone": "+14155550188", "type": "WORK" }] }]
+}
+```
+
+`contacts` takes WhatsApp's raw contact-card object shape directly (name, phones, emails, etc. - see [Meta's WhatsApp Cloud API reference](https://developers.facebook.com/docs/whatsapp/cloud-api/messages/contacts-messages) for every optional field).
+
+### Reply threading and reactions
+
+Pass `context_message_id` (a prior WhatsApp message id, `wamid...`) on any send to thread it as a reply - it renders as a quoted message in the customer's app. You get `wamid` values back from every send response's `message_id`, and on every inbound message via the `message.received` webhook.
+
+```json Threaded reply
+{
+  "account_id": 42, "to": "+14155551234", "type": "text",
+  "text": "Yes, that ships tomorrow.",
+  "context_message_id": "wamid.HBgLMTU1NTU1NTU1NTUVAgARGBI5QTM2RUQ4RkQ2QjM4RjQ4QjQA"
+}
+```
+
+```json React to a message
+{
+  "account_id": 42, "to": "+14155551234", "type": "reaction",
+  "context_message_id": "wamid.HBgLMTU1NTU1NTU1NTUVAgARGBI5QTM2RUQ4RkQ2QjM4RjQ4QjQA",
+  "emoji": "👍"
+}
+```
+
+Send `emoji: ""` to remove a reaction you previously sent. A customer's reaction to your message arrives via the `reaction.received` webhook, not `message.received`.
 
 ## Receive messages
 

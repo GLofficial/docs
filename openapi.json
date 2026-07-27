@@ -27677,7 +27677,7 @@
       "post": {
         "summary": "Send a WhatsApp message",
         "operationId": "sendWhatsAppMessage",
-        "description": "Send a message from a connected WhatsApp number. `text` and `media` are SESSION messages - deliverable only inside the 24-hour customer window (i.e. after the user messaged you). Outside it, only `template` (an approved HSM) is deliverable. Requires social:write.",
+        "description": "Send a message from a connected WhatsApp number. `text`, `media`, `interactive_buttons`, `interactive_list`, `location`, and `contacts` are SESSION messages - deliverable only inside the 24-hour customer window (i.e. after the user messaged you). Outside it, only `template` (an approved HSM) is deliverable. `context_message_id` (any type except `contacts`) threads the message as a reply under a prior WhatsApp message id, rendering as a quoted reply in the customer's app. Requires social:write.",
         "tags": [
           "WhatsApp"
         ],
@@ -27705,13 +27705,22 @@
                     "enum": [
                       "text",
                       "media",
-                      "template"
+                      "template",
+                      "interactive_buttons",
+                      "interactive_list",
+                      "location",
+                      "contacts",
+                      "reaction"
                     ],
                     "default": "text"
                   },
+                  "context_message_id": {
+                    "type": "string",
+                    "description": "A prior WhatsApp message id (wamid) to thread this message as a reply under, or (for type=reaction) the message being reacted to. Renders as a quoted reply in the customer's app."
+                  },
                   "text": {
                     "type": "string",
-                    "description": "Body for type=text."
+                    "description": "Body for type=text, or the prompt text for type=interactive_buttons/interactive_list."
                   },
                   "media": {
                     "type": "object",
@@ -27752,14 +27761,220 @@
                         }
                       }
                     }
+                  },
+                  "buttons": {
+                    "type": "array",
+                    "description": "For type=interactive_buttons. Up to 3 reply buttons; the customer's tap arrives as an inbound message you already receive on your webhook.",
+                    "maxItems": 3,
+                    "items": {
+                      "type": "object",
+                      "required": [
+                        "id",
+                        "title"
+                      ],
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "description": "Opaque id returned in the customer's tap event."
+                        },
+                        "title": {
+                          "type": "string",
+                          "description": "Button label, max 20 characters."
+                        }
+                      }
+                    }
+                  },
+                  "button_text": {
+                    "type": "string",
+                    "description": "For type=interactive_list. Label on the button that opens the list, max 20 characters."
+                  },
+                  "sections": {
+                    "type": "array",
+                    "description": "For type=interactive_list. Up to 10 rows total across all sections.",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "title": {
+                          "type": "string",
+                          "description": "Optional section heading, max 24 characters."
+                        },
+                        "rows": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "required": [
+                              "id",
+                              "title"
+                            ],
+                            "properties": {
+                              "id": {
+                                "type": "string"
+                              },
+                              "title": {
+                                "type": "string",
+                                "description": "Max 24 characters."
+                              },
+                              "description": {
+                                "type": "string",
+                                "description": "Max 72 characters."
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "location": {
+                    "type": "object",
+                    "description": "For type=location.",
+                    "required": [
+                      "latitude",
+                      "longitude"
+                    ],
+                    "properties": {
+                      "latitude": {
+                        "type": "number"
+                      },
+                      "longitude": {
+                        "type": "number"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "address": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "contacts": {
+                    "type": "array",
+                    "description": "For type=contacts. WhatsApp's raw contact-card array - see Meta's WhatsApp Cloud API `contacts` message reference for the full object shape (name, phones, emails, etc.).",
+                    "items": {
+                      "type": "object"
+                    }
+                  },
+                  "emoji": {
+                    "type": "string",
+                    "description": "For type=reaction. The emoji to react with, or an empty string to remove a previously-sent reaction. Requires context_message_id."
                   }
                 }
               },
-              "example": {
-                "account_id": 42,
-                "to": "+14155551234",
-                "type": "text",
-                "text": "Thanks for reaching out!"
+              "examples": {
+                "text": {
+                  "summary": "Text (session)",
+                  "value": {
+                    "account_id": 42,
+                    "to": "+14155551234",
+                    "type": "text",
+                    "text": "Thanks for reaching out!"
+                  }
+                },
+                "threaded_reply": {
+                  "summary": "Text, threaded as a reply",
+                  "value": {
+                    "account_id": 42,
+                    "to": "+14155551234",
+                    "type": "text",
+                    "text": "Yes, that ships tomorrow.",
+                    "context_message_id": "wamid.HBgLMTU1NTU1NTU1NTUVAgARGBI5QTM2RUQ4RkQ2QjM4RjQ4QjQA"
+                  }
+                },
+                "interactive_buttons": {
+                  "summary": "Interactive buttons",
+                  "value": {
+                    "account_id": 42,
+                    "to": "+14155551234",
+                    "type": "interactive_buttons",
+                    "text": "Your order #A1234 is ready. What would you like to do?",
+                    "buttons": [
+                      {
+                        "id": "confirm",
+                        "title": "Confirm"
+                      },
+                      {
+                        "id": "reschedule",
+                        "title": "Reschedule"
+                      },
+                      {
+                        "id": "cancel",
+                        "title": "Cancel"
+                      }
+                    ]
+                  }
+                },
+                "interactive_list": {
+                  "summary": "Interactive list",
+                  "value": {
+                    "account_id": 42,
+                    "to": "+14155551234",
+                    "type": "interactive_list",
+                    "text": "Pick a time slot for your appointment.",
+                    "button_text": "View slots",
+                    "sections": [
+                      {
+                        "title": "Tomorrow",
+                        "rows": [
+                          {
+                            "id": "slot_10",
+                            "title": "10:00 AM",
+                            "description": "45 min available"
+                          },
+                          {
+                            "id": "slot_14",
+                            "title": "2:00 PM",
+                            "description": "45 min available"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                },
+                "location": {
+                  "summary": "Location pin",
+                  "value": {
+                    "account_id": 42,
+                    "to": "+14155551234",
+                    "type": "location",
+                    "location": {
+                      "latitude": 37.7749,
+                      "longitude": -122.4194,
+                      "name": "Store pickup counter",
+                      "address": "123 Market St, San Francisco, CA"
+                    }
+                  }
+                },
+                "contacts": {
+                  "summary": "Contact card",
+                  "value": {
+                    "account_id": 42,
+                    "to": "+14155551234",
+                    "type": "contacts",
+                    "contacts": [
+                      {
+                        "name": {
+                          "formatted_name": "Support Team",
+                          "first_name": "Support"
+                        },
+                        "phones": [
+                          {
+                            "phone": "+14155550188",
+                            "type": "WORK"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                },
+                "reaction": {
+                  "summary": "React to a message",
+                  "value": {
+                    "account_id": 42,
+                    "to": "+14155551234",
+                    "type": "reaction",
+                    "context_message_id": "wamid.HBgLMTU1NTU1NTU1NTUVAgARGBI5QTM2RUQ4RkQ2QjM4RjQ4QjQA",
+                    "emoji": "👍"
+                  }
+                }
               }
             }
           }

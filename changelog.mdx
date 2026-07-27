@@ -16,7 +16,24 @@ SmartlyQ now connects to the **WhatsApp Business Cloud API**:
 - **Receive** - inbound messages and delivery receipts arrive on your webhooks and populate the in-app Inbox. New events: `message.delivered`, `message.read`, `message.failed` (joining `message.received`).
 - **Manage** - list/create message templates (`/whatsapp/templates`), read/update the business profile (`/whatsapp/business-profile`), and list phone numbers (`/whatsapp/phone-numbers`).
 
-See the new [WhatsApp guide](/guides/whatsapp). Flows, calling, groups and interactive buttons are planned for a later phase.
+See the new [WhatsApp guide](/guides/whatsapp). Flows, calling, and groups are planned for a later phase.
+</Update>
+
+<Update label="July 27, 2026" tags={["WhatsApp", "New"]}>
+## WhatsApp: interactive buttons, reply threading, reactions, location, contacts
+
+`POST /whatsapp/messages` now sends five more message types, and every send can thread as a reply:
+
+- **`interactive_buttons`** - up to 3 tappable reply buttons; the customer's tap arrives as a normal inbound message.
+- **`interactive_list`** - a tappable list picker, up to 10 rows across sections.
+- **`location`** - share a pin (latitude/longitude, optional name/address).
+- **`contacts`** - share one or more contact cards.
+- **`reaction`** - react to (or remove a reaction from) any message. Inbound reactions from the customer now arrive on the `reaction.received` webhook instead of being dropped.
+- **`context_message_id`** - pass on any send type to thread it as a quoted reply under a prior WhatsApp message id.
+
+Voice notes sent via `type: "media"` with `media.kind: "audio"` are now automatically transcoded to WhatsApp's OGG/Opus voice-note format when needed, so a browser-recorded clip renders as a playable voice note instead of a generic attachment.
+
+See the updated [WhatsApp guide](/guides/whatsapp#interactive-buttons-and-lists).
 </Update>
 
 <Update label="July 27, 2026" tags={["Social", "New"]}>
