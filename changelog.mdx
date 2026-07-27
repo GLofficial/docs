@@ -6,6 +6,12 @@ icon: "clock-rotate-left"
 
 Product updates for the SmartlyQ Developer API, MCP server, and Developer Portal. All endpoints live at `https://api.smartlyq.com/v1`.
 
+<Update label="July 27, 2026" tags={["Social", "New"]}>
+## X reply threads with media
+
+`first_comments` on X now post as a **chained reply thread** (the first replies to the post, each next one to the previous), and any entry can attach media: pass `{ "text": "...", "media_urls": ["https://..."] }` instead of a plain string to put up to 4 images on that reply. Same in the app composer - first comments on X now offer an image attachment. See [Platform options](/guides/platform-options#x-twitter).
+</Update>
+
 <Update label="July 27, 2026" tags={["Social", "Fixed"]}>
 ## X (Twitter) comment threads, and more
 

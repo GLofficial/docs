@@ -70,7 +70,16 @@ Posting a link instead of a self post is automatic when the post carries media s
 `title` (video/document posts), `first_comments`, `_thumbnail.url`. Document (PDF) posts publish via the document pipeline automatically.
 
 ### X (Twitter)
-`content` override and `media_urls` per platform; `first_comments` publish as replies to the new post.
+`content` override and `media_urls` per platform. `first_comments` publish as a **reply thread**: the first replies to the post, each subsequent one replies to the previous (a chained thread). Each comment may be a plain string, or an object `{ "text": "...", "media_urls": ["https://..."] }` to attach up to 4 media items to that reply (X allows media on replies). Example:
+
+```json
+"twitter": {
+  "first_comments": [
+    "More in the thread 👇",
+    { "text": "Here's the demo", "media_urls": ["https://cdn.example.com/demo.png"] }
+  ]
+}
+```
 
 ### Threads
 `reply_control` - who can reply; `first_comments`.
@@ -106,4 +115,4 @@ Posting a link instead of a self post is automatic when the post carries media s
 
 ## First comments summary
 
-`first_comments` (array, max 5) is supported on **Facebook, Instagram, X, LinkedIn, Threads, and Reddit**. Other platforms ignore it.
+`first_comments` (array, max 5) is supported on **Facebook, Instagram, X, LinkedIn, Threads, and Reddit**. Other platforms ignore it. On **X** they post as a chained reply thread and each entry may carry media (`{ text, media_urls }`); on **Facebook** an entry may carry a single image. Elsewhere they are text only.
