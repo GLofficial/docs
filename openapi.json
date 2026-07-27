@@ -13807,6 +13807,73 @@
             "$ref": "#/components/responses/ValidationError"
           }
         }
+      },
+      "patch": {
+        "summary": "Update a profile",
+        "operationId": "updateProfile",
+        "description": "Rename a profile and/or change its external_id. Only the fields you send are modified; renaming also renames the profile's backing workspace so the two never drift. Requires `profiles:write`.",
+        "tags": [
+          "Profiles"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ProfileIdParam"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "maxLength": 120,
+                    "description": "New display name (1-120 chars)."
+                  },
+                  "external_id": {
+                    "type": "string",
+                    "maxLength": 128,
+                    "nullable": true,
+                    "description": "Your own identifier for this profile; send null to clear it."
+                  }
+                }
+              },
+              "example": {
+                "name": "Acme Corp (EU)",
+                "external_id": "client-042-eu"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated profile",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Profile"
+                },
+                "example": {
+                  "id": 128,
+                  "workspace_id": 128,
+                  "name": "Acme Corp (EU)",
+                  "external_id": "client-042-eu",
+                  "status": "active",
+                  "paused_for_billing": false,
+                  "created_at": "2026-07-26T09:41:22Z"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
       }
     },
     "/profiles/{id}/accounts": {
@@ -27296,6 +27363,67 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/media/upload-direct": {
+      "post": {
+        "summary": "Upload a file directly",
+        "operationId": "uploadMediaDirect",
+        "description": "Upload a file in one multipart/form-data request - no presign step. The file is stored and recorded in your media library, and the response is the same shape as GET /media/{id}. The file type is detected from the bytes (not the declared Content-Type); max 200MB (upload larger media by URL). Requires `media:write`.",
+        "tags": [
+          "Media"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "file"
+                ],
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "The media file (image/video/audio/pdf)."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Stored media record",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "example": {
+                  "success": true,
+                  "data": {
+                    "id": "a1b2c3d4e5f60718293a4b5c6d7e8f90",
+                    "url": "https://cdn.smartlyq.com/uploads/12/2026/07/launch.mp4",
+                    "filename": "launch.mp4",
+                    "extension": "mp4",
+                    "content_type": "video/mp4",
+                    "type": "video",
+                    "size": 48213004,
+                    "created_at": "2026-07-27T10:00:00Z"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
           }
         }
       }

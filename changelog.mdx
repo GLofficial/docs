@@ -6,6 +6,13 @@ icon: "clock-rotate-left"
 
 Product updates for the SmartlyQ Developer API, MCP server, and Developer Portal. All endpoints live at `https://api.smartlyq.com/v1`.
 
+<Update label="July 27, 2026" tags={["API", "New"]}>
+## Profile update and direct media upload
+
+- **`PATCH /profiles/{id}`** - rename a profile or change its `external_id` without recreating it (renaming keeps the backing workspace name in sync). Fills the last gap in profile management.
+- **`POST /media/upload-direct`** - upload a file in a single `multipart/form-data` request, no presign round-trip. Stored straight to your media library and returned in the same shape as `GET /media/{id}`; the type is detected from the file's actual bytes, up to 200MB.
+</Update>
+
 <Update label="July 27, 2026" tags={["Webhooks", "New"]}>
 ## 10 new webhook events
 

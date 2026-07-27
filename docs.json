@@ -224,6 +224,7 @@
               "POST /profiles",
               "GET /profiles",
               "GET /profiles/{id}",
+              "PATCH /profiles/{id}",
               "GET /profiles/{id}/accounts",
               "POST /profiles/{id}/connect-link",
               "POST /profiles/{id}/connect/{platform}",
@@ -482,6 +483,7 @@
                 "group": "Media",
                 "pages": [
                   "POST /media/upload-url",
+                  "POST /media/upload-direct",
                   "GET /media",
                   "GET /media/{media_id}",
                   "DELETE /media/{media_id}"
