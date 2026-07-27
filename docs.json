@@ -132,7 +132,8 @@
                 "pages": [
                   "GET /me",
                   "GET /me/usage",
-                  "GET /me/balance"
+                  "GET /me/balance",
+                  "GET /me/billing"
                 ]
               },
               {
@@ -170,6 +171,8 @@
                   "PATCH /contacts/{id}",
                   "POST /contacts/{id}/tags",
                   "DELETE /contacts/{id}/tags",
+                  "PUT /contacts/{id}/fields/{slug}",
+                  "DELETE /contacts/{id}/fields/{slug}",
                   "GET /contacts/{id}/channels",
                   "GET /contacts/{id}/notes",
                   "POST /contacts/{id}/notes",
@@ -508,6 +511,7 @@
                 "group": "Comments",
                 "pages": [
                   "GET /social/comments",
+                  "GET /social/comments/{post_id}",
                   "POST /social/comments/{comment_id}/reply",
                   "POST /social/comments/{comment_id}/private-reply",
                   "POST /social/comments/{comment_id}/hide",

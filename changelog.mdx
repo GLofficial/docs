@@ -6,6 +6,15 @@ icon: "clock-rotate-left"
 
 Product updates for the SmartlyQ Developer API, MCP server, and Developer Portal. All endpoints live at `https://api.smartlyq.com/v1`.
 
+<Update label="July 27, 2026" tags={["Social", "Fixed"]}>
+## X (Twitter) comment threads, and more
+
+- **X comment threading fixed** - replies on X posts now nest correctly. Previously the reply tree never linked (we keyed on the replied-to user instead of the parent tweet), so X threads came back flat. Reply nesting now works for every platform except Pinterest (whose comments are inherently flat). This fix applies to the app's comment view as well as the API.
+- **`GET /social/comments/{post_id}`** - fetch one post's comments as a nested thread by id, instead of filtering the full comments list.
+- **`PUT` / `DELETE /contacts/{id}/fields/{slug}`** - set or clear a single contact custom field by its slug, without sending the whole attributes object.
+- **`GET /me/billing`** - a read-only superset of `/me/balance`: balance breakdown, monthly cycle reset, auto-recharge config, and card-on-file status with an at-a-glance `payment.status`.
+</Update>
+
 <Update label="July 27, 2026" tags={["API", "New"]}>
 ## Profile update and direct media upload
 

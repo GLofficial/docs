@@ -27427,6 +27427,244 @@
           }
         }
       }
+    },
+    "/social/comments/{post_id}": {
+      "get": {
+        "summary": "Get one post's comments (threaded)",
+        "operationId": "getPostComments",
+        "description": "Returns a single post's comments as a nested reply tree, with post metadata. A by-id convenience over GET /social/comments (which already threads replies). Reply nesting is populated for every platform except Pinterest (whose comments are flat). Requires social:read.",
+        "tags": [
+          "Comments"
+        ],
+        "parameters": [
+          {
+            "name": "post_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The SmartlyQ post id."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Post with threaded comments",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "example": {
+                  "success": true,
+                  "data": {
+                    "id": 8841,
+                    "post_id": 8841,
+                    "remote_post_id": "178...",
+                    "platform": "twitter",
+                    "content": "Launch day!",
+                    "permalink": "https://x.com/acme/status/178...",
+                    "comment_count": 3,
+                    "comments": [
+                      {
+                        "id": 51,
+                        "author_name": "Jamie",
+                        "content": "Congrats!",
+                        "is_reply": 0,
+                        "replies": [
+                          {
+                            "id": 52,
+                            "author_name": "Acme",
+                            "content": "Thanks!",
+                            "is_reply": 1,
+                            "replies": []
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      }
+    },
+    "/contacts/{id}/fields/{slug}": {
+      "put": {
+        "summary": "Set one custom field",
+        "operationId": "setContactField",
+        "description": "Set a single custom field on a contact by its slug (the field's key). The slug must be a defined custom field in this workspace (create one with POST /custom-fields). Merges into the contact's attributes without touching other fields. Requires contacts:write.",
+        "tags": [
+          "CRM Contacts"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "slug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The custom field's key/slug."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "value"
+                ],
+                "properties": {
+                  "value": {
+                    "description": "The value to store (string, number, boolean or null)."
+                  }
+                }
+              },
+              "example": {
+                "value": "enterprise"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated attributes",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "example": {
+                  "success": true,
+                  "data": {
+                    "attributes": {
+                      "plan_tier": "enterprise"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Clear one custom field",
+        "operationId": "clearContactField",
+        "description": "Remove a single custom field from a contact by slug. Succeeds (200) even if the field was not set. Requires contacts:write.",
+        "tags": [
+          "CRM Contacts"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "slug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The custom field's key/slug."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Remaining attributes",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "example": {
+                  "success": true,
+                  "data": {
+                    "attributes": {}
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/me/billing": {
+      "get": {
+        "summary": "Billing overview",
+        "operationId": "getBilling",
+        "description": "A read-only superset of GET /me/balance: the wallet balance breakdown, the monthly cycle reset, auto-recharge configuration, and whether a card is on file. Use payment.status to know if the next billable call is at risk.",
+        "tags": [
+          "Account"
+        ],
+        "responses": {
+          "200": {
+            "description": "Billing overview",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "example": {
+                  "success": true,
+                  "data": {
+                    "currency": "USD",
+                    "balance": {
+                      "total": "42.5000",
+                      "purchased": "40.0000",
+                      "monthly": "2.5000"
+                    },
+                    "cycle": {
+                      "monthly_reset_at": "2026-08-01T00:00:00Z"
+                    },
+                    "auto_recharge": {
+                      "enabled": true,
+                      "below": "5.0000",
+                      "amount": "25.0000",
+                      "active": true
+                    },
+                    "payment": {
+                      "card_on_file": true,
+                      "status": "ok"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
