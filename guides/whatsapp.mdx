@@ -9,7 +9,11 @@ SmartlyQ connects to the **WhatsApp Business Cloud API** (Meta), so you can send
 
 ## Connect a number
 
-WhatsApp is a credential connect (no OAuth redirect). Supply your WhatsApp Business Account id, the phone number id, and a Meta system-user access token:
+There are two ways to connect a WhatsApp number.
+
+**In the app (recommended).** In **Settings &rarr; WhatsApp**, click **Connect with WhatsApp** and complete Meta's Embedded Signup popup - sign in, pick your WhatsApp Business Account and phone number, and you're done. SmartlyQ exchanges the returned code for a system-user token, subscribes to the number's webhooks, and stores the connection. No tokens to copy.
+
+**Over the API (headless).** For server-to-server onboarding, supply your WhatsApp Business Account id, the phone number id, and a Meta system-user access token:
 
 ```bash
 curl -X POST https://api.smartlyq.com/v1/social/connect/whatsapp \
@@ -18,7 +22,7 @@ curl -X POST https://api.smartlyq.com/v1/social/connect/whatsapp \
   -d '{ "waba_id": "1234567890", "phone_number_id": "9876543210", "access_token": "EAAG..." }'
 ```
 
-The token is verified against the number and stored encrypted; the connected number appears in `GET /v1/social/accounts` (platform `whatsapp`). Its `id` is the `account_id` you pass to every WhatsApp call below.
+Either way, the token is verified against the number and stored encrypted; the connected number appears in `GET /v1/social/accounts` (platform `whatsapp`). Its `id` is the `account_id` you pass to every WhatsApp call below.
 
 ## Send a message
 
