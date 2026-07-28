@@ -6,6 +6,25 @@ icon: "clock-rotate-left"
 
 Product updates for the SmartlyQ Developer API, MCP server, and Developer Portal. All endpoints live at `https://api.smartlyq.com/v1`.
 
+<Update label="July 28, 2026" tags={["WhatsApp", "Billing"]}>
+## WhatsApp is now priced per destination and message type
+
+`POST /whatsapp/messages` no longer bills a single flat rate. The price now depends on the destination country and the message category, mirroring how WhatsApp itself prices: a utility message to the US and a marketing message to Germany are very different amounts, and one flat number could not represent both.
+
+Every send response now carries a `pricing` block showing exactly what was applied:
+
+```json
+"pricing": { "category": "utility", "market": "United States", "calling_code": "1", "rate": "0.003600" }
+```
+
+Two things worth knowing:
+
+- **You are charged only for a message accepted for delivery.** A send rejected by WhatsApp is refunded automatically, and validation failures are never charged at all.
+- **Free-form replies inside the 24-hour customer service window are billed as `service`.** WhatsApp does not charge for these today, so the rate is currently zero. That changes on **1 October 2026**, when WhatsApp begins charging for service messages and for utility templates sent inside the window.
+
+Template sends take their category from the template. If you already know it, pass `category` on the request and we will skip the lookup.
+</Update>
+
 <Update label="July 28, 2026" tags={["New", "Social", "WhatsApp"]}>
 ## Per-platform management: pages, boards, playlists, mentions, flairs
 
