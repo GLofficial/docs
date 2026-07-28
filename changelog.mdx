@@ -6,6 +6,37 @@ icon: "clock-rotate-left"
 
 Product updates for the SmartlyQ Developer API, MCP server, and Developer Portal. All endpoints live at `https://api.smartlyq.com/v1`.
 
+<Update label="July 28, 2026" tags={["New", "Logs", "Analytics"]}>
+## Developer logs, YouTube Analytics, webhook replay
+
+**Read your own logs** - `GET /logs` returns the same feed the Developer Logs screen shows: API calls and webhook delivery attempts in one time-ordered stream, 90-day retention, filterable by source, endpoint, status, platform, key and date range. Request and response bodies are opt-in via `include_payloads=true`. Uses a new `logs:read` scope, so a key that reads posts cannot read every request made with your other keys.
+
+**Replay a webhook delivery** - `POST /webhooks/deliveries/{id}/replay` re-sends a past delivery with its original payload, freshly signed, and resets retry backoff. This is the fix-up after a receiver was down; find delivery ids with `GET /webhooks/logs`.
+
+**YouTube Analytics** - four reports from the data behind YouTube Studio:
+
+- `GET /analytics/youtube/channel-insights` - views, watch time, average view duration and percentage, subscribers gained/lost, engagement.
+- `GET /analytics/youtube/daily-views` - the same headline metrics broken down by day.
+- `GET /analytics/youtube/video-retention` - the retention curve for one video, plus how it compares with similar videos.
+- `GET /analytics/youtube/demographics` - viewer split by age bracket and gender.
+
+These need a YouTube permission we did not previously request. **Channels connected before today must be reconnected**: until then these endpoints return `403 CONNECTION_SCOPE_MISSING` with `reconnect_required: true`, rather than a vague failure.
+
+**Message reactions** - `POST` and `DELETE /social/conversations/{conversation_id}/messages/{message_id}/reactions` react as the connected account on Messenger, Instagram, Bluesky and WhatsApp.
+
+**Connect Bluesky without a browser** - `POST /social/connect/bluesky` now accepts `identifier` + `app_password` (an app password from Bluesky settings, never your account password) and connects the account immediately instead of returning a `connect_url`.
+
+**Update a short link** - `PATCH /urls/{id}` repoints an existing short URL at a new destination, renames it, or deactivates it. The short code never changes, so links already in the wild keep working and keep their click history.
+
+**More WhatsApp management** - per-template `GET`, `PATCH` and `DELETE /whatsapp/templates/{name}`, plus `POST /whatsapp/business-profile/photo` and `GET`/`POST /whatsapp/business-profile/display-name`.
+</Update>
+
+<Update label="July 28, 2026" tags={["WhatsApp", "Billing"]}>
+## WhatsApp sends are now billed
+
+`POST /whatsapp/messages` now charges your API wallet per message, and the response carries the usual `usage` block with units, cost and remaining balance. Phase 1 shipped unbilled while pricing was settled; your plan's monthly WhatsApp send limit still applies on top.
+</Update>
+
 <Update label="July 27, 2026" tags={["WhatsApp", "New"]}>
 ## WhatsApp Business messaging (Phase 1)
 

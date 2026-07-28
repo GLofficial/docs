@@ -153,7 +153,14 @@
                   "PUT /webhooks/{id}",
                   "POST /webhooks/{id}/test",
                   "GET /webhooks/logs",
-                  "DELETE /webhooks/{id}"
+                  "DELETE /webhooks/{id}",
+                  "POST /webhooks/deliveries/{id}/replay"
+                ]
+              },
+              {
+                "group": "Logs",
+                "pages": [
+                  "GET /logs"
                 ]
               }
             ]
@@ -459,7 +466,11 @@
                   "GET /analytics/inbox/top-accounts",
                   "GET /analytics/inbox/conversations",
                   "GET /analytics/inbox/conversations/{conversation_id}",
-                  "GET /analytics/accounts/{account_id}"
+                  "GET /analytics/accounts/{account_id}",
+                  "GET /analytics/youtube/channel-insights",
+                  "GET /analytics/youtube/daily-views",
+                  "GET /analytics/youtube/video-retention",
+                  "GET /analytics/youtube/demographics"
                 ]
               },
               {
@@ -500,7 +511,8 @@
                   "GET /urls",
                   "GET /urls/{url_id}",
                   "GET /urls/{url_id}/stats",
-                  "DELETE /urls/{url_id}"
+                  "DELETE /urls/{url_id}",
+                  "PATCH /urls/{id}"
                 ]
               }
             ]
@@ -513,7 +525,13 @@
               "POST /whatsapp/templates",
               "GET /whatsapp/business-profile",
               "PATCH /whatsapp/business-profile",
-              "GET /whatsapp/phone-numbers"
+              "GET /whatsapp/phone-numbers",
+              "GET /whatsapp/templates/{name}",
+              "PATCH /whatsapp/templates/{name}",
+              "DELETE /whatsapp/templates/{name}",
+              "POST /whatsapp/business-profile/photo",
+              "GET /whatsapp/business-profile/display-name",
+              "POST /whatsapp/business-profile/display-name"
             ]
           },
           {
@@ -540,7 +558,9 @@
                   "GET /social/conversations/{conversation_id}/messages",
                   "POST /social/conversations/{conversation_id}/messages",
                   "POST /social/conversations/{conversation_id}/read",
-                  "POST /social/conversations/{conversation_id}/typing"
+                  "POST /social/conversations/{conversation_id}/typing",
+                  "POST /social/conversations/{conversation_id}/messages/{message_id}/reactions",
+                  "DELETE /social/conversations/{conversation_id}/messages/{message_id}/reactions"
                 ]
               }
             ]
