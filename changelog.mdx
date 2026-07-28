@@ -6,6 +6,21 @@ icon: "clock-rotate-left"
 
 Product updates for the SmartlyQ Developer API, MCP server, and Developer Portal. All endpoints live at `https://api.smartlyq.com/v1`.
 
+<Update label="July 28, 2026" tags={["New", "Social", "WhatsApp"]}>
+## Per-platform management: pages, boards, playlists, mentions, flairs
+
+The write-side counterparts to the platform lookups. Each one reports a missing permission as `403 CONNECTION_SCOPE_MISSING` with `reconnect_required: true`, so "this account was connected before we asked for that permission" is never a vague failure.
+
+- **Facebook page** - `GET` and `PATCH /social/accounts/{account_id}/facebook/page`. Read the page's about, description, category, contact details, address, hours and follower counts; edit the ones you want, sending only what changes.
+- **Pinterest** - `POST /social/accounts/{account_id}/pinterest/boards` creates a board to pin into.
+- **YouTube** - `PATCH /social/accounts/{account_id}/youtube/playlists/{playlist_id}` renames a playlist, edits its description, or changes its visibility. YouTube's own update replaces every field you submit, so we read the playlist first and merge rather than blanking what you left out.
+- **Mentions** - `GET /social/accounts/{account_id}/mentions` lists posts where a Facebook page or Instagram account was tagged, and `POST .../mentions/{mention_id}/reply` answers one. X keeps its own richer endpoint.
+- **Reddit flairs** - `GET /social/accounts/{account_id}/reddit/subreddits/{subreddit}/flairs`. Many subreddits reject a submission with no flair; read the flairs, then pass the id as `platform_options.reddit.flair_id` when you post.
+- **WhatsApp template library** - `GET /whatsapp/template-library` browses Meta's prewritten, pre-approved templates, and `POST /whatsapp/templates/from-library` adopts one under your own name. This skips the draft-and-wait-for-review cycle.
+
+New Facebook connections now also request the page-metadata permission, which is what page editing needs. Pages connected before today keep working for everything else and can be reconnected when you want to edit them.
+</Update>
+
 <Update label="July 28, 2026" tags={["New", "Logs", "Analytics"]}>
 ## Developer logs, YouTube Analytics, webhook replay
 

@@ -386,7 +386,14 @@
                   "POST /social/account-groups",
                   "GET /social/account-groups/{group_id}",
                   "PUT /social/account-groups/{group_id}",
-                  "DELETE /social/account-groups/{group_id}"
+                  "DELETE /social/account-groups/{group_id}",
+                  "GET /social/accounts/{account_id}/facebook/page",
+                  "PATCH /social/accounts/{account_id}/facebook/page",
+                  "POST /social/accounts/{account_id}/pinterest/boards",
+                  "PATCH /social/accounts/{account_id}/youtube/playlists/{playlist_id}",
+                  "GET /social/accounts/{account_id}/mentions",
+                  "POST /social/accounts/{account_id}/mentions/{mention_id}/reply",
+                  "GET /social/accounts/{account_id}/reddit/subreddits/{subreddit}/flairs"
                 ]
               },
               {
@@ -531,7 +538,9 @@
               "DELETE /whatsapp/templates/{name}",
               "POST /whatsapp/business-profile/photo",
               "GET /whatsapp/business-profile/display-name",
-              "POST /whatsapp/business-profile/display-name"
+              "POST /whatsapp/business-profile/display-name",
+              "GET /whatsapp/template-library",
+              "POST /whatsapp/templates/from-library"
             ]
           },
           {
