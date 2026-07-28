@@ -20,7 +20,7 @@ Every send response now carries a `pricing` block showing exactly what was appli
 Two things worth knowing:
 
 - **You are charged only for a message accepted for delivery.** A send rejected by WhatsApp is refunded automatically, and validation failures are never charged at all.
-- **Free-form replies inside the 24-hour customer service window are billed as `service`.** WhatsApp does not charge for these today, so the rate is currently zero. That changes on **1 October 2026**, when WhatsApp begins charging for service messages and for utility templates sent inside the window.
+- **Free-form replies are billed as `service`**, priced at the destination market's utility rate, so a service reply to the US and one to Germany cost different amounts just like templates do.
 
 Template sends take their category from the template. If you already know it, pass `category` on the request and we will skip the lookup.
 </Update>
