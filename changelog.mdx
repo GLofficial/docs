@@ -6,6 +6,15 @@ icon: "clock-rotate-left"
 
 Product updates for the SmartlyQ Developer API, MCP server, and Developer Portal. All endpoints live at `https://api.smartlyq.com/v1`.
 
+<Update label="August 4, 2026" tags={["WhatsApp", "New"]}>
+## WhatsApp Flows and Block Users
+
+- **Flows** - build native in-chat forms (booking, surveys, lead capture) without leaving WhatsApp. `POST /whatsapp/flows` creates a DRAFT flow, `PUT .../flows/{flow_id}/json` uploads its screens, `POST .../flows/{flow_id}/publish` makes it sendable, and `POST /whatsapp/messages` with `type: "flow"` sends the opening CTA. Full CRUD plus a preview URL (`GET .../flows/{flow_id}/preview`) and deprecate.
+- **Block users** - `GET` / `POST` / `DELETE /whatsapp/block-users` blocks or unblocks WhatsApp users on a connected number, and lists who's currently blocked (up to 64,000, cursor-paginated). Meta only allows blocking someone who messaged your business in the last 24 hours; other targets come back in a `failed` array without failing the rest of the batch.
+
+Both run on the same `whatsapp_business_management` / `whatsapp_business_messaging` permissions every other WhatsApp endpoint already uses - no new connection or reconnect required.
+</Update>
+
 <Update label="August 4, 2026" tags={["API", "New"]}>
 ## Comment moderation, message delete, and automation version history
 

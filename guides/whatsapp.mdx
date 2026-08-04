@@ -151,6 +151,47 @@ See the [Webhooks guide](/guides/webhooks). Inbound messages also populate the i
 
 `GET /v1/whatsapp/phone-numbers?account_id=42` lists the numbers on the connection's WhatsApp Business Account with their display number, verified name, and quality rating.
 
+## Flows
+
+Flows are native in-chat forms - booking, surveys, lead capture - that open inside WhatsApp instead of linking out. A flow goes DRAFT → screens uploaded → PUBLISHED → sendable.
+
+```json Create a draft flow
+POST /v1/whatsapp/flows
+{ "account_id": 42, "name": "Book an appointment", "categories": ["APPOINTMENT_BOOKING"] }
+```
+
+```json Upload its screens
+PUT /v1/whatsapp/flows/{flow_id}/json
+{ "account_id": 42, "flow_json": { "version": "6.0", "screens": [ /* ... */ ] } }
+```
+
+Check the response's `validation_errors` - a successful upload doesn't guarantee the flow is publishable. Preview a draft with `GET /v1/whatsapp/flows/{flow_id}/preview` (embeddable iframe URL) before publishing. Once `POST /v1/whatsapp/flows/{flow_id}/publish` succeeds, send it:
+
+```json Send the flow
+POST /v1/whatsapp/messages
+{
+  "account_id": 42, "to": "+14155551234", "type": "flow",
+  "text": "Book your appointment in a few taps.",
+  "flow": {
+    "id": "1234567890123456",
+    "cta": "Book now",
+    "action": "navigate",
+    "action_payload": { "screen": "APPOINTMENT", "data": {} }
+  }
+}
+```
+
+Published flows are immutable - to change one, create a new flow and update your senders to reference the new id. See the full endpoint list on the [API reference](/api-reference).
+
+## Block users
+
+`GET` / `POST` / `DELETE /v1/whatsapp/block-users` blocks or unblocks WhatsApp users on a connected number and lists who's currently blocked. Meta only allows blocking someone who has messaged your business within the last 24 hours; other targets come back in the response's `failed` array without failing the rest of the batch.
+
+```json Block a user
+POST /v1/whatsapp/block-users
+{ "account_id": 42, "users": ["+14155551234"] }
+```
+
 ## Limits & restrictions
 
 WhatsApp messaging is governed by both Meta's platform rules and your SmartlyQ plan. Knowing these avoids surprises:
