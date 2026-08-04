@@ -6,6 +6,18 @@ icon: "clock-rotate-left"
 
 Product updates for the SmartlyQ Developer API, MCP server, and Developer Portal. All endpoints live at `https://api.smartlyq.com/v1`.
 
+<Update label="August 4, 2026" tags={["API", "New"]}>
+## Comment moderation, message delete, and automation version history
+
+- **Comment moderation** - `POST /social/comments/{id}/moderate` approves or rejects a comment (with an optional author ban). YouTube only - uses the same underlying endpoint `POST .../hide` already used, just the full status set.
+- **Comment likes** - `POST` / `DELETE /social/comments/{id}/like`. Facebook only - Instagram's Graph API has no comment-like edge.
+- **Delete a sent message** - `DELETE /social/conversations/{conversation_id}/messages/{message_id}`. X and Bluesky only (Messenger, Instagram, and WhatsApp have no unsend API for a business-sent message). On Bluesky this removes the message from your side of the conversation only - their chat API has no unsend-for-everyone, and the response says so explicitly via a `note` field.
+- **Automation duplicate** - `POST /automations/{id}/duplicate`. Copies the graph into a new automation, always starting as `draft`.
+- **Automation version history** - `GET /automations/{id}/versions` (list), `GET .../versions/{version}` (one, with its graph), `POST .../versions/{version}/restore`. A snapshot is taken automatically before every graph edit, so you can always see - and undo - past changes. Restoring is itself just another edit, so it's never destructive.
+
+Each of these follows the same rule as reactions before them: if a platform can't do it, the API says so honestly rather than pretending to succeed. Comment edit (Reddit) and message edit/delete (Telegram) were investigated and are not included in this release - Reddit's granted OAuth scope has no edit permission, and Telegram's inbox integration doesn't exist yet (publish-only today).
+</Update>
+
 <Update label="July 28, 2026" tags={["WhatsApp", "Billing"]}>
 ## WhatsApp is now priced per destination and message type
 
