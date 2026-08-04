@@ -192,6 +192,45 @@ POST /v1/whatsapp/block-users
 { "account_id": 42, "users": ["+14155551234"] }
 ```
 
+## Sandbox (shared test number)
+
+Every developer can test against one SmartlyQ-owned WhatsApp number without connecting their own. Activate a phone, reply to prove you own it, then send the locked sandbox template as many times as you like (up to the daily cap) to see it actually land.
+
+```json Start an activation
+POST /v1/whatsapp/sandbox/sessions
+{ "phone": "+14155551234" }
+```
+
+Reply to the WhatsApp message that arrives at that phone (any text works) - the reply itself activates the session. Then:
+
+```json Fire the template again once active
+POST /v1/whatsapp/sandbox/sessions/{session_id}/send
+```
+
+One phone per user at a time; revoke (`DELETE /v1/whatsapp/sandbox/sessions/{session_id}`) before activating a different one. Limits: 50 sends/24h, pending sessions expire after 24h, active sessions after 7 days. `503 SANDBOX_UNAVAILABLE` means the platform hasn't configured a sandbox number yet - it's opt-in infrastructure, not guaranteed to exist on every deployment.
+
+## Bring your own number (Twilio bridge)
+
+If you've bought a phone number through SmartlyQ (`POST /v1/phone-numbers/purchase`), you can bridge it onto WhatsApp instead of connecting a separate number. This adds the number to your **existing** WhatsApp Business Account connection - connect one number first via Settings > WhatsApp, then bridge any additional purchased numbers onto that same account.
+
+```json 1. Start the bridge
+POST /v1/whatsapp/numbers/{sender_id}/bridge
+```
+
+```json 2. Request a verification code
+POST /v1/whatsapp/numbers/{sender_id}/bridge/request-code
+{ "method": "sms" }
+```
+
+Meta sends the code to the number itself (SMS or a voice call) - check that number's inbound message log in SmartlyQ to read it, the same way you'd check any other number you own.
+
+```json 3. Submit the code
+POST /v1/whatsapp/numbers/{sender_id}/bridge/verify
+{ "code": "123456" }
+```
+
+On success the number is registered with WhatsApp and connected in SmartlyQ - from then on it behaves exactly like any other connected WhatsApp number, including in `POST /whatsapp/messages`. Requires the number to have SMS or voice capability so Meta can actually deliver the code.
+
 ## Limits & restrictions
 
 WhatsApp messaging is governed by both Meta's platform rules and your SmartlyQ plan. Knowing these avoids surprises:

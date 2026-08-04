@@ -7,6 +7,15 @@ icon: "clock-rotate-left"
 Product updates for the SmartlyQ Developer API, MCP server, and Developer Portal. All endpoints live at `https://api.smartlyq.com/v1`.
 
 <Update label="August 4, 2026" tags={["WhatsApp", "New"]}>
+## WhatsApp sandbox and bring-your-own-number bridge
+
+- **Sandbox** - test WhatsApp end-to-end without connecting your own number. `POST /whatsapp/sandbox/sessions` activates a phone against a shared SmartlyQ-owned number (they reply to prove ownership), then `POST .../sessions/{session_id}/send` re-fires the locked sandbox template to actually see a message land. 50 sends/24h, one phone per user at a time.
+- **Number bridge** - already bought a phone number through SmartlyQ? `POST /whatsapp/numbers/{sender_id}/bridge` adds it to your existing WhatsApp Business Account connection, following Meta's real add → request-code → verify → register sequence. Once linked it's a normal connected WhatsApp number, usable anywhere `account_id` is accepted.
+
+Sandbox availability depends on the platform having configured a shared number (`503 SANDBOX_UNAVAILABLE` if not) - it's opt-in infrastructure, not guaranteed on every deployment.
+</Update>
+
+<Update label="August 4, 2026" tags={["WhatsApp", "New"]}>
 ## WhatsApp Flows and Block Users
 
 - **Flows** - build native in-chat forms (booking, surveys, lead capture) without leaving WhatsApp. `POST /whatsapp/flows` creates a DRAFT flow, `PUT .../flows/{flow_id}/json` uploads its screens, `POST .../flows/{flow_id}/publish` makes it sendable, and `POST /whatsapp/messages` with `type: "flow"` sends the opening CTA. Full CRUD plus a preview URL (`GET .../flows/{flow_id}/preview`) and deprecate.
