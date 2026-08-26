@@ -525,6 +525,88 @@
             ]
           },
           {
+            "group": "Ads",
+            "pages": [
+              {
+                "group": "Campaigns",
+                "pages": [
+                  "GET /ads/campaigns",
+                  "POST /ads/campaigns",
+                  "GET /ads/campaigns/{id}",
+                  "PATCH /ads/campaigns/{id}",
+                  "DELETE /ads/campaigns/{id}",
+                  "POST /ads/campaigns/{id}/pause",
+                  "POST /ads/campaigns/{id}/resume",
+                  "POST /ads/campaigns/{id}/duplicate",
+                  "POST /ads/campaigns/{id}/archive",
+                  "POST /ads/campaigns/bulk-status"
+                ]
+              },
+              {
+                "group": "Ad Sets",
+                "pages": [
+                  "GET /ads/ad-sets",
+                  "GET /ads/ad-sets/{id}",
+                  "DELETE /ads/ad-sets/{id}",
+                  "POST /ads/ad-sets/{id}/pause",
+                  "POST /ads/ad-sets/{id}/resume",
+                  "POST /ads/ad-sets/{id}/duplicate",
+                  "POST /ads/ad-sets/{id}/archive"
+                ]
+              },
+              {
+                "group": "Ads",
+                "pages": [
+                  "GET /ads/ads",
+                  "GET /ads/ads/{id}",
+                  "DELETE /ads/ads/{id}",
+                  "POST /ads/ads/{id}/pause",
+                  "POST /ads/ads/{id}/resume",
+                  "POST /ads/ads/{id}/duplicate",
+                  "POST /ads/ads/{id}/archive"
+                ]
+              },
+              {
+                "group": "Audiences & Pixels",
+                "pages": [
+                  "GET /ads/audiences",
+                  "GET /ads/pixels"
+                ]
+              },
+              {
+                "group": "Lead Forms",
+                "pages": [
+                  "GET /ads/lead-forms",
+                  "POST /ads/lead-forms"
+                ]
+              },
+              {
+                "group": "Creatives",
+                "pages": [
+                  "GET /ads/creatives",
+                  "POST /ads/creatives",
+                  "PATCH /ads/creatives/{id}",
+                  "DELETE /ads/creatives/{id}"
+                ]
+              },
+              {
+                "group": "Accounts & Diagnostics",
+                "pages": [
+                  "GET /ads/accounts",
+                  "GET /ads/accounts/diagnostics",
+                  "GET /ads/audit-log"
+                ]
+              },
+              {
+                "group": "Estimate & Sync",
+                "pages": [
+                  "POST /ads/estimate",
+                  "POST /ads/sync"
+                ]
+              }
+            ]
+          },
+          {
             "group": "WhatsApp",
             "pages": [
               "POST /whatsapp/messages",

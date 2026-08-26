@@ -6,6 +6,21 @@ icon: "clock-rotate-left"
 
 Product updates for the SmartlyQ Developer API, MCP server, and Developer Portal. All endpoints live at `https://api.smartlyq.com/v1`.
 
+<Update label="August 26, 2026" tags={["Ads", "New"]}>
+## Ads API - campaigns, ad sets, ads, audiences, pixels, lead forms, and creatives
+
+The first ads/campaign endpoints on the public API, spanning Meta, Google, TikTok, and LinkedIn Ads. New `ads:read` / `ads:write` scopes.
+
+- **Campaigns, ad sets, ads** - full CRUD plus `pause`, `resume`, `duplicate`, and `archive` on each, and `POST /ads/campaigns/bulk-status` for pausing or resuming up to 100 campaigns in one call (per-item results, never all-or-nothing).
+- **Creating a campaign** - `POST /ads/campaigns` with `platform: meta` and a `page_id` launches a real campaign on Meta. Every other platform, or Meta without a `page_id`, creates a local draft - only Meta has live launch wiring today.
+- **Audiences, pixels, lead forms** - `GET /ads/audiences` and `GET /ads/pixels` are read-only mirrors of what's already on the platform. `POST /ads/lead-forms` creates a real Meta Instant Form (standard question fields, requires a privacy policy URL).
+- **Creatives** - a standalone asset library independent of any specific ad. `POST /ads/creatives` takes an already-hosted `file_url` - upload bytes through `POST /media/upload-direct` first, this endpoint doesn't handle raw uploads.
+- **Accounts & diagnostics** - `GET /ads/accounts` lists connected ad accounts; `GET /ads/accounts/diagnostics` adds live per-account API rate-limit usage and last-sync health. `GET /ads/audit-log` supports `campaign_id` to scope the log to one campaign and everything under it.
+- **Estimate** - `POST /ads/estimate` returns a real Meta audience-size range for a targeting spec before you launch. Every other platform returns `available: false` rather than an error, so you can branch on it cleanly - Google's forecasting tools need a keyword seed this endpoint doesn't collect, TikTok has no published estimate API for standard campaigns, and LinkedIn's geo-targeting IDs have no stable public mapping to resolve against yet.
+
+Every write goes through the same guardrails the in-app Ad Manager uses - anti-ban edit cooldowns on budget/name changes, per-platform rate limiting, and full audit logging.
+</Update>
+
 <Update label="August 5, 2026" tags={["Media", "Fix"]}>
 ## Media presign now works, plus a confirm step
 
