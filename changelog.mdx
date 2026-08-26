@@ -6,6 +6,16 @@ icon: "clock-rotate-left"
 
 Product updates for the SmartlyQ Developer API, MCP server, and Developer Portal. All endpoints live at `https://api.smartlyq.com/v1`.
 
+<Update label="August 5, 2026" tags={["Media", "Fix"]}>
+## Media presign now works, plus a confirm step
+
+`POST /media/upload-url` previously returned a URL that wasn't actually connected to storage - a PUT there silently went nowhere while the API still reported success. It now issues a real presigned URL, so uploads through it actually land.
+
+New: `POST /media/{media_id}/confirm` - call this after PUTting to the presigned URL. It checks storage for the object and backfills the real `file_size` (and `mime_type`, if it differs from what you declared at presign time) - the presign flow has no other way to know your upload finished. Returns `422 NOT_UPLOADED` if nothing has landed yet.
+
+If you don't need the presign flow's two-step handshake, `POST /media/upload-direct` remains the simpler one-request path and was unaffected by this.
+</Update>
+
 <Update label="August 4, 2026" tags={["WhatsApp", "New"]}>
 ## WhatsApp sandbox and bring-your-own-number bridge
 
