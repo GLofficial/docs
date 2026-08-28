@@ -7,6 +7,20 @@ icon: "clock-rotate-left"
 Product updates for the SmartlyQ Developer API, MCP server, and Developer Portal. All endpoints live at `https://api.smartlyq.com/v1`.
 
 <Update label="August 26, 2026" tags={["Ads", "New"]}>
+## Ads analytics, audience creation, targeting search, Boost Post, and Click-to-Message/Call
+
+Five additions to the Ads API shipped earlier today:
+
+- **`GET /ads/analytics`** - spend/impressions/clicks/conversions summary, a by-platform breakdown, a daily spend chart, and period-over-period trends.
+- **`POST /ads/audiences`** - real audience creation on Meta (Custom/Lookalike) or Google (remarketing/CRM user lists), not just the read-only listing from earlier today.
+- **`GET /ads/targeting-search`** - Meta interest type-ahead, for building a campaign's `targeting.interests`.
+- **Boost Post** - `POST /ads/campaigns` now accepts `creative.object_story_id` (`"{page_id}_{post_id}"`, from the new `GET /ads/pages/{page_id}/posts`) to turn an existing organic Page post straight into an ad - no new creative to build.
+- **Click-to-Messenger / Click-to-Call** - `settings.destination_type: "messenger"` with a `MESSAGE_PAGE` CTA opens a Messenger chat instead of a link; a `CALL_NOW` CTA plus `settings.phone_number` (E.164) dials a number instead.
+
+All five go through the exact same launch path and guardrails as everything else in the Ads API - nothing here is a separate/parallel flow.
+</Update>
+
+<Update label="August 26, 2026" tags={["Ads", "New"]}>
 ## Ads API - campaigns, ad sets, ads, audiences, pixels, lead forms, and creatives
 
 The first ads/campaign endpoints on the public API, spanning Meta, Google, TikTok, and LinkedIn Ads. New `ads:read` / `ads:write` scopes.

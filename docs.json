@@ -528,6 +528,14 @@
             "group": "Ads",
             "pages": [
               {
+                "group": "Analytics & Targeting",
+                "pages": [
+                  "GET /ads/analytics",
+                  "GET /ads/targeting-search",
+                  "GET /ads/pages/{page_id}/posts"
+                ]
+              },
+              {
                 "group": "Campaigns",
                 "pages": [
                   "GET /ads/campaigns",
@@ -569,6 +577,7 @@
               {
                 "group": "Audiences & Pixels",
                 "pages": [
+                  "POST /ads/audiences",
                   "GET /ads/audiences",
                   "GET /ads/pixels"
                 ]
