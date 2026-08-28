@@ -6,6 +6,25 @@ icon: "clock-rotate-left"
 
 Product updates for the SmartlyQ Developer API, MCP server, and Developer Portal. All endpoints live at `https://api.smartlyq.com/v1`.
 
+<Update label="August 29, 2026" tags={["Ads", "Changed"]}>
+## Bulk campaign status: 50 per call, and a 207 for partial batches
+
+Two changes to `POST /ads/campaigns/bulk-status`, both of which can affect existing integrations.
+
+- **The per-call limit is now 50 campaigns, down from 100.** Sending more returns `422`. The old limit was one this endpoint could not actually honour: every id costs a live write to the ad platform, and Meta's per-ad-account budget is spent long before 100 - so the tail of a large batch came back `Meta rate limit reached` and looked like your fault. 50 fits inside that budget, so every id you send can actually succeed. Split larger jobs across calls.
+- **A partly-failed batch now answers `207`, not `200`.** `200` means every id succeeded; `207` means at least one didn't. The body shape is unchanged either way, so you can keep reading per-item results exactly as before - but you no longer have to parse the body to find out whether anything failed.
+</Update>
+
+<Update label="August 29, 2026" tags={["API", "Changed"]}>
+## `DELETE` requests that send a body must declare `Content-Type`
+
+If you send a `DELETE` **with** a JSON body, it now needs `Content-Type: application/json`, the same rule `POST`/`PUT`/`PATCH` have always followed. Without it you get `400 INVALID_REQUEST`.
+
+This only affects deletes that carry a body - the confirmation ones like `DELETE /profiles/{id}` and `DELETE /workspaces/{id}`, which take `{"confirm":"DELETE"}`. Every bodyless delete (`DELETE /ads/campaigns/{id}`, `DELETE /ads/creatives/{id}`, and the rest) is untouched and still needs no such header.
+
+Worth checking if you call those endpoints with hand-written `curl`: `curl -d` defaults to `application/x-www-form-urlencoded`, not JSON, so add `-H "Content-Type: application/json"` explicitly. Our official SDKs already send it.
+</Update>
+
 <Update label="August 26, 2026" tags={["Ads", "New"]}>
 ## Ads analytics, audience creation, targeting search, Boost Post, and Click-to-Message/Call
 
