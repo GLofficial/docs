@@ -12,7 +12,7 @@ Webhooks let your server receive HTTP POST callbacks when events occur in Smartl
 
 Two ways to register an endpoint (both HTTPS-only, public URLs):
 
-- **Dashboard**: [Developer Dashboard](https://app.smartlyq.com/my/developer) → **Webhooks** tab → add an endpoint URL and select events.
+- **Dashboard**: [Developer Dashboard](https://app.smartlyq.com/next/developer) → **Webhooks** tab → add an endpoint URL and select events.
 - **API**: `POST /webhooks` with `url` and an `events` array (see the [API reference](/api-reference/webhooks/create-webhook)). The response includes the signing `secret` - shown exactly once.
 
 The full management surface via API: list (`GET /webhooks`), create (`POST /webhooks`), update url/events or pause/resume (`PUT /webhooks/{id}`), send a signed test delivery (`POST /webhooks/{id}/test`), inspect the delivery log (`GET /webhooks/logs`), and delete (`DELETE /webhooks/{id}`).

@@ -31,7 +31,7 @@ git config core.hooksPath .githooks
 
 It blocks a commit if it spots a secret (uses [gitleaks](https://github.com/gitleaks/gitleaks) when installed, a built-in grep otherwise). The same scan runs in CI on every push/PR via `.github/workflows/secret-scan.yml`, and we also enable **GitHub Secret Scanning + Push Protection** on the repo as a server-side backstop.
 
-If a secret ever does land in a commit: rotate it immediately in the [Developer Dashboard](https://app.smartlyq.com/my/developer), then ask a maintainer to scrub it from history.
+If a secret ever does land in a commit: rotate it immediately in the [Developer Dashboard](https://app.smartlyq.com/next/developer), then ask a maintainer to scrub it from history.
 
 ## Writing guidelines
 
@@ -45,4 +45,4 @@ If a secret ever does land in a commit: rotate it immediately in the [Developer 
 ## Questions
 
 Reach out at [support@smartlyq.com](mailto:support@smartlyq.com) or via the
-[Developer Dashboard](https://app.smartlyq.com/my/developer).
+[Developer Dashboard](https://app.smartlyq.com/next/developer).

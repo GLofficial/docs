@@ -52,7 +52,7 @@
     "primary": {
       "type": "button",
       "label": "Developer Dashboard",
-      "href": "https://app.smartlyq.com/my/developer"
+      "href": "https://app.smartlyq.com/next/developer"
     }
   },
   "navigation": {

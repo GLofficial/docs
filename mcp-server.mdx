@@ -34,7 +34,7 @@ claude mcp add smartlyq --transport http https://mcp.smartlyq.com/mcp
 
 ## Connect with an API key
 
-Alternatively, authenticate with a SmartlyQ API key (`sqk_live_...`) from the [Developer Dashboard](https://app.smartlyq.com/my/developer) — with the scopes you need enabled (see [Scopes](#tool-scopes) below) — passed as a Bearer token.
+Alternatively, authenticate with a SmartlyQ API key (`sqk_live_...`) from the [Developer Dashboard](https://app.smartlyq.com/next/developer) — with the scopes you need enabled (see [Scopes](#tool-scopes) below) — passed as a Bearer token.
 
 <CodeGroup>
 ```jsonc Claude Desktop / Cursor (mcp config)
@@ -116,7 +116,7 @@ The agent discovers what it needs (`search_operations` → `describe_operation` 
 
 ## Tool scopes
 
-Each tool requires the matching scope on your API key. Enable them in the [Developer Dashboard](https://app.smartlyq.com/my/developer). If a key lacks a scope, the tool returns:
+Each tool requires the matching scope on your API key. Enable them in the [Developer Dashboard](https://app.smartlyq.com/next/developer). If a key lacks a scope, the tool returns:
 
 ```
 SmartlyQ API error (HTTP 403) — code: INSUFFICIENT_SCOPE — API key lacks required scope: social:read

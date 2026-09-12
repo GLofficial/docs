@@ -18,7 +18,7 @@ generate AI content, and drive it all from your own app or an AI agent.
 ## Get started
 
 1. Create an account at [smartlyq.com](https://smartlyq.com)
-2. Grab an API key from the [Developer Dashboard](https://app.smartlyq.com/my/developer)
+2. Grab an API key from the [Developer Dashboard](https://app.smartlyq.com/next/developer)
 3. Follow the [Quickstart](https://docs.smartlyq.com/quickstart)
 
 ## The spec
@@ -29,6 +29,6 @@ For machine/LLM consumption, the full docs index is also available at
 
 ## Resources
 
-- [SmartlyQ Developer Dashboard](https://app.smartlyq.com/my/developer)
+- [SmartlyQ Developer Dashboard](https://app.smartlyq.com/next/developer)
 - [MCP server](https://mcp.smartlyq.com/mcp)
 - [Support](mailto:support@smartlyq.com)
