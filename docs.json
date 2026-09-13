@@ -198,6 +198,48 @@
                 ]
               },
               {
+                "group": "Companies",
+                "pages": [
+                  "GET /companies",
+                  "POST /companies",
+                  "GET /companies/{id}",
+                  "PATCH /companies/{id}",
+                  "DELETE /companies/{id}",
+                  "POST /companies/{id}/contacts",
+                  "DELETE /companies/{id}/contacts"
+                ]
+              },
+              {
+                "group": "Tasks",
+                "pages": [
+                  "GET /tasks",
+                  "POST /tasks",
+                  "GET /tasks/{id}",
+                  "PATCH /tasks/{id}",
+                  "DELETE /tasks/{id}",
+                  "POST /tasks/{id}/time"
+                ]
+              },
+              {
+                "group": "Tags",
+                "pages": [
+                  "GET /tags",
+                  "POST /tags",
+                  "POST /tags/rename",
+                  "POST /tags/merge",
+                  "POST /tags/delete"
+                ]
+              },
+              {
+                "group": "Calendar",
+                "pages": [
+                  "GET /calendar/event-types",
+                  "GET /calendar/slots",
+                  "POST /calendar/bookings",
+                  "POST /calendar/bookings/{id}/cancel"
+                ]
+              },
+              {
                 "group": "Opportunities",
                 "pages": [
                   "GET /pipelines",
