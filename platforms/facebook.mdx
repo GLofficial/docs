@@ -20,6 +20,18 @@ Reels and Stories are selected with `platform_options.facebook.type` (`reel` /
 Stories API has no text parameter - and lives for 24 hours. See
 [Platform options](/guides/platform-options) for the per-type media rules.
 
+## Reel limit
+
+Facebook allows **30 API-published Reels per Page in a moving 24-hour window**.
+Creating or scheduling a Reel is refused up front when the Page would be at the
+limit at the post's publish time (Reels published plus Reels already scheduled
+in the 24 hours before it): `422 PLATFORM_DAILY_LIMIT_REACHED`, with
+`details.next_available_at` saying when a Reel fits again. Check the allowance
+with [Get Facebook Reel limit](/api-reference/social/get-facebook-reel-limit).
+Reels posted to the Page outside this platform are not counted, so Facebook can
+still refuse a Reel; a scheduled Reel that hits the limit when it publishes
+fails with the same error code and is not retried automatically.
+
 ## Page settings
 
 These calls manage the Facebook Page behind a connected account, where

@@ -51,6 +51,7 @@ All errors follow a consistent JSON structure:
 | `MODEL_NOT_AVAILABLE` | The requested AI model is not available on your plan |
 | `JOB_FAILED` | An async job encountered an error |
 | `POST_TYPE_UNSUPPORTED` | `platform_options.<platform>.type` names a post format this platform cannot publish. The message lists the accepted values; see [Platform options](/guides/platform-options). |
+| `PLATFORM_DAILY_LIMIT_REACHED` | HTTP `422`, not retryable. The platform's daily limit for this post type is used up for a selected account - today, Facebook's 30 Reels per Page in a moving 24-hour window. Nothing is created. Publish after `details.next_available_at`, or send the post as a different type. `details` also carries `account_id`, `limit` and `used`. |
 
 ## Idempotency
 

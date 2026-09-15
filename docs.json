@@ -435,6 +435,7 @@
                   "PATCH /social/accounts/{account_id}/facebook/page/settings",
                   "POST /social/accounts/{account_id}/facebook/page/picture",
                   "POST /social/accounts/{account_id}/facebook/page/cover",
+                  "GET /social/accounts/{account_id}/facebook/reel-limit",
                   "POST /social/accounts/{account_id}/pinterest/boards",
                   "PATCH /social/accounts/{account_id}/youtube/playlists/{playlist_id}",
                   "GET /social/accounts/{account_id}/mentions",
