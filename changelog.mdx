@@ -42,7 +42,7 @@ Our [platform options guide](/guides/platform-options) documented `platform_opti
 
 - **`"feed"` is now accepted**, along with `"video"`, `"photo"`, `"image"`, `"text"` (all the same as `"post"`) and `"reels"` (the same as `"reel"`). Existing calls that used any of these start working with no change on your side. The same aliases apply to Instagram, plus `"stories"` for `"story"`.
 - **A post type we cannot publish now returns `422 POST_TYPE_UNSUPPORTED`**, and the message lists the values that platform accepts. It used to be a `500` telling you to retry, which could never help.
-- **Facebook `type: "story"` stopped publishing to the timeline.** It had been accepted and then published as an ordinary feed post, which is not what anyone asking for a story wanted. It was briefly refused, and now [publishes as a real story](#facebook-stories). Instagram stories were unaffected throughout.
+- **Facebook `type: "story"` is now refused.** It was previously accepted and then published to the timeline instead - there is no Facebook Stories publishing behind it. Instagram stories are unaffected and still publish normally.
 
 See [Platform options](/guides/platform-options) for the accepted values per platform.
 </Update>
