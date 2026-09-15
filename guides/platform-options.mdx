@@ -69,6 +69,7 @@ Posting a link instead of a self post is automatic when the post carries media s
 | `type` | `post` (timeline, including video) or `reel`. Omit it for a normal post - text, image and video all publish to the timeline without it. `feed`, `video`, `photo`, `image`, `text` are accepted as aliases of `post`, and `reels` as an alias of `reel`. Anything else is rejected with `POST_TYPE_UNSUPPORTED` and a list of the accepted values. |
 | `first_comments` | Up to 5 comments posted right after publishing (an entry may carry a single image) |
 | `_thumbnail.url` | Video cover image |
+| `link` | Destination URL. On a text-only post Facebook renders it as a preview card. When the post carries media the attachment is the card and Graph has no link parameter, so the URL is appended to the post text instead. Setting this here overrides a request-level `link`. |
 
 Facebook **stories are not supported**. `type: "story"` is refused rather than
 published, because there is no story pipeline behind it - a story request used
