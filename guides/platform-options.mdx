@@ -28,7 +28,7 @@ description: "Every per-platform option you can set on a post, per platform."
 ### Instagram
 | Key | Effect |
 |---|---|
-| `type` | Post format selection (feed/reel/story routing) |
+| `type` | `post`, `reel` or `story`. Omit it for a normal post. `feed`, `video`, `photo`, `image` are aliases of `post`; `reels` of `reel`; `stories` of `story`. Anything else is rejected with `POST_TYPE_UNSUPPORTED`. |
 | `share_to_story` | Also publish the media as a story |
 | `share_to_feed` | Reels: whether the reel also appears in the main feed (Instagram's default when omitted) |
 | `first_comments` | Up to 5 comments posted right after publishing (`first_comment` legacy singular works) |
@@ -64,7 +64,15 @@ description: "Every per-platform option you can set on a post, per platform."
 Posting a link instead of a self post is automatic when the post carries media suited to it. Check a community first with `GET /social/accounts/{account_id}/reddit/subreddits/{subreddit}` (rules + `can_post` verdict).
 
 ### Facebook
-`type` (feed/reel/story routing), `first_comments`, `_thumbnail.url` (video cover).
+| Key | Effect |
+|---|---|
+| `type` | `post` (timeline, including video) or `reel`. Omit it for a normal post - text, image and video all publish to the timeline without it. `feed`, `video`, `photo`, `image`, `text` are accepted as aliases of `post`, and `reels` as an alias of `reel`. Anything else is rejected with `POST_TYPE_UNSUPPORTED` and a list of the accepted values. |
+| `first_comments` | Up to 5 comments posted right after publishing (an entry may carry a single image) |
+| `_thumbnail.url` | Video cover image |
+
+Facebook **stories are not supported**. `type: "story"` is refused rather than
+published, because there is no story pipeline behind it - a story request used
+to be accepted and then published to the timeline instead.
 
 ### LinkedIn
 `title` (video/document posts), `first_comments`, `_thumbnail.url`. Document (PDF) posts publish via the document pipeline automatically.

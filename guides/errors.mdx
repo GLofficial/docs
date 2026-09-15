@@ -49,6 +49,7 @@ All errors follow a consistent JSON structure:
 | `IDEMPOTENCY_CONFLICT` | A request with this idempotency key was already processed |
 | `MODEL_NOT_AVAILABLE` | The requested AI model is not available on your plan |
 | `JOB_FAILED` | An async job encountered an error |
+| `POST_TYPE_UNSUPPORTED` | `platform_options.<platform>.type` names a post format this platform cannot publish. The message lists the accepted values; see [Platform options](/guides/platform-options). |
 
 ## Idempotency
 
