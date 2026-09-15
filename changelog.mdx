@@ -7,6 +7,22 @@ icon: "clock-rotate-left"
 Product updates for the SmartlyQ Developer API, MCP server, and Developer Portal. All endpoints live at `https://api.smartlyq.com/v1`.
 
 <Update label="September 15, 2026" tags={["Social", "Fixed"]}>
+## `link` on a post is published instead of dropped
+
+`link` has been documented on `POST /social/posts` as long as the endpoint has existed, and it was accepted without complaint. Nothing published it. The post went out carrying only its text - no link, no preview card - and the response was still a `200`, so there was no way to tell from the API that anything had been lost. Putting the URL in `platform_options.facebook.link` did the same thing, because unknown per-platform keys are ignored rather than rejected.
+
+- **`link` now reaches the platform.** On a Facebook text post it publishes as a real link post, so Facebook renders the preview card for it.
+- **On a post that carries media, the URL is appended to the post text.** The attachment is already the card there and Facebook's publishing API has no link parameter for it, so the URL is kept in the copy rather than dropped. It is not added twice if your text already contains it.
+- **Platforms that cannot carry a link now tell you so.** They come back in `data.warnings` on the create response, keyed by platform, instead of the link quietly disappearing for that leg of the post.
+- **`platform_options.<platform>.link` wins over a request-level `link`**, so you can send one default and override it per platform.
+- **A malformed link is now a `422` rather than a silent drop.** Links must be `http`/`https`, carry a host, and stay under 2,048 characters.
+
+If you have been working around this by writing the URL into `content`, that still behaves exactly as before and needs no change. Move it to `link` when you want the preview card.
+
+See [Platform options](/guides/platform-options) for the per-platform keys.
+</Update>
+
+<Update label="September 15, 2026" tags={["Social", "Fixed"]}>
 ## Facebook `type: "feed"` works, and an unknown post type now says so
 
 Our [platform options guide](/guides/platform-options) documented `platform_options.facebook.type` as `"feed"`. The publisher only ever accepted `"post"`, so a request following the documentation matched no handler, and the failure came back as a generic `UNKNOWN_PLATFORM_ERROR` with no detail. Text and image posts were unaffected because they carry no `type` at all - only posts that named a video format hit it.
