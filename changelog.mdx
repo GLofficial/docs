@@ -6,6 +6,18 @@ icon: "clock-rotate-left"
 
 Product updates for the SmartlyQ Developer API, MCP server, and Developer Portal. All endpoints live at `https://api.smartlyq.com/v1`.
 
+<Update label="September 15, 2026" tags={["API", "Docs"]}>
+## Every endpoint says which scope it needs, and 30 more are listed
+
+Scopes were enforced but never published. The API has always answered `403` when a key lacks the right scope, and the [scope table](/authentication#scopes) has always listed what exists, but nothing told you which scope a given endpoint wanted. You found out from the 403.
+
+- **Every endpoint page now states its scope**, in the same "Requires scope `contacts:write`." form that some pages already carried by hand. The three endpoints needing two scopes say both, and `/me`, `/me/usage`, `/me/balance` and `/me/billing` now say plainly that any valid key works.
+- **The spec carries `x-scopes` on every operation**, so tooling can read the requirement instead of parsing prose. It is a vendor extension, so it changes nothing for existing OpenAPI clients.
+- **Thirty endpoints that were live but missing from these docs are now listed.** WhatsApp Flows (create, update, publish, deprecate, preview and the flow JSON), the WhatsApp sandbox sessions, the block list, and number bridging; automation versions, version restore and duplicate; `POST /media/{media_id}/confirm`; comment like, unlike and moderate; and deleting a direct message. They worked before, they were simply not documented.
+
+Scopes come straight from what the API enforces, so the docs cannot drift from the check any more.
+</Update>
+
 <Update label="September 15, 2026" tags={["Social", "New"]}>
 ## Facebook Stories
 

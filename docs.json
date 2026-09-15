@@ -540,7 +540,11 @@
                   "POST /automations/{automation_id}/deactivate",
                   "POST /automations/{automation_id}/trigger",
                   "GET /automations/{automation_id}/runs",
-                  "GET /automations/{automation_id}/runs/{run_id}"
+                  "GET /automations/{automation_id}/runs/{run_id}",
+                  "POST /automations/{automation_id}/duplicate",
+                  "GET /automations/{automation_id}/versions",
+                  "GET /automations/{automation_id}/versions/{version}",
+                  "POST /automations/{automation_id}/versions/{version}/restore"
                 ]
               },
               {
@@ -548,6 +552,7 @@
                 "pages": [
                   "POST /media/upload-url",
                   "POST /media/upload-direct",
+                  "POST /media/{media_id}/confirm",
                   "GET /media",
                   "GET /media/{media_id}",
                   "DELETE /media/{media_id}"
@@ -673,7 +678,28 @@
               "GET /whatsapp/business-profile/display-name",
               "POST /whatsapp/business-profile/display-name",
               "GET /whatsapp/template-library",
-              "POST /whatsapp/templates/from-library"
+              "POST /whatsapp/templates/from-library",
+              "GET /whatsapp/flows",
+              "POST /whatsapp/flows",
+              "GET /whatsapp/flows/{flow_id}",
+              "PATCH /whatsapp/flows/{flow_id}",
+              "DELETE /whatsapp/flows/{flow_id}",
+              "GET /whatsapp/flows/{flow_id}/json",
+              "PUT /whatsapp/flows/{flow_id}/json",
+              "GET /whatsapp/flows/{flow_id}/preview",
+              "POST /whatsapp/flows/{flow_id}/publish",
+              "POST /whatsapp/flows/{flow_id}/deprecate",
+              "GET /whatsapp/block-users",
+              "POST /whatsapp/block-users",
+              "DELETE /whatsapp/block-users",
+              "GET /whatsapp/sandbox/sessions",
+              "POST /whatsapp/sandbox/sessions",
+              "POST /whatsapp/sandbox/sessions/{session_id}/send",
+              "DELETE /whatsapp/sandbox/sessions/{session_id}",
+              "GET /whatsapp/numbers/{sender_id}/bridge",
+              "POST /whatsapp/numbers/{sender_id}/bridge",
+              "POST /whatsapp/numbers/{sender_id}/bridge/request-code",
+              "POST /whatsapp/numbers/{sender_id}/bridge/verify"
             ]
           },
           {
@@ -687,7 +713,10 @@
                   "POST /social/comments/{comment_id}/reply",
                   "POST /social/comments/{comment_id}/private-reply",
                   "POST /social/comments/{comment_id}/hide",
-                  "DELETE /social/comments/{comment_id}"
+                  "DELETE /social/comments/{comment_id}",
+                  "POST /social/comments/{comment_id}/like",
+                  "DELETE /social/comments/{comment_id}/like",
+                  "POST /social/comments/{comment_id}/moderate"
                 ]
               },
               {
@@ -702,7 +731,8 @@
                   "POST /social/conversations/{conversation_id}/read",
                   "POST /social/conversations/{conversation_id}/typing",
                   "POST /social/conversations/{conversation_id}/messages/{message_id}/reactions",
-                  "DELETE /social/conversations/{conversation_id}/messages/{message_id}/reactions"
+                  "DELETE /social/conversations/{conversation_id}/messages/{message_id}/reactions",
+                  "DELETE /social/conversations/{conversation_id}/messages/{message_id}"
                 ]
               }
             ]
