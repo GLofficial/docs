@@ -6,6 +6,21 @@ icon: "clock-rotate-left"
 
 Product updates for the SmartlyQ Developer API, MCP server, and Developer Portal. All endpoints live at `https://api.smartlyq.com/v1`.
 
+<Update label="September 15, 2026" tags={["Social", "New"]}>
+## Manage a Facebook Page's messages, profile picture and cover photo
+
+Four new endpoints turn the Page's Message button on or off and change its profile picture and cover photo, without anyone opening Facebook.
+
+- **Read the messaging setting** - [`GET /social/accounts/{account_id}/facebook/page/settings`](/api-reference/social/get-facebook-page-settings) returns `users_can_message`, or `null` when Facebook did not report it.
+- **Turn messaging on or off** - [`PATCH /social/accounts/{account_id}/facebook/page/settings`](/api-reference/social/update-facebook-page-settings) with `users_can_message`. `false` hides the Message button **and blocks replies in chats that already exist**; `true` restores both.
+- **Set the profile picture** - [`POST /social/accounts/{account_id}/facebook/page/picture`](/api-reference/social/set-facebook-page-profile-picture) with an image `url`. Facebook downloads the image itself, and no feed story or follower notification is created.
+- **Set the cover photo** - [`POST /social/accounts/{account_id}/facebook/page/cover`](/api-reference/social/set-facebook-page-cover-photo) with `url` and an optional `offset_y` (0-100, default 50). No feed story or notification. It needs the business permission on the connection; connections without it get `403 CONNECTION_SCOPE_MISSING` with `reconnect_required: true`, and reconnecting fixes it. A cover can be replaced through the API but not removed.
+- **Images are validated.** JPG, PNG, GIF, BMP or TIFF, 10 MB at most, and a cover of at least 400 x 150 px. Anything else is a `422 VALIDATION_ERROR` with `details.field` set to `url` and a `details.reason` saying why.
+- **`GET /social/accounts/{account_id}/facebook/page` now returns `picture` and `cover`**, and its response fields are documented. `cover` is absent when the Page has no cover photo.
+
+Test keys (`sqk_test_...`) validate the request, including the image URL, and return a success response without contacting Facebook. See [Facebook](/platforms/facebook) for the image rules and recommended sizes.
+</Update>
+
 <Update label="September 15, 2026" tags={["API", "Docs"]}>
 ## Every endpoint says which scope it needs, and 30 more are listed
 

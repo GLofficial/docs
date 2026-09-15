@@ -42,6 +42,7 @@ All errors follow a consistent JSON structure:
 |------|-------------|
 | `UNAUTHORIZED` | API key is missing or invalid |
 | `FORBIDDEN` | Key lacks the required scope |
+| `CONNECTION_SCOPE_MISSING` | The connected social account is missing a permission this call needs, usually because it was connected before SmartlyQ requested that permission. Reconnect the account to fix it; `details.reconnect_required` is `true`. |
 | `INSUFFICIENT_CREDITS` | Wallet balance too low |
 | `RATE_LIMITED` | Too many requests |
 | `VALIDATION_ERROR` | Request body failed validation |

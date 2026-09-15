@@ -20,4 +20,57 @@ Reels and Stories are selected with `platform_options.facebook.type` (`reel` /
 Stories API has no text parameter - and lives for 24 hours. See
 [Platform options](/guides/platform-options) for the per-type media rules.
 
+## Page settings
+
+These calls manage the Facebook Page behind a connected account, where
+`account_id` is the connected account's id. A test key (`sqk_test_...`)
+validates the request - including checking the image URL - and returns a
+success response without contacting Facebook.
+
+### Message button
+
+`PATCH /v1/social/accounts/{account_id}/facebook/page/settings` with
+`{"users_can_message": false}` turns messaging off: the Page's **Message**
+button is hidden **and replies are blocked in chats that already exist**. Send
+`true` to restore both. Read the current value with
+`GET /v1/social/accounts/{account_id}/facebook/page/settings`;
+`users_can_message` is `null` when Facebook did not report the setting.
+
+### Profile picture
+
+`POST /v1/social/accounts/{account_id}/facebook/page/picture` with
+`{"url": "https://..."}`. Facebook downloads the image from that URL itself. No
+feed story is created and followers are not notified. Facebook shows the
+picture as a circle, so a square image of 196 x 196 px or larger works best.
+
+### Cover photo
+
+`POST /v1/social/accounts/{account_id}/facebook/page/cover` with `url` and an
+optional `offset_y` (0-100, default 50). No feed story is created and followers
+are not notified. The recommended size is 851 x 315 px.
+
+This call needs the business permission on the connection. A connection
+without it gets `403 CONNECTION_SCOPE_MISSING` with `reconnect_required: true` -
+reconnect the account to fix it. A cover photo can be replaced through the API
+but not removed; removing it has to be done on Facebook.
+
+### Image rules
+
+| | Profile picture | Cover photo |
+|---|---|---|
+| **Formats** | JPG, PNG, GIF, BMP, TIFF | JPG, PNG, GIF, BMP, TIFF |
+| **Maximum file size** | 10 MB | 10 MB |
+| **Minimum dimensions** | - | 400 x 150 px |
+| **Recommended** | Square, 196 x 196 px or larger | 851 x 315 px |
+
+Only the format, file size and cover minimum are enforced. An image that breaks
+one is refused with `422 VALIDATION_ERROR`, with `details.field` set to `"url"`
+and `details.reason` one of `invalid_url`, `unreachable`, `too_large`,
+`unsupported_type` or, for a cover photo only, `too_small`.
+
+API reference: [Get page settings](/api-reference/social/get-facebook-page-settings) |
+[Update page settings](/api-reference/social/update-facebook-page-settings) |
+[Set profile picture](/api-reference/social/set-facebook-page-profile-picture) |
+[Set cover photo](/api-reference/social/set-facebook-page-cover-photo)
+
 See [all platforms](/platforms) for the capability matrix and media rules.
