@@ -6,6 +6,29 @@ icon: "clock-rotate-left"
 
 Product updates for the SmartlyQ Developer API, MCP server, and Developer Portal. All endpoints live at `https://api.smartlyq.com/v1`.
 
+<Update label="September 15, 2026" tags={["Social", "Fixed"]}>
+## Facebook `type: "feed"` works, and an unknown post type now says so
+
+Our [platform options guide](/guides/platform-options) documented `platform_options.facebook.type` as `"feed"`. The publisher only ever accepted `"post"`, so a request following the documentation matched no handler, and the failure came back as a generic `UNKNOWN_PLATFORM_ERROR` with no detail. Text and image posts were unaffected because they carry no `type` at all - only posts that named a video format hit it.
+
+- **`"feed"` is now accepted**, along with `"video"`, `"photo"`, `"image"`, `"text"` (all the same as `"post"`) and `"reels"` (the same as `"reel"`). Existing calls that used any of these start working with no change on your side. The same aliases apply to Instagram, plus `"stories"` for `"story"`.
+- **A post type we cannot publish now returns `422 POST_TYPE_UNSUPPORTED`**, and the message lists the values that platform accepts. It used to be a `500` telling you to retry, which could never help.
+- **Facebook `type: "story"` is now refused.** It was previously accepted and then published to the timeline instead - there is no Facebook Stories publishing behind it. Instagram stories are unaffected and still publish normally.
+
+See [Platform options](/guides/platform-options) for the accepted values per platform.
+</Update>
+
+<Update label="September 15, 2026" tags={["Ads", "Changed"]}>
+## Ad metrics now cover one window on every platform
+
+The metric fields on `GET /ads/campaigns`, `/ads/ad-sets` and `/ads/ads` - `spent`, `impressions`, `clicks`, `conversions`, `leads`, `purchase_value`, `ctr`, `cpa`, `roas` - meant something different depending on the network. Meta reported its last 28 days, Google reported the campaign's **entire lifetime**, and TikTok and LinkedIn reported nothing at all (a row of zeros). One field, one name, four meanings.
+
+- **Every platform now reports the same last 28 days.** If you read these fields for Google campaigns, the values will drop - they were lifetime totals, not a recent window. TikTok and LinkedIn campaigns will show real figures for the first time.
+- **`GET /ads/analytics` gained a `by_campaign` block** - the same per-campaign figures, scoped to whatever `date_from`/`date_to` you ask for. Use it for any window other than the fixed 28 days, or to compare campaigns over a specific period.
+
+Twenty-eight days is what the ad networks give us daily figures for, so it is the longest total we can report without inventing the missing days.
+</Update>
+
 <Update label="August 29, 2026" tags={["Ads", "Changed"]}>
 ## Bulk campaign status: 50 per call, and a 207 for partial batches
 
