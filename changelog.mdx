@@ -6,6 +6,19 @@ icon: "clock-rotate-left"
 
 Product updates for the SmartlyQ Developer API, MCP server, and Developer Portal. All endpoints live at `https://api.smartlyq.com/v1`.
 
+<Update label="September 15, 2026" tags={["Social", "New"]}>
+## Facebook Stories
+
+`platform_options.facebook.type: "story"` now publishes to the Page's story tray through Meta's Page Stories API. It was refused earlier today, because nothing stood behind it.
+
+- **One photo or one video.** Video is MP4, 9:16, up to **60 seconds**; photo is up to 10MB.
+- **No caption.** Neither story endpoint takes a message, description or overlay, so the post text is **not published** - put the wording in the media itself. The create response returns a `warnings` entry when a story post carries text.
+- **The media must be new.** Meta refuses a photo or video that has already appeared in a published post, and refuses media served from its own CDN (`fbcdn.net`) - host your own copy.
+- **`post_url` comes back `null`.** A story has no permanent page and expires after 24 hours; `post_id` is always returned.
+
+`"stories"` works as an alias. Your Page token needs `pages_manage_posts` and `pages_read_engagement`. No new endpoint - it is the same `POST /social/posts` you already call. See [Platform options](/guides/platform-options).
+</Update>
+
 <Update label="September 15, 2026" tags={["Social", "Fixed"]}>
 ## `link` on a post is published instead of dropped
 
@@ -29,7 +42,7 @@ Our [platform options guide](/guides/platform-options) documented `platform_opti
 
 - **`"feed"` is now accepted**, along with `"video"`, `"photo"`, `"image"`, `"text"` (all the same as `"post"`) and `"reels"` (the same as `"reel"`). Existing calls that used any of these start working with no change on your side. The same aliases apply to Instagram, plus `"stories"` for `"story"`.
 - **A post type we cannot publish now returns `422 POST_TYPE_UNSUPPORTED`**, and the message lists the values that platform accepts. It used to be a `500` telling you to retry, which could never help.
-- **Facebook `type: "story"` is now refused.** It was previously accepted and then published to the timeline instead - there is no Facebook Stories publishing behind it. Instagram stories are unaffected and still publish normally.
+- **Facebook `type: "story"` stopped publishing to the timeline.** It had been accepted and then published as an ordinary feed post, which is not what anyone asking for a story wanted. It was briefly refused, and now [publishes as a real story](#facebook-stories). Instagram stories were unaffected throughout.
 
 See [Platform options](/guides/platform-options) for the accepted values per platform.
 </Update>

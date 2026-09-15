@@ -8,11 +8,16 @@ description: "Facebook support in the SmartlyQ API: limits, post types, capabili
 | | |
 |---|---|
 | **Caption limit** | 63,206 characters |
-| **Post types** | Feed posts (text, link, image, video) |
+| **Post types** | Feed posts (text, link, image, video), Reels, Stories |
 | **Capabilities** | Publish · Analytics · Comments · Direct messages |
 | **Connect** | Headless (`POST /v1/social/connect/facebook`) or dashboard |
 | **Tokens** | Page tokens are effectively permanent — no refresh needed |
 
 DMs use Meta's **24-hour messaging window**. Comments support full fetch / reply / hide / delete.
+
+Reels and Stories are selected with `platform_options.facebook.type` (`reel` /
+`story`); omit it for a feed post. A **story carries no caption** - Meta's Page
+Stories API has no text parameter - and lives for 24 hours. See
+[Platform options](/guides/platform-options) for the per-type media rules.
 
 See [all platforms](/platforms) for the capability matrix and media rules.

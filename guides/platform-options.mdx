@@ -66,14 +66,30 @@ Posting a link instead of a self post is automatic when the post carries media s
 ### Facebook
 | Key | Effect |
 |---|---|
-| `type` | `post` (timeline, including video) or `reel`. Omit it for a normal post - text, image and video all publish to the timeline without it. `feed`, `video`, `photo`, `image`, `text` are accepted as aliases of `post`, and `reels` as an alias of `reel`. Anything else is rejected with `POST_TYPE_UNSUPPORTED` and a list of the accepted values. |
+| `type` | `post` (timeline, including video), `reel`, or `story`. Omit it for a normal post - text, image and video all publish to the timeline without it. `feed`, `video`, `photo`, `image`, `text` are accepted as aliases of `post`, `reels` of `reel`, and `stories` of `story`. Anything else is rejected with `POST_TYPE_UNSUPPORTED` and a list of the accepted values. |
 | `first_comments` | Up to 5 comments posted right after publishing (an entry may carry a single image) |
 | `_thumbnail.url` | Video cover image |
 | `link` | Destination URL. On a text-only post Facebook renders it as a preview card. When the post carries media the attachment is the card and Graph has no link parameter, so the URL is appended to the post text instead. Setting this here overrides a request-level `link`. |
 
-Facebook **stories are not supported**. `type: "story"` is refused rather than
-published, because there is no story pipeline behind it - a story request used
-to be accepted and then published to the timeline instead.
+#### Stories
+
+`type: "story"` publishes to the Page's story tray via Meta's Page Stories API.
+
+- **Exactly one photo or one video.** Not a carousel, not two images.
+- **No caption.** Neither story endpoint accepts a message, description or text
+  overlay, so the post's text is **not published**. Put any wording into the
+  image or video itself. The create response carries a `warnings` entry saying
+  so when a story post has text.
+- **Video:** MP4, 9:16, **up to 60 seconds**, 1080x1920 recommended (540x960
+  minimum), H.264/H.265, 24-60fps.
+- **Photo:** JPEG, PNG, BMP, GIF or TIFF, up to 10MB.
+- **The media must not already have been published.** Meta refuses a photo or
+  video that has appeared in a previous post, and refuses media served from its
+  own CDN (`fbcdn.net`) - host your own copy.
+- **No permanent link.** A story lives for 24 hours and has no `/posts/{id}`
+  page, so `post_url` comes back `null` once it expires. The `post_id` is always
+  returned.
+- Your Page token needs `pages_manage_posts` and `pages_read_engagement`.
 
 ### LinkedIn
 `title` (video/document posts), `first_comments`, `_thumbnail.url`. Document (PDF) posts publish via the document pipeline automatically.
