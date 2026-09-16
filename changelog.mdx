@@ -6,6 +6,16 @@ icon: "clock-rotate-left"
 
 Product updates for the SmartlyQ Developer API, MCP server, and Developer Portal. All endpoints live at `https://api.smartlyq.com/v1`.
 
+<Update label="September 16, 2026" tags={["Social", "Improvement"]}>
+## Posts are screened against the Content Policy before they are created
+
+Content checks previously ran only inside AI Captain and the website builder. They now run on every post, whichever way it is created: the API, the app, WordPress or Captain.
+
+- **Prohibited content is refused at creation** with `422 CONTENT_POLICY_VIOLATION`, before anything is scheduled or published. The response links the [Content Policy](https://smartlyq.com/legal/content-policy) and the error is not retryable: edit the post, or contact support if you think the decision is wrong.
+- **Links to adult subscription platforms are refused.** This is a check on the links in your caption and `link` field, so ordinary posts that merely mention such a service in passing are unaffected.
+- **Duplicate detection now looks across your profiles, not just inside one.** The existing 24-hour duplicate guard only ever compared posts within a single workspace, which meant the same content sent to many profiles was invisible to it. Publishing identical content to several of your profiles in quick succession is still allowed and still publishes; it is now recorded for review.
+- **New error code `CONTENT_POLICY_VIOLATION`** - HTTP `422`, not retryable. See [Errors](/guides/errors).
+
 <Update label="September 16, 2026" tags={["API", "Improvement"]}>
 ## Request limits now scale with your connected accounts, and posting is capped per account
 

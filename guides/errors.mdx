@@ -46,6 +46,7 @@ All errors follow a consistent JSON structure:
 | `INSUFFICIENT_CREDITS` | Wallet balance too low |
 | `RATE_LIMIT_EXCEEDED` | You exceeded your own request limit. See [rate limiting](/guides/rate-limiting). |
 | `PLATFORM_RATE_LIMITED` | A connected platform is temporarily limiting publishing for that account. Retryable: back off and retry after the cooldown. |
+| `CONTENT_POLICY_VIOLATION` | The post breaches the [Content Policy](https://smartlyq.com/legal/content-policy) and was not created. Not retryable: edit the content, or contact support if you believe the decision is wrong. |
 | `VALIDATION_ERROR` | Request body failed validation |
 | `RESOURCE_NOT_FOUND` | The requested resource does not exist |
 | `IDEMPOTENCY_CONFLICT` | A request with this idempotency key was already processed |
