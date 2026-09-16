@@ -1,6 +1,7 @@
 name: Notify SDKs
 
-# When openapi.json changes on main, tell the SDK repos to regenerate.
+# When openapi.json changes on main, tell the SDK repos and the Claude Code
+# skill to regenerate.
 # The CLI is dispatched LAST, after the Node SDK republishes, because the
 # CLI regenerates against the published @smartlyqofficial/node package -
 # dispatching it too early makes its endpoint tests fail on commands the
@@ -43,7 +44,9 @@ jobs:
 
           NODE_BEFORE=$(curl -s https://registry.npmjs.org/@smartlyqofficial%2Fnode | jq -r '."dist-tags".latest')
 
-          for repo in smartlyq-node smartlyq-python smartlyq-go smartlyq-php; do
+          # The skill only reads the published spec, so it has no ordering
+          # dependency on the SDKs and goes in the first batch.
+          for repo in smartlyq-node smartlyq-python smartlyq-go smartlyq-php SmartlyQ-api-skill; do
             dispatch "$repo" || echo "WARN: dispatch to $repo failed"
           done
 
