@@ -74,6 +74,15 @@ Both request limits return **429 Too Many Requests** with a `Retry-After` header
 }
 ```
 
+### Two different 429s
+
+A `429` can mean one of two things, and they are handled differently:
+
+| Code | Meaning | What to do |
+|------|---------|------------|
+| `RATE_LIMIT_EXCEEDED` | You exceeded your own request limit, above. | Back off for `Retry-After` seconds. |
+| `PLATFORM_RATE_LIMITED` | A connected platform is temporarily limiting publishing for that account. Nothing to do with your request allowance. | Retry that account after the platform's cooldown. Other accounts are unaffected. |
+
 ### Handling 429 errors
 
 <Steps>

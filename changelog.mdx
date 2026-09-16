@@ -16,7 +16,7 @@ Your request allowance used to be a flat 60 per minute regardless of size. It no
 - **Each connected account now has a daily posting cap** - Threads 250, Instagram 100, Facebook 100, X 50, Pinterest 25, TikTok 15 video plus 15 photo as separate allowances, and 50 for every other platform. Caps are per account, not a shared pool, so connecting more accounts raises your total throughput.
 - **Every account is also limited to 25 posts per hour** across all platforms, so a day's allowance cannot be published in a single burst.
 - **Capped accounts are held back, not the whole request.** When you publish to several accounts at once, the accounts still under their caps go through and only the capped ones are refused, before the platform is called. The response names the limit that was reached and when to retry.
-- **`RATE_LIMIT_EXCEEDED` is now listed in [Errors](/guides/errors)** alongside `RATE_LIMITED`. They are different: `RATE_LIMIT_EXCEEDED` means you exceeded your own request limit, while `RATE_LIMITED` means a connected platform rate-limited us while serving your call. The `429` example in the OpenAPI spec was showing the wrong one of the two and now shows `RATE_LIMIT_EXCEEDED`.
+- **Two error codes are now listed in [Errors](/guides/errors)** that were missing or wrong. `RATE_LIMIT_EXCEEDED` means you exceeded your own request limit. `PLATFORM_RATE_LIMITED` means a connected platform is temporarily limiting publishing for that account, is retryable after its cooldown, and had never been documented despite being returned by the publishing endpoints. The `429` example in the OpenAPI spec showed a code the API does not return and now shows `RATE_LIMIT_EXCEEDED`.
 
 See [Rate limiting](/guides/rate-limiting) for both tables.
 </Update>
