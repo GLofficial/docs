@@ -33,4 +33,8 @@ regexes = [
   '''(?i)YOUR_(API_KEY|TOKEN|SECRET)''',
   '''(?i)\b(example|placeholder|changeme|redacted)\b''',
   '''x{8,}''',
+  # The webhook example in openapi.json. Obviously fake, but it matches the
+  # generic-api-key rule on a full-history scan, which is what the SDK repos
+  # already allowlist.
+  '''whsec_a1b2c3d4e5f6''',
 ]
