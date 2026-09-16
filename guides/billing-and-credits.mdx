@@ -8,6 +8,30 @@ description: "How API credits work, pricing, and wallet management."
 
 The SmartlyQ API uses a **prepaid credit** system called **SmartlyQ Credits (SQC)**. Every API call that consumes AI resources deducts credits from your Developer wallet.
 
+## Two things are billed
+
+Credits (SQC) pay for individual API calls that use AI resources. **Connected social accounts are billed separately, per account per month**, from the same wallet. The two are independent: a month with no API calls still bills for the accounts you have connected.
+
+## Connected account billing
+
+Each social account connected to your profiles is billed monthly, at a rate that falls as you connect more:
+
+| Accounts | Per account, per month |
+|----------|------------------------|
+| 1 to 10 | $6.00 |
+| 11 to 100 | $3.00 |
+| 101 and above | $1.00 |
+
+Pricing is marginal, so 15 accounts costs (10 x $6) + (5 x $3) = **$75.00 per month**.
+
+The charge is taken from your Developer wallet. If the wallet is short, the charge retries daily; after the grace period your profiles are paused until it succeeds, and resume automatically on payment. Keeping **auto-recharge** on is the simplest way to avoid that.
+
+<Note>
+**From 1 November 2026, accounts are counted by the day.** Each account is billed for every day it stays connected, so a part month costs a part price: 15 accounts connected for half the month bills 7.5 account-months, $45.00. A full month of the same accounts costs exactly what it does today, so nothing reprices.
+
+**Disconnecting** an account stops its charge from that day. **Pausing** a profile stops it publishing, but the accounts stay connected and stay billable. Disconnect the accounts you no longer need.
+</Note>
+
 ## Developer wallet
 
 Your wallet is separate from your SmartlyQ subscription. Each request that uses AI resources deducts SQC; read-only calls are free. Top it up from the [Developer Dashboard](https://app.smartlyq.com/next/developer), and enable **auto-recharge** to keep it funded automatically.
