@@ -73,7 +73,7 @@ Two events cover billing: `account_billing.charged` and `account_billing.failed`
 - `POST /profiles/{id}/pause` - suspend a customer (stops posting AND stops their accounts billing). `resume` undoes it.
 - `DELETE /profiles/{id}` with `{"confirm": "DELETE"}` - schedules async teardown of the profile workspace and its connections.
 - You can create up to **200 sub-accounts** (profiles). Every profile you still hold counts toward that, whether it is active or paused - only deleting one frees a slot. Trying to create the 201st returns `402 LIMIT_REACHED`; delete any you no longer need, or email support@smartlyq.com to have the limit raised on your account.
-- Connected accounts are capped separately, and your wallet must hold at least $10 (or have auto-recharge on) before you can connect any. See [Billing & Credits](/guides/billing-and-credits).
+- **How many accounts you can connect is set by your wallet balance**, at the rates in [Billing & Credits](/guides/billing-and-credits): enough to cover a month at those rates is enough to connect. $60 funds 10 accounts, $150 funds 40, $430 funds 200. The first 2 are free so you can try the API before funding anything, and auto-recharge counts toward the figure. Adding credit raises the limit immediately - there is nothing to apply for.
 
 ## Errors worth knowing
 
