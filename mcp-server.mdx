@@ -17,7 +17,12 @@ https://mcp.smartlyq.com/mcp
 ## Prerequisites
 
 - A SmartlyQ account on a **Pro plan or higher** (API access requires Pro+).
-- An MCP-capable client: **Claude.ai, Claude Desktop, Claude Code, Cursor, ChatGPT, Windsurf**, or any MCP client.
+- An MCP-capable client: **Claude Code, Claude Desktop, Claude.ai, ChatGPT, Cursor, Codex, VS Code, Gemini CLI**, or any MCP client.
+
+<Tip>
+  Per-client setup pages, written so a coding agent can wire itself up from the URL:
+  [smartlyq.com/claude](https://smartlyq.com/claude), [/codex](https://smartlyq.com/codex), [/cursor](https://smartlyq.com/cursor), [/vscode](https://smartlyq.com/vscode). Settings > Developer API > MCP has the full list with one-click installs for Cursor and VS Code.
+</Tip>
 
 ## Connect with OAuth (recommended)
 
@@ -28,7 +33,7 @@ The server supports **OAuth 2.1 sign-in** (MCP spec authorization) — no API ke
 3. Approve — you're connected. Revoke anytime from **Settings > Developer API** (the connection appears as an API key).
 
 ```bash Claude Code (CLI)
-claude mcp add smartlyq --transport http https://mcp.smartlyq.com/mcp
+claude mcp add --transport http smartlyq https://mcp.smartlyq.com/mcp
 # Claude Code walks you through the SmartlyQ sign-in on first use.
 ```
 
@@ -50,8 +55,7 @@ Alternatively, authenticate with a SmartlyQ API key (`sqk_live_...`) from the [D
 ```
 
 ```bash Claude Code (CLI)
-claude mcp add smartlyq \
-  --transport http https://mcp.smartlyq.com/mcp \
+claude mcp add --transport http smartlyq https://mcp.smartlyq.com/mcp \
   --header "Authorization: Bearer sqk_live_xxxxxxxxxxxx"
 ```
 </CodeGroup>
