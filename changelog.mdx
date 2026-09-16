@@ -7,14 +7,14 @@ icon: "clock-rotate-left"
 Product updates for the SmartlyQ Developer API, MCP server, and Developer Portal. All endpoints live at `https://api.smartlyq.com/v1`.
 
 <Update label="September 16, 2026" tags={["API", "Billing"]}>
-## Connected account billing is documented, and moves to per-day counting on 1 November
+## Connected accounts are billed by the day, and the rates are now documented
 
-Per-account charges were never described in these docs. They are now, along with a change to how accounts are counted.
+Per-account charges were never described in these docs. They are now, and accounts are counted daily rather than once a month.
 
-- **What you pay** - each connected social account is billed monthly from your Developer wallet: $6 each for the first 10, $3 for accounts 11 to 100, $1 above that. Marginal, so 15 accounts is $75 a month. See [Billing & Credits](/guides/billing-and-credits).
-- **From 1 November 2026 accounts are counted by the day.** An account is billed for each day it stays connected, so a part month costs a part price: 15 accounts connected for half a month bills 7.5 account-months, $45. A full month of the same accounts costs exactly what it does today, so nothing reprices.
-- **Disconnecting stops the charge; pausing does not.** Pausing a profile stops it publishing, but its accounts stay connected and stay billable. If you no longer need an account, disconnect it. This is a change from today and the reason for the notice period.
-- **The Profiles tab in the Developer Dashboard now shows your current rates** and, until the change lands, the date it takes effect.
+- **What you pay** - each connected social account is billed from your Developer wallet: $6 each for the first 10, $3 for accounts 11 to 100, $1 above that. Marginal, so 15 accounts held for a full month is $75. See [Billing & Credits](/guides/billing-and-credits).
+- **Accounts are counted by the day.** An account is billed for each day it stays connected, so a part month costs a part price: 15 accounts connected for half a month bills 7.5 account-months, $45. Connect on the 20th and you pay for eleven days. A full month costs the same as it always did.
+- **Disconnecting stops the charge; pausing does not.** Pausing a profile stops it publishing, but its accounts stay connected and stay billable. If you no longer need an account, disconnect it.
+- **The Profiles tab and the Wallet tab in the Developer Dashboard now show your current rates**, so what you pay is visible next to the accounts and next to the balance it is charged against.
 
 <Update label="September 16, 2026" tags={["Social", "Improvement"]}>
 ## Posts are screened against the Content Policy before they are created
