@@ -6,6 +6,21 @@ icon: "clock-rotate-left"
 
 Product updates for the SmartlyQ Developer API, MCP server, and Developer Portal. All endpoints live at `https://api.smartlyq.com/v1`.
 
+<Update label="September 16, 2026" tags={["API", "Improvement"]}>
+## Request limits now scale with your connected accounts, and posting is capped per account
+
+Your request allowance used to be a flat 60 per minute regardless of size. It now scales with how many social accounts you have connected, because that is what determines how much work your integration actually has to do.
+
+- **Requests per minute by connected accounts** - 0 to 2 accounts get 60, 3 to 2,000 get 600, and 2,001 or more get 1,200. The limit moves as soon as you connect or disconnect an account. There is still no separate request limit per platform. A custom limit configured on your key continues to override the table.
+- **Analytics reads get a per-second ceiling** - your per-minute allowance divided by 60, never below 6. It applies to every endpoint requiring the `analytics:read` scope, so a dashboard refresh cannot spend a whole minute's budget in one burst and then stall. Exceeding it returns `429` with `Retry-After: 1`, and the rejected request does **not** count against your per-minute allowance.
+- **Each connected account now has a daily posting cap** - Threads 250, Instagram 100, Facebook 100, X 50, Pinterest 25, TikTok 15 video plus 15 photo as separate allowances, and 50 for every other platform. Caps are per account, not a shared pool, so connecting more accounts raises your total throughput.
+- **Every account is also limited to 25 posts per hour** across all platforms, so a day's allowance cannot be published in a single burst.
+- **Capped accounts are held back, not the whole request.** When you publish to several accounts at once, the accounts still under their caps go through and only the capped ones are refused, before the platform is called. The response names the limit that was reached and when to retry.
+- **`RATE_LIMIT_EXCEEDED` is now listed in [Errors](/guides/errors)** alongside `RATE_LIMITED`. They are different: `RATE_LIMIT_EXCEEDED` means you exceeded your own request limit, while `RATE_LIMITED` means a connected platform rate-limited us while serving your call. The `429` example in the OpenAPI spec was showing the wrong one of the two and now shows `RATE_LIMIT_EXCEEDED`.
+
+See [Rate limiting](/guides/rate-limiting) for both tables.
+</Update>
+
 <Update label="September 15, 2026" tags={["Social", "New"]}>
 ## Facebook Reels over the daily limit are refused up front, with the reason
 

@@ -44,7 +44,8 @@ All errors follow a consistent JSON structure:
 | `FORBIDDEN` | Key lacks the required scope |
 | `CONNECTION_SCOPE_MISSING` | The connected social account is missing a permission this call needs, usually because it was connected before SmartlyQ requested that permission. Reconnect the account to fix it; `details.reconnect_required` is `true`. |
 | `INSUFFICIENT_CREDITS` | Wallet balance too low |
-| `RATE_LIMITED` | Too many requests |
+| `RATE_LIMIT_EXCEEDED` | You exceeded your own request limit. See [rate limiting](/guides/rate-limiting). |
+| `RATE_LIMITED` | A connected platform rate-limited us while serving your call. Retry shortly. |
 | `VALIDATION_ERROR` | Request body failed validation |
 | `RESOURCE_NOT_FOUND` | The requested resource does not exist |
 | `IDEMPOTENCY_CONFLICT` | A request with this idempotency key was already processed |
