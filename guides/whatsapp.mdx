@@ -49,7 +49,7 @@ Either way, the token is verified against the number and stored encrypted; the c
   "media": { "kind": "image", "link": "https://cdn.example.com/receipt.png", "caption": "Your receipt" } }
 ```
 
-A `502` means WhatsApp rejected it - most commonly sending a session message outside the 24-hour window (send a template instead).
+A `422` with code `PLATFORM_UPSTREAM_ERROR` means WhatsApp rejected it, and `error.message` carries its reason - most commonly sending a session message outside the 24-hour window (send a template instead).
 
 For `media.kind: "audio"`, SmartlyQ automatically transcodes the file to WhatsApp's voice-note format (OGG/Opus) when it isn't already one of `ogg`/`oga`/`aac`/`m4a`/`mp3`/`amr` - so a browser-recorded clip still renders as a playable voice note, not a generic file attachment. This happens transparently; no extra parameter needed.
 
@@ -237,7 +237,7 @@ WhatsApp messaging is governed by both Meta's platform rules and your SmartlyQ p
 
 **Meta (platform) rules — enforced by WhatsApp:**
 
-- **24-hour customer service window** — free-form `text` and `media` messages are only deliverable within 24 hours of the customer's last message to you. Outside it, you must use an approved `template`. A `502` on a session message almost always means the window has closed.
+- **24-hour customer service window** — free-form `text` and `media` messages are only deliverable within 24 hours of the customer's last message to you. Outside it, you must use an approved `template`. A `422` refusal on a session message almost always means the window has closed.
 - **Messaging tiers** — a new number can start ~250 unique customers per 24 hours, rising to 1K → 10K → 100K → unlimited as your volume and quality grow. Meta raises the tier automatically.
 - **Quality rating** — each number carries a green / yellow / red rating. Too many blocks or reports lowers it and can throttle or restrict the number, so keep messaging relevant and opt-in.
 - **Template categories** — templates are `MARKETING`, `UTILITY`, or `AUTHENTICATION`, and each must be approved by Meta before it can be sent. Marketing templates are subject to per-user frequency caps.

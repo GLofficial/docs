@@ -6,6 +6,18 @@ icon: "clock-rotate-left"
 
 Product updates for the SmartlyQ Developer API, MCP server, and Developer Portal. All endpoints live at `https://api.smartlyq.com/v1`.
 
+<Update label="September 17, 2026" tags={["API", "Improvement"]}>
+## Platform refusals now return 422 with the reason, instead of an empty 502
+
+When a connected platform refused a request - an expired token, a value it does not accept, a WhatsApp message outside the 24-hour window - the API answered `502`. Our edge network replaces the body of `502` responses, so you received `error code: 502` and none of the explanation.
+
+- **Refusals now return `422`** with the platform's reason in `error.message`. This covers the social account, published post, WhatsApp, Google Business, Reddit, reviews, ads, SEO, avatar and video AI endpoints. The error `code` values are unchanged (`PLATFORM_ERROR`, `PLATFORM_UPSTREAM_ERROR`, `PROVIDER_ERROR`, `CREATE_FAILED`, `SEO_PROVIDER_ERROR`, `PLATFORM_DELETE_FAILED`).
+- **`502` now only means the platform could not be reached at all.** It still arrives without a body; retry after a short delay.
+- **AI generation failures** (hooks, captions, B-roll, emphasis, thumbnails) return `422` with `retryable: true`, because a second attempt can succeed.
+- **`PATCH /social/accounts/{account_id}/facebook/page` saves each field separately.** Facebook could store some fields and refuse a later one while the request reported a failure. A refusal now stops at that field and returns `details.field` and `details.saved_fields`, and the success response lists the fields saved.
+- **If your integration branches on `502`**, treat `422` with one of the codes above as a refusal to fix, not an outage. See [Errors](/guides/errors).
+</Update>
+
 <Update label="September 16, 2026" tags={["API", "Billing"]}>
 ## Connected accounts are billed by the day, and the rates are now documented
 
@@ -15,6 +27,7 @@ Per-account charges were never described in these docs. They are now, and accoun
 - **Accounts are counted by the day.** An account is billed for each day it stays connected, so a part month costs a part price: 15 accounts connected for half a month bills 7.5 account-months, $45. Connect on the 20th and you pay for eleven days. A full month costs the same as it always did.
 - **Disconnecting stops the charge; pausing does not.** Pausing a profile stops it publishing, but its accounts stay connected and stay billable. If you no longer need an account, disconnect it.
 - **The Profiles tab and the Wallet tab in the Developer Dashboard now show your current rates**, so what you pay is visible next to the accounts and next to the balance it is charged against.
+</Update>
 
 <Update label="September 16, 2026" tags={["Social", "Improvement"]}>
 ## Posts are screened against the Content Policy before they are created
@@ -25,6 +38,7 @@ Content checks previously ran only inside AI Captain and the website builder. Th
 - **Links to adult subscription platforms are refused.** This is a check on the links in your caption and `link` field, so ordinary posts that merely mention such a service in passing are unaffected.
 - **Duplicate detection now looks across your profiles, not just inside one.** The existing 24-hour duplicate guard only ever compared posts within a single workspace, which meant the same content sent to many profiles was invisible to it. Publishing identical content to several of your profiles in quick succession is still allowed and still publishes; it is now recorded for review.
 - **New error code `CONTENT_POLICY_VIOLATION`** - HTTP `422`, not retryable. See [Errors](/guides/errors).
+</Update>
 
 <Update label="September 16, 2026" tags={["API", "Improvement"]}>
 ## Request limits now scale with your connected accounts, and posting is capped per account
