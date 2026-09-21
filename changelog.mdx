@@ -6,6 +6,16 @@ icon: "clock-rotate-left"
 
 Product updates for the SmartlyQ Developer API, MCP server, and Developer Portal. All endpoints live at `https://api.smartlyq.com/v1`.
 
+<Update label="September 21, 2026" tags={["API", "Opportunities"]}>
+## Opportunities have a source
+
+Where a deal came from is now a field of its own, accepted by `POST /opportunities` and `PATCH /opportunities/{id}` and returned on every opportunity response.
+
+- **`source`** - free text up to 100 characters ("Website form", "Autumn campaign", "Referral").
+- **Leave it out when you create a deal** and the linked contact's own source is used, so a deal made from a form keeps the attribution the contact already carries. Send an empty string to clear it.
+- It is also a merge tag in messages and automations: `{{deal.source}}`.
+</Update>
+
 <Update label="September 21, 2026" tags={["API", "Contacts"]}>
 ## Contacts have an address, a date of birth and a website
 
