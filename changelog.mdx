@@ -6,6 +6,19 @@ icon: "clock-rotate-left"
 
 Product updates for the SmartlyQ Developer API, MCP server, and Developer Portal. All endpoints live at `https://api.smartlyq.com/v1`.
 
+<Update label="September 21, 2026" tags={["API", "Contacts"]}>
+## Contacts have an address, a date of birth and a website
+
+Seven new fields on every contact, accepted by `POST /contacts`, `PATCH /contacts/{id}` and `POST /contacts/bulk`, and returned on every contact response (`null` when not set).
+
+- **`address1`, `city`, `state`, `postal_code`** - text. `postal_code` is always a string, so leading zeros and letters survive (`"02134"`, `"SW1A 1AA"`).
+- **`country`** - send an ISO 3166-1 alpha-2 code (`"GR"`) or an English country name (`"Greece"`); it is stored and returned as the code.
+- **`date_of_birth`** - a date with no time, `YYYY-MM-DD` (`DD/MM/YYYY` is also accepted). It must be a real past date after 1900.
+- **`website`** - a bare domain gets `https://` added.
+- **An unknown country or an impossible date is refused** with `422 VALIDATION_ERROR`, and the message names the field and the value. Send an empty string to clear a field.
+- **The new fields are also merge tags** in messages and automations: `{{contact.address1}}`, `{{contact.city}}`, `{{contact.country}}`, `{{contact.date_of_birth}}`, `{{contact.full_address}}` and the rest.
+</Update>
+
 <Update label="September 17, 2026" tags={["API", "Improvement"]}>
 ## Platform refusals now return 422 with the reason, instead of an empty 502
 
