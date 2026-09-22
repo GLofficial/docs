@@ -6,6 +6,19 @@ icon: "clock-rotate-left"
 
 Product updates for the SmartlyQ Developer API, MCP server, and Developer Portal. All endpoints live at `https://api.smartlyq.com/v1`.
 
+<Update label="September 22, 2026" tags={["API", "Contacts"]}>
+## Contact notes can be edited, formatted, coloured and pinned
+
+Notes gained a title, formatting, a colour, a pin and attachments, and can now be edited and deleted over the API.
+
+- **New endpoints:** `PATCH /contacts/{id}/notes/{note_id}` edits a note (only the fields you send change) and `DELETE /contacts/{id}/notes/{note_id}` removes it.
+- **New fields** on `POST /contacts/{id}/notes` and the edit: `title` (up to 120 characters), `body_html` (bold, italic, underline, strike, lists, quotes and http(s) / mailto / tel links - anything else is removed), `color` (`yellow`, `green`, `blue`, `gray`, `teal`, `purple`, `orange`, `pink`, `violet`, `cyan`), `pinned` and `attachment_file_ids` (up to 5 files already on the contact).
+- **`body` stays plain text** on every response, so existing integrations keep working; `body_html` is the formatted version when there is one.
+- **A note needs text, a title or an attachment**, so `body` is no longer strictly required.
+- **Automations:** editing a note's title, text, colour or attachments starts the new "Note changed" trigger; pinning does not. `{{note.title}}` is a new merge tag.
+- `GET /contacts/{id}/notes` now lists pinned notes first and answers `404` for a contact outside your workspace.
+</Update>
+
 <Update label="September 21, 2026" tags={["API", "Opportunities"]}>
 ## Opportunities have a source
 
