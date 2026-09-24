@@ -6,6 +6,14 @@ icon: "clock-rotate-left"
 
 Product updates for the SmartlyQ Developer API, MCP server, and Developer Portal. All endpoints live at `https://api.smartlyq.com/v1`.
 
+<Update label="September 24, 2026" tags={["API", "Companies"]}>
+## Companies have a city, state, postal code, country and email
+
+- `POST /companies` and `PATCH /companies/{id}` accept `city`, `state`, `postal_code`, `country` and `email`, and every company response returns them.
+- `country` is stored as a two-letter code (`GR`). Send the code or an English country name; an unknown country is refused with `422`.
+- `email` must be a valid address. Send an empty string to clear any of these fields.
+</Update>
+
 <Update label="September 24, 2026" tags={["Developer Portal", "MCP"]}>
 ## See your request allowance in the Developer Portal
 
