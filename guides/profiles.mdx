@@ -44,7 +44,7 @@ curl -X POST https://api.smartlyq.com/v1/social/posts \
   -d '{"content": "Fresh roast, first pour.", "platforms": ["instagram"]}'
 ```
 
-Everything stays yours where it matters: billing, rate limits, and usage logs remain on **your** account and wallet - the profile is only a data boundary. Delegation requires the `profiles:manage` scope on the key; profile lifecycle uses `profiles:read` / `profiles:write`.
+Everything stays yours where it matters: billing, rate limits, and usage logs remain on **your** account and wallet - the profile is only a data boundary. A call made on a profile's behalf counts against your workspace's request allowance, not a separate one per profile. Delegation requires the `profiles:manage` scope on the key; profile lifecycle uses `profiles:read` / `profiles:write`.
 
 ## Billing
 
