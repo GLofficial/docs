@@ -6,6 +6,17 @@ icon: "clock-rotate-left"
 
 Product updates for the SmartlyQ Developer API, MCP server, and Developer Portal. All endpoints live at `https://api.smartlyq.com/v1`.
 
+<Update label="September 24, 2026" tags={["API", "Improvement"]}>
+## Request limits follow your connected accounts, one allowance per workspace
+
+The [request limits](/guides/rate-limiting) now apply as published: 60, 600 or 1,200 requests per minute depending on the social accounts connected. Until now every key stayed at 60 requests per minute.
+
+- **One allowance per workspace.** All API keys in a workspace, including the keys MCP connections create, draw on one per-minute allowance. Creating more keys no longer adds requests.
+- **Test keys** (`sqk_test_`) have their own allowance of the same size, so sandbox traffic never uses up your live one.
+- **A key with a custom rate limit** keeps an allowance of its own.
+- **`X-RateLimit-Reset`** is always the start of the next minute.
+</Update>
+
 <Update label="September 22, 2026" tags={["API", "Contacts"]}>
 ## Contact notes can be edited, formatted, coloured and pinned
 
