@@ -6,6 +6,18 @@ icon: "clock-rotate-left"
 
 Product updates for the SmartlyQ Developer API, MCP server, and Developer Portal. All endpoints live at `https://api.smartlyq.com/v1`.
 
+<Update label="October 5, 2026" tags={["API", "Fix"]}>
+## TikTok posts need a privacy choice; LinkedIn and Pinterest fixes
+
+- **TikTok `visibility` is now required.** TikTok requires the person posting to choose who can see the post. A post that includes TikTok and has no valid `platform_options.tiktok.visibility` (`public`, `friends` or `private`) is refused with `VALIDATION_ERROR`. Until now it was published as public.
+- **TikTok branded content cannot be private.** `branded_content: true` together with `visibility: private` is refused, as TikTok requires.
+- **Docs fix:** the API reference showed `platform_options.tiktok.privacy_level`. The key is `visibility`; `privacy_level` was never read. See [Platform options](/guides/platform-options). The TikTok options are now a typed object (`TikTokPlatformOptions`) in the API reference.
+- **Editing posts:** `PATCH /social/posts/{post_id}` now accepts `platform_options`, merged over the stored options (send `null` for a key to clear it), so TikTok options can be set or changed after create. A post that will be scheduled after the edit is checked the same way as on create.
+- **Fix:** `media_urls` and `link` sent to `PATCH /social/posts/{post_id}` were accepted but not applied. Both are applied now.
+- **LinkedIn:** LinkedIn could cut a post short at characters it reserves for its own formatting, such as `(`. Post text is now sent the way LinkedIn requires, so it publishes in full. `#hashtags` still work.
+- **Pinterest:** the post URL returned for an image pin is now the pin itself, not the pin's destination link.
+</Update>
+
 <Update label="September 24, 2026" tags={["API", "Companies"]}>
 ## Companies have a city, state, postal code, country and email
 

@@ -48,9 +48,11 @@ description: "Every per-platform option you can set on a post, per platform."
 ### TikTok
 | Key | Effect |
 |---|---|
-| `visibility` | Privacy level (required by TikTok) |
-| `allow_comments` / `allow_duet` / `allow_stitch` | Interaction toggles |
-| `branded_content` / `your_brand` | Commercial-content disclosure flags |
+| `visibility` | **Required.** `public`, `friends` or `private` (Only me). TikTok requires the person to choose it - a TikTok post without a valid `visibility` is refused with `VALIDATION_ERROR` and is not published. |
+| `type` | `video` (default) or `photo` for a photo post |
+| `allow_comments` / `allow_duet` / `allow_stitch` | Interaction toggles (off unless set to `true`) |
+| `disclose_content` | `true` when the post promotes goods or services. Then set `your_brand`, `branded_content`, or both. |
+| `your_brand` / `branded_content` | Commercial-content disclosure: promotes yourself / a third party (paid partnership). `branded_content` cannot be combined with `visibility: private` - that post is refused. |
 | `auto_add_music`, `photo_cover_index`, `photo_title` | Photo-post extras |
 | `_thumbnail.timestamp_ms` | Video cover frame offset |
 
