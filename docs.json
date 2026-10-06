@@ -85,6 +85,7 @@
               "guides/connecting-accounts",
               "guides/idempotency",
               "guides/platform-options",
+              "guides/bulk-scheduling",
               "guides/whatsapp",
               "guides/workspaces",
               "guides/profiles",

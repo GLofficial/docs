@@ -6,6 +6,15 @@ icon: "clock-rotate-left"
 
 Product updates for the SmartlyQ Developer API, MCP server, and Developer Portal. All endpoints live at `https://api.smartlyq.com/v1`.
 
+<Update label="October 6, 2026" tags={["API", "Improvement"]}>
+## Bulk CSV: platform option columns, captions over several lines
+
+- **Platform options in a CSV.** The `csv` of `POST /social/posts/bulk` and `/social/posts/bulk/validate` accepts `<platform>.<field>` columns for any [platform option](/guides/platform-options), e.g. `tiktok.visibility`, `youtube.title`, `pinterest.board_id`, `instagram.type`, and a `first_comment` column. Existing files with the six basic columns work as before. See [Bulk scheduling](/guides/bulk-scheduling).
+- **Fix:** a caption with a line break inside a quoted CSV cell was split into broken rows. It is now read as one post, and billed as one.
+- **Validate matches create:** `/social/posts/bulk/validate` now also reports the platform rules create enforces (e.g. a TikTok row without `visibility`), so a batch it passes is not refused by create.
+- **Limits:** a CSV of more than 2 MB is refused. The 50 posts per call limit is unchanged.
+</Update>
+
 <Update label="October 5, 2026" tags={["API", "Fix"]}>
 ## TikTok posts need a privacy choice; LinkedIn and Pinterest fixes
 

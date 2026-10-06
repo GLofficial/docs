@@ -1,0 +1,68 @@
+---
+title: "Bulk scheduling"
+icon: "table-list"
+description: "Schedule up to 50 posts in one call, from JSON or a CSV file."
+---
+
+`POST /social/posts/bulk` schedules up to 50 posts in one call. Send a JSON `posts` array, or the contents of a CSV file as the `csv` string. Run the free `POST /social/posts/bulk/validate` first: it checks every row and creates nothing.
+
+The bulk scheduler in the SmartlyQ app reads CSV files with the same code and the same columns, so a file that works in the app works here, and the other way round.
+
+## CSV columns
+
+The first line names the columns. Column names are not case-sensitive, and the order does not matter.
+
+| Column | Required | What it is |
+|---|---|---|
+| `content` | Yes | The post text. A cell in double quotes may span several lines. |
+| `platforms` | Yes (API) | Platforms for this row, e.g. `instagram\|facebook`. |
+| `account_ids` | Yes (API) | Connected account IDs for this row, e.g. `12\|34`. |
+| `scheduled_time` | Yes (API) | When to publish, e.g. `2026-11-02 10:00` or ISO 8601 with an offset. |
+| `media_urls` | | Public image or video links, separated by `\|`. |
+| `link` | | Added to every platform that has a link field. |
+| `first_comment` | | Posted as the first comment on Facebook, Instagram, LinkedIn, Threads, X and Reddit. |
+
+List cells (`platforms`, `account_ids`, `media_urls`) are split on `|`. `platforms` and `account_ids` may also use commas. In `media_urls` a comma only starts a new link when the next link begins with `http`, because some image links contain commas.
+
+A file can use `;` or a tab instead of a comma between cells, as Excel does in some languages. A UTF-8 byte-order mark is ignored.
+
+## Platform option columns
+
+Any [platform option](/guides/platform-options) can be a column, named `<platform>.<field>`:
+
+| Column | Values |
+|---|---|
+| `tiktok.visibility` | `public`, `friends`, `private` - required for every TikTok post |
+| `tiktok.type` | `video` or `photo` |
+| `tiktok.allow_comments`, `tiktok.allow_duet`, `tiktok.allow_stitch` | `true` or `false` |
+| `tiktok.disclose_content`, `tiktok.your_brand`, `tiktok.branded_content` | `true` or `false` |
+| `youtube.type` | `video` or `short` |
+| `youtube.title` | required for YouTube |
+| `youtube.privacy` | `public`, `unlisted`, `private` |
+| `instagram.type`, `facebook.type` | `post`, `reel`, `story` |
+| `pinterest.board_id` | the board to pin to (see `GET /social/accounts/{account_id}/pinterest/boards`) |
+| `pinterest.title`, `pinterest.description`, `pinterest.link`, `pinterest.alt_text` | text |
+| `linkedin.type` | `post` or `document` |
+| `gmb.post_type` | `STANDARD`, `EVENT`, `OFFER` (with the event and offer fields, e.g. `gmb.event_title`) |
+| `threads.reply_control` | `everyone`, `accounts_you_follow`, `mentioned_only` |
+
+A value can be the option itself or its label: `private`, `Only Me` and `only_me` all mean the same for `tiktok.visibility`. An option column applies only to rows that post to that platform. A column name we do not know rejects the whole file with `VALIDATION_ERROR` and lists the unknown names in `details.unknown`.
+
+## Example
+
+```csv
+content,platforms,account_ids,scheduled_time,media_urls,tiktok.visibility,youtube.title
+"New menu is here!
+See you soon.",tiktok|youtube,12|34,2026-11-02 10:00,https://cdn.example.com/menu.mp4,public,Our new menu
+```
+
+```bash
+curl -X POST https://api.smartlyq.com/v1/social/posts/bulk/validate \
+  -H "Authorization: Bearer sqk_live_xxxx" \
+  -H "Content-Type: application/json" \
+  -d '{"timezone": "Europe/Athens", "csv": "content,platforms,account_ids,scheduled_time,tiktok.visibility\nHello,tiktok,12,2026-11-02 10:00,public"}'
+```
+
+## Checks
+
+Every row gets the same checks as a single post: caption length and media per platform, the platform rules (for example TikTok's `visibility`, which has no default), and the 24-hour same-text guard. The validate call reports them per row. The create call rejects the whole batch for structural problems before anything is created and refunds the charge; a row that fails after that is reported in `results`.
