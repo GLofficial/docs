@@ -16,13 +16,14 @@ The first line names the columns. Column names are not case-sensitive, and the o
 |---|---|---|
 | `content` | Yes | The post text. A cell in double quotes may span several lines. |
 | `platforms` | Yes (API) | Platforms for this row, e.g. `instagram\|facebook`. |
-| `account_ids` | Yes (API) | Connected account IDs for this row, e.g. `12\|34`. |
+| `account_ids` | Yes (API) | Connected account IDs for this row, e.g. `12\|34`. Optional when `account_group_ids` is set. |
+| `account_group_ids` | | API only. Account group IDs for this row, e.g. `3\|5`. Their connected accounts are added to `account_ids`. |
 | `scheduled_time` | Yes (API) | When to publish, e.g. `2026-11-02 10:00` or ISO 8601 with an offset. |
 | `media_urls` | | Public image or video links, separated by `\|`. |
 | `link` | | Added to every platform that has a link field. |
 | `first_comment` | | Posted as the first comment on Facebook, Instagram, LinkedIn, Threads, X and Reddit. |
 
-List cells (`platforms`, `account_ids`, `media_urls`) are split on `|`. `platforms` and `account_ids` may also use commas. In `media_urls` a comma only starts a new link when the next link begins with `http`, because some image links contain commas.
+List cells (`platforms`, `account_ids`, `account_group_ids`, `media_urls`) are split on `|`. `platforms`, `account_ids` and `account_group_ids` may also use commas. In `media_urls` a comma only starts a new link when the next link begins with `http`, because some image links contain commas.
 
 A file can use `;` or a tab instead of a comma between cells, as Excel does in some languages. A UTF-8 byte-order mark is ignored.
 

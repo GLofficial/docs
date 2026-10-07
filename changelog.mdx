@@ -6,6 +6,15 @@ icon: "clock-rotate-left"
 
 Product updates for the SmartlyQ Developer API, MCP server, and Developer Portal. All endpoints live at `https://api.smartlyq.com/v1`.
 
+<Update label="October 7, 2026" tags={["API", "Improvement"]}>
+## Post to an account group
+
+- **`account_group_ids`** on `POST /social/posts`, `POST /social/posts/schedule`, `PATCH /social/posts/{post_id}` and each row of `POST /social/posts/bulk` (and `/validate`): the connected accounts of those [account groups](/api-reference/social/list-account-groups) are added to `account_ids`, each account once. Send `account_ids`, `account_group_ids` or both. In a bulk `csv`, use an `account_group_ids` column.
+- **Clear refusals:** an unknown group id answers `404 RESOURCE_NOT_FOUND` and a group with no connected accounts left answers `422 VALIDATION_ERROR`, each naming the group. A post never goes to fewer accounts than asked without saying so. In a bulk batch the row is reported with the others.
+- **Account groups:** names are now unique per workspace (any letter case), and every member must be a connected account. An account may be in several groups. Accounts disconnected since are left out of a group when you read it.
+- Groups can now also be created and edited in the app, from the account picker of the post composer and the bulk scheduler.
+</Update>
+
 <Update label="October 7, 2026" tags={["API", "Fix"]}>
 ## YouTube: options applied, clearer errors, larger thumbnails
 
