@@ -334,6 +334,17 @@
                 ]
               },
               {
+                "group": "Edits",
+                "pages": [
+                  "POST /edits",
+                  "GET /edits",
+                  "GET /edits/options",
+                  "GET /edits/{uid}",
+                  "PATCH /edits/{uid}",
+                  "POST /edits/{uid}/export"
+                ]
+              },
+              {
                 "group": "Presentations",
                 "pages": [
                   "POST /presentations/generate",

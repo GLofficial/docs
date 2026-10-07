@@ -7,6 +7,17 @@ icon: "clock-rotate-left"
 Product updates for the SmartlyQ Developer API, MCP server, and Developer Portal. All endpoints live at `https://api.smartlyq.com/v1`.
 
 <Update label="October 7, 2026" tags={["API", "New"]}>
+## Video editing API: /edits
+
+- **`POST /edits`** edits a whole video (any aspect ratio, up to 60 minutes): word-by-word captions in any caption style and formatting, magic zooms, stock b-roll, silence removal at three paces, filler-word removal, clean audio, a hook title, music and your brand template. Every field is checked before any charge.
+- **Open or export it:** once `ready`, `editor_url` opens the edit in the SmartlyQ video editor; **`POST /edits/{uid}/export`** renders the MP4 (`output_url`). Set `auto_export` to export straight away.
+- **Change it:** **`PATCH /edits/{uid}`** updates the title, or the settings (the edit is rebuilt as a new editor project).
+- **`GET /edits`**, **`GET /edits/{uid}`** and **`GET /edits/options`** (every setting with its default and allowed values, and the caption styles).
+- **Webhooks:** `job.completed` with `stage: "ready"` and again with `stage: "exported"`; `job.failed` with `stage` and `error_code`. Pass `webhook_url` for this edit alone.
+- **Pricing:** per source minute to create ($0.20), per output minute to export ($0.10), clean audio per source minute ($0.75); minutes rounded up. A failed edit or render is refunded.
+</Update>
+
+<Update label="October 7, 2026" tags={["API", "New"]}>
 ## Magic Shorts: per-job webhook, finished events, speech languages
 
 - **`webhook_url`** on `POST /shorts/generate`: a public HTTPS URL told when the job finishes. The 202 returns that job's `webhook_secret` (shown once) to verify `X-SmartlyQ-Signature`. See [Webhooks](/guides/webhooks).
