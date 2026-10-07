@@ -6,6 +6,15 @@ icon: "clock-rotate-left"
 
 Product updates for the SmartlyQ Developer API, MCP server, and Developer Portal. All endpoints live at `https://api.smartlyq.com/v1`.
 
+<Update label="October 7, 2026" tags={["API", "New"]}>
+## Magic Shorts: per-job webhook, finished events, speech languages
+
+- **`webhook_url`** on `POST /shorts/generate`: a public HTTPS URL told when the job finishes. The 202 returns that job's `webhook_secret` (shown once) to verify `X-SmartlyQ-Signature`. See [Webhooks](/guides/webhooks).
+- **`job.completed` / `job.failed` now fire for Magic Shorts jobs**, to your registered webhooks and to the job's `webhook_url`, once per job. `job.completed` carries the delivered clips (same shape as `GET /shorts/{uid}`); a job whose clips all failed is `job.failed` with an `error`.
+- **`GET /languages`** lists the speech languages. `language` on `POST /shorts/generate` now defaults to `auto` (detect) and is used for the transcript; an unknown code answers `422` naming the field.
+- **Docs fix:** the clips of `GET /shorts/{uid}` are now documented as returned: `clip_url`, `start_ms` / `end_ms`, `duration_ms`, `scores` and the rest.
+</Update>
+
 <Update label="October 7, 2026" tags={["API", "Fix"]}>
 ## Retries never post twice; .jfif photos
 

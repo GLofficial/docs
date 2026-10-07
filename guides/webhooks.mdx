@@ -145,8 +145,12 @@ All registerable events. Registering an event name outside this catalog is rejec
 
 | Event | Fires when | `data` fields |
 |---|---|---|
-| `job.completed` | An async job finished successfully | `job_id`, `type`, `status` |
+| `job.completed` | An async job finished successfully | `job_id`, `type`, `status`; for `type: "shorts"` also `job_uid`, `clip_count`, `clips[]` (same shape as `GET /shorts/{uid}`) |
 | `job.failed` | An async job failed | `job_id`, `type`, `status`, `error` |
+
+#### Per-job webhook URL
+
+`POST /shorts/generate` also takes a `webhook_url`: a public HTTPS URL that gets this job's `job.completed` or `job.failed`, even if you have no registered webhooks. The 202 response returns a `webhook_secret` for that job, shown once; verify `X-SmartlyQ-Signature` on those deliveries with it. Same envelope, retries and safety checks as registered webhooks. A Magic Shorts job whose clips all failed is reported as `job.failed`.
 
 ### Billing & keys
 

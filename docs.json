@@ -329,7 +329,8 @@
                   "POST /shorts/generate",
                   "GET /shorts",
                   "GET /shorts/caption-styles",
-                  "GET /shorts/{uid}"
+                  "GET /shorts/{uid}",
+                  "GET /languages"
                 ]
               },
               {
