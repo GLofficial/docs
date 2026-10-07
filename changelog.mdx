@@ -6,6 +6,14 @@ icon: "clock-rotate-left"
 
 Product updates for the SmartlyQ Developer API, MCP server, and Developer Portal. All endpoints live at `https://api.smartlyq.com/v1`.
 
+<Update label="October 7, 2026" tags={["API", "Fix"]}>
+## Retries never post twice; .jfif photos
+
+- **Fix:** retrying a post again while an earlier retry was still publishing posted it a second time. Now one retry runs at a time per post: `POST /social/posts/{post_id}/retry` answers `409 RETRY_IN_PROGRESS` and publishes nothing while another retry or publish of that post is running. Wait for it to finish, then read the post.
+- **Only failed platforms are retried.** A platform that already has its published post is never posted again, also when you name it in `platforms`; asking only for those answers `422 NOTHING_TO_RETRY`.
+- **`.jfif` photos** (a JPEG saved under that name, e.g. by Chrome on Windows) now publish to Facebook and Instagram. Other platforms refuse them with a message to save the image as `.jpg`.
+</Update>
+
 <Update label="October 7, 2026" tags={["API", "Improvement"]}>
 ## Post to an account group
 
