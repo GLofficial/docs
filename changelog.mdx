@@ -15,6 +15,7 @@ Product updates for the SmartlyQ Developer API, MCP server, and Developer Portal
 - **`GET /edits`**, **`GET /edits/{uid}`** and **`GET /edits/options`** (every setting with its default and allowed values, and the caption styles).
 - **Webhooks:** `job.completed` with `stage: "ready"` and again with `stage: "exported"`; `job.failed` with `stage` and `error_code`. Pass `webhook_url` for this edit alone.
 - **Pricing:** per source minute to create ($0.20), per output minute to export ($0.10), clean audio per source minute ($0.75); minutes rounded up. A failed edit or render is refunded.
+- **Your files:** every export is saved to your workspace Media Library (it counts toward your storage, and you keep or delete it). An edit's working files (source copy, b-roll) are deleted 30 days after it finished; after that `files_expired` is true and the edit can no longer be changed or exported again (410 `EDIT_EXPIRED`), while its exports stay.
 </Update>
 
 <Update label="October 7, 2026" tags={["API", "New"]}>
