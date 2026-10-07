@@ -41,9 +41,9 @@ description: "Every per-platform option you can set on a post, per platform."
 | `privacy` | `public` · `private` · `unlisted` |
 | `made_for_kids` | COPPA audience declaration (default false) |
 | `tags` | Array of video tags/keywords |
-| `category_id` | Numeric YouTube category (default 22, People & Blogs) |
-| `contains_synthetic_media` | AI-generated/altered content disclosure - only sent when you set it |
-| `_thumbnail.url` | Custom video thumbnail |
+| `category_id` | Numeric YouTube category, e.g. `22` (People & Blogs). Categories differ by country - YouTube's `videoCategories.list` lists the ones you can use. When not set, YouTube applies its own default. |
+| `contains_synthetic_media` | `true` when the video contains realistic AI-generated or altered content (YouTube's disclosure) - only sent when you set it |
+| `_thumbnail.url` | Custom video thumbnail, JPEG or PNG, up to 50MB |
 
 ### TikTok
 | Key | Effect |

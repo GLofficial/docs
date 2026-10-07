@@ -6,6 +6,18 @@ icon: "clock-rotate-left"
 
 Product updates for the SmartlyQ Developer API, MCP server, and Developer Portal. All endpoints live at `https://api.smartlyq.com/v1`.
 
+<Update label="October 7, 2026" tags={["API", "Fix"]}>
+## YouTube: options applied, clearer errors, larger thumbnails
+
+- **Fix:** `platform_options.youtube.category_id` and `contains_synthetic_media` were documented but never reached YouTube. Both are applied now. Without `category_id`, YouTube still applies its own default.
+- **Clearer YouTube errors:** a failed YouTube post now says why - for example YouTube's daily upload quota being used up, the channel's upload limit, a Google account without a YouTube channel, or which field YouTube refused. A used-up quota no longer marks the account as disconnected.
+- **Failed posts on every platform** now show each account's reason, not only "Failed to post to any ... accounts".
+- **Interrupted YouTube uploads resume** instead of starting over, so a retry cannot upload the same video twice.
+- **Custom YouTube thumbnails** up to 50MB (was 2MB). `POST /social/posts/{post_id}/update-metadata` now says whether a thumbnail could not be downloaded, was too large, or was refused by YouTube, and why.
+- **YouTube descriptions** are checked against YouTube's limit of 5,000 bytes (Greek and other non-Latin letters take 2 bytes each).
+- **Bulk posting:** `POST /social/posts/bulk` can no longer run out of time when media links are slow to answer, so a batch is always answered with every row's result.
+</Update>
+
 <Update label="October 6, 2026" tags={["API", "Improvement"]}>
 ## Bulk CSV: platform option columns, captions over several lines
 
