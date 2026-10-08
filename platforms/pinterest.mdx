@@ -13,6 +13,8 @@ description: "Pinterest support in the SmartlyQ API: limits, post types, capabil
 | **Connect** | Headless (`POST /v1/social/connect/pinterest`) or dashboard |
 | **Tokens** | ~30 days |
 
+**Requires media** - every pin needs an image or video. A post without one is refused with `422 VALIDATION_ERROR` before anything is sent.
+
 Pinterest comments **cannot be hidden or deleted** via the API — those operations return `not_supported`.
 
 See [all platforms](/platforms) for the capability matrix and media rules.
