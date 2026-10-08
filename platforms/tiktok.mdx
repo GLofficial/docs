@@ -13,4 +13,6 @@ description: "TikTok support in the SmartlyQ API: limits, post types, capabiliti
 | **Connect** | Headless (`POST /v1/social/connect/tiktok`) or dashboard |
 | **Tokens** | ~24 hours, auto-refreshed |
 
+**Requires media** - an image or a video; a post without one is refused with `422 VALIDATION_ERROR`. Images publish as a photo post. With `platform_options.tiktok.type: "photo"` the post takes images only.
+
 See [all platforms](/platforms) for the capability matrix and media rules.

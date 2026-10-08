@@ -8,9 +8,11 @@ description: "YouTube support in the SmartlyQ API: limits, post types, capabilit
 | | |
 |---|---|
 | **Caption limit** | 5,000 characters (description) |
-| **Post types** | Standard video, Shorts, Community posts |
+| **Post types** | Standard video, Shorts |
 | **Capabilities** | Publish · Analytics · Comments |
 | **Connect** | Headless (`POST /v1/social/connect/youtube`) or dashboard |
 | **Tokens** | ~1 hour, auto-refreshed |
+
+**Requires a video** - a post without one is refused with `422 VALIDATION_ERROR` before anything is sent. YouTube's API has no community (text) posts.
 
 See [all platforms](/platforms) for the capability matrix and media rules.

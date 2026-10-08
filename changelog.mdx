@@ -13,6 +13,14 @@ Product updates for the SmartlyQ Developer API, MCP server, and Developer Portal
 - A **partly published** post still cannot be updated - re-sending it would post its published platforms again - and answers `422 NOT_EDITABLE` with that reason.
 - A failed post that is being retried right now answers `409 RETRY_IN_PROGRESS`; nothing is changed. Wait for the retry to finish, then read the post.
 
+## The same checks on create, edit and validate
+
+- **`PATCH /social/posts/{post_id}`** now runs the same caption, media and file checks as create on the post as it will be after the edit, when it is scheduled or sent for approval. Before, an edit could turn a valid post into one that failed at publish.
+- **Media must suit the post type:** an Instagram or Facebook Reel and a YouTube video need a video; a TikTok photo post (`platform_options.tiktok.type: "photo"`) takes images only; a TikTok post needs an image or video (images without a type still publish as a photo post). Refused with `422 VALIDATION_ERROR` naming the rule.
+- **Each platform's own text is checked:** with `platform_overrides`, every platform is checked against its own caption. Before, the shared text was checked for all of them.
+- **`POST /social/posts/bulk/validate`** runs the same checks on each row as create (it does not read the media files; create still checks their size and length).
+- **`POST /social/validate/post`** now runs exactly what create runs (post fields included), accepts optional `platform_options` and `platform_overrides` as create does, and adds non-blocking `warnings`. `valid: true` means create would accept the post.
+
 ## Instagram and Threads rules checked before publishing
 
 - **Instagram:** at most 30 hashtags and 20 @mentions per caption; Reel and feed videos 3 seconds to 15 minutes and up to 300 MB; Story videos 3 to 60 seconds and up to 100 MB. A Story with text answers with a warning that stories carry no caption. See [Instagram](/platforms/instagram).
