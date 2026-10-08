@@ -6,6 +6,14 @@ icon: "clock-rotate-left"
 
 Product updates for the SmartlyQ Developer API, MCP server, and Developer Portal. All endpoints live at `https://api.smartlyq.com/v1`.
 
+<Update label="October 8, 2026" tags={["API", "Improvement"]}>
+## Fix a failed post without posting anything twice
+
+- **`PATCH /social/posts/{post_id}`** now also updates a post that **failed on every platform**. Nothing of it is live, so saving it makes it a draft again (or scheduled, with a `scheduled_time`) and stops its automatic retries.
+- A **partly published** post still cannot be updated - re-sending it would post its published platforms again - and answers `422 NOT_EDITABLE` with that reason.
+- A failed post that is being retried right now answers `409 RETRY_IN_PROGRESS`; nothing is changed. Wait for the retry to finish, then read the post.
+</Update>
+
 <Update label="October 7, 2026" tags={["API", "New"]}>
 ## Video editing API: /edits
 
