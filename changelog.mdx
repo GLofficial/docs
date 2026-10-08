@@ -12,6 +12,13 @@ Product updates for the SmartlyQ Developer API, MCP server, and Developer Portal
 - **`PATCH /social/posts/{post_id}`** now also updates a post that **failed on every platform**. Nothing of it is live, so saving it makes it a draft again (or scheduled, with a `scheduled_time`) and stops its automatic retries.
 - A **partly published** post still cannot be updated - re-sending it would post its published platforms again - and answers `422 NOT_EDITABLE` with that reason.
 - A failed post that is being retried right now answers `409 RETRY_IN_PROGRESS`; nothing is changed. Wait for the retry to finish, then read the post.
+
+## Instagram and Threads rules checked before publishing
+
+- **Instagram:** at most 30 hashtags and 20 @mentions per caption; Reel and feed videos 3 seconds to 15 minutes and up to 300 MB; Story videos 3 to 60 seconds and up to 100 MB. A Story with text answers with a warning that stories carry no caption. See [Instagram](/platforms/instagram).
+- **Threads:** 500 characters with each emoji counted as its size in bytes, as Threads counts; up to 5 links; carousels of up to 20 items. See [Threads](/platforms/threads).
+- A post that breaks a rule is refused with `422 VALIDATION_ERROR` naming the rule, instead of failing at the platform later.
+- **Retry** (`POST /social/posts/{post_id}/retry`) now runs the same checks first, and sends each platform its own `platform_overrides` text and media, as the first publish does.
 </Update>
 
 <Update label="October 7, 2026" tags={["API", "New"]}>
