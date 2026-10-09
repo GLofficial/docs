@@ -6,6 +6,15 @@ icon: "clock-rotate-left"
 
 Product updates for the SmartlyQ Developer API, MCP server, and Developer Portal. All endpoints live at `https://api.smartlyq.com/v1`.
 
+<Update label="October 9, 2026" tags={["API", "Improvement"]}>
+## Failed posts say why
+
+- **Instagram:** when Instagram cannot process the media, the post's error now gives Instagram's reason in plain words (unsupported video format, image too large, aspect ratio, daily publishing limit, restricted account, ...). Video processing is given up to 5 minutes, Meta's documented limit. A retry made through `POST /social/posts/{post_id}/retry` waits up to 90 seconds and, if Instagram is still processing, says so.
+- **TikTok:** a post TikTok rejects after the upload (moderation, format, spam checks) no longer stays `published`. Within about 15 minutes its TikTok part is marked failed with TikTok's reason, and the post becomes `failed` or `partially_published`.
+- **Automatic retries** skip failures that cannot succeed by waiting: posts refused by the pre-publish checks, and platform errors such as an unsupported format or a restricted account. You can still retry them yourself.
+- **Pinterest:** `GET /social/accounts/{account_id}/pinterest/boards` returns every board, not only the first 100.
+</Update>
+
 <Update label="October 8, 2026" tags={["API", "Improvement"]}>
 ## Fix a failed post without posting anything twice
 
