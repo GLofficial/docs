@@ -74,15 +74,20 @@ Disconnecting is instant and irreversible — the app must sign in again to reco
 
 ## Available tools
 
+Each tool needs the scope shown on your API key (or granted at OAuth sign-in). A tool that lists two scopes needs both.
+
+### Social, webhooks and analytics
+
 | Tool | What it does | Scope |
 |------|--------------|-------|
 | `list_social_accounts` | List connected social accounts | `social:read` |
+| `list_account_groups` | List account groups (named sets of accounts, e.g. one per client); pass a group id as `account_group_ids` to post to all of its accounts | `social:read` |
 | `create_social_post` | Publish a post immediately | `social:write` |
-| `schedule_social_post` | Schedule a post for later | `social:write` |
+| `schedule_social_post` | Schedule a post for later; optional IANA `timezone` for a `scheduled_time` without an offset (default UTC) | `social:write` |
 | `list_social_posts` | List posts (filter by status/platform) | `social:read` |
 | `retry_social_post` | Re-attempt publishing on given platforms | `social:write` |
 | `disconnect_social_account` | Disconnect a connected account | `social:write` |
-| `get_account_health` | Token validity/status of an account | `social:read` |
+| `get_account_health` | Token validity/status of an account, and whether and why it must be reconnected | `social:read` |
 | `get_account_reconnect_url` | URL to re-authenticate an account | `social:read` |
 | `pause_social_account` / `resume_social_account` | Pause/resume posting to an account | `social:write` |
 | `list_comments` | List comments on your posts | `social:read` |
@@ -96,15 +101,121 @@ Disconnecting is instant and irreversible — the app must sign in again to reco
 | `create_webhook` | Subscribe an HTTPS URL to events | `webhooks:write` |
 | `delete_webhook` | Delete a webhook subscription | `webhooks:write` |
 | `get_analytics_overview` | Likes/impressions/clicks/views overview | `analytics:read` |
+| `get_post_analytics` | Per-post impressions, engagement and clicks, newest first (filter by platform and date, paginated) | `analytics:read` |
+| `get_post_analytics_timeline` | One post's metric history per platform (reach, likes, comments, shares, saves, video views over time) | `analytics:read` |
+
+### Content and video
+
+| Tool | What it does | Scope |
+|------|--------------|-------|
 | `rewrite_content` | Rewrite/rephrase text | `articles:write` |
 | `generate_article` | Generate a long-form article | `articles:write` |
 | `generate_image` | Generate an image | `images:write` |
 | `list_video_models` | List video models + options | `videos:read` |
 | `generate_video` | Generate a video | `videos:write` |
+| `generate_shorts` | Turn one long video into ranked, ready-to-post clips (async, billed per requested clip) | `videos:write` |
+| `get_shorts` | Status and ranked clips of a shorts job | `videos:read` |
+| `list_shorts_caption_styles` | Caption styles, clip lengths, genres and output formats for `generate_shorts` | `videos:read` |
+| `list_languages` | Speech languages a video job can name | `videos:read` |
+| `generate_video_hook` | One scroll-stopping hook line for a short | `videos:write` |
+| `suggest_broll` / `suggest_emphasis` | B-roll moments / on-screen emphasis picks from a word-level transcript | `videos:write` |
+| `generate_thumbnail` | Click-optimized thumbnail from a video title | `videos:write` |
+| `generate_caption` | One platform-tuned social caption for a short video | `social:write` |
 | `text_to_speech` | Convert text to speech | `audio:write` |
 | `generate_presentation` | Generate a complete AI presentation deck from a prompt | `presentations:write` |
 | `get_job` | Get an async job's status/result | `jobs:read` |
 | `list_jobs` | List async jobs | `jobs:read` |
+
+### Video editing
+
+| Tool | What it does | Scope |
+|------|--------------|-------|
+| `create_video_edit` | Edit a whole video: captions, zooms, b-roll, silence/filler removal, clean audio, hook, music (async, billed per source minute) | `videos:write` |
+| `list_video_edits` / `get_video_edit` | List edits / one edit's status, `editor_url` and `output_url` | `videos:read` |
+| `update_video_edit` | Change an edit's title or settings | `videos:write` |
+| `export_video_edit` | Render a ready edit to an MP4 | `videos:write` |
+| `list_edit_options` | Every edit setting with its default and allowed values | `videos:read` |
+
+### SEO and AI visibility
+
+| Tool | What it does | Scope |
+|------|--------------|-------|
+| `seo_keyword_research` | Keyword suggestions with search volume, CPC and competition | `seo:read` |
+| `seo_serp` | Live Google organic SERP for a keyword | `seo:read` |
+| `seo_keyword_difficulty` | Difficulty scores (0-100) for a list of keywords | `seo:read` |
+| `seo_ranked_keywords` | Every keyword a domain ranks for | `seo:read` |
+| `seo_domain_overview` | A domain's organic keyword count, traffic value and position buckets | `seo:read` |
+| `seo_competitors` | A domain's organic competitors | `seo:read` |
+| `seo_backlinks_summary` | A domain's backlink profile summary | `seo:read` |
+| `seo_referring_domains` / `seo_backlink_anchors` | Top referring domains / top anchor texts | `seo:read` |
+| `seo_backlink_prospects` | Link-gap prospects: domains that link to competitors but not to you | `seo:read` |
+| `seo_spam_score` | Backlink spam score (0-100) for domains | `seo:read` |
+| `seo_audit` | Instant on-page audit of one URL | `seo:read` |
+| `seo_site_audit` | Deep crawl-based technical audit of a site | `seo:read` |
+| `seo_rank_history` | A domain's monthly organic keyword and traffic trend (premium lookup) | `seo:read` |
+| `seo_brand_lookup` | How often AI assistants cite a brand, domain or keyword | `seo:read` |
+| `seo_prompt_explorer` | Run one prompt across several AI assistants side by side | `seo:read` |
+| `seo_ai_audit` | Audit whether AI assistants recommend a business (long-running job) | `seo:read` |
+
+### CRM
+
+| Tool | What it does | Scope |
+|------|--------------|-------|
+| `list_contacts` / `get_contact` | List contacts / one contact with tags and custom attributes | `contacts:read` |
+| `create_contact` / `update_contact` | Create (or upsert by email) / update a contact | `contacts:write` |
+| `add_contact_tags` / `remove_contact_tags` | Tag or untag a contact | `contacts:write` |
+| `list_contact_notes` | Notes on a contact's timeline | `contacts:read` |
+| `add_contact_note` | Append a note to a contact's timeline | `contacts:write` |
+| `log_contact_message` | Record a message on a contact's timeline (does not send it) | `contacts:write` |
+| `enroll_contact_in_automation` | Enrol a contact into an active automation | `contacts:write` |
+| `list_tags` | Every contact tag with its contact count | `contacts:read` |
+| `create_tag` / `rename_tag` / `merge_tags` / `delete_tag` | Manage tags across every contact | `contacts:write` |
+| `list_custom_fields` | Custom field definitions | `contacts:read` |
+| `create_custom_field` / `delete_custom_field` | Define or delete a custom field | `contacts:write` |
+| `list_pipelines` | Sales pipelines with their stages | `opportunities:read` |
+| `create_pipeline` | Create a sales pipeline | `opportunities:write` |
+| `list_opportunities` / `get_opportunity` | List deals / one deal | `opportunities:read` |
+| `create_opportunity` / `update_opportunity` / `delete_opportunity` | Create, update or delete a deal | `opportunities:write` |
+| `update_opportunity_status` | Set a deal's outcome (open/won/lost/abandoned) | `opportunities:write` |
+| `list_companies` / `get_company` | List companies / one company with its contacts, deals and value rollup | `companies:read` |
+| `create_company` / `update_company` / `delete_company` | Create, update or delete a company | `companies:write` |
+| `link_contact_to_company` / `unlink_contact_from_company` | Attach or detach a contact | `companies:write` + `contacts:write` |
+| `list_tasks` / `get_task` | List tasks / one task with subtasks and tracked time | `tasks:read` |
+| `create_task` / `update_task` / `delete_task` | Create, update or delete a task | `tasks:write` |
+| `log_task_time` | Add tracked minutes to a task | `tasks:write` |
+
+### Calendar
+
+| Tool | What it does | Scope |
+|------|--------------|-------|
+| `list_event_types` | Booking pages this account can take bookings for | `calendar:read` |
+| `list_open_slots` | Times that are actually free for an event type | `calendar:read` |
+| `book_appointment` | Take a booking at a free time | `calendar:write` |
+| `cancel_booking` | Cancel a booking (releases the slot and tells the attendee) | `calendar:write` |
+
+### Agency sub-accounts
+
+| Tool | What it does | Scope |
+|------|--------------|-------|
+| `list_workspaces` / `get_workspace` | Client sub-accounts with billing state and wallet balance | `workspaces:read` |
+| `create_workspace` | Create a client sub-account | `workspaces:write` |
+| `pause_workspace` / `resume_workspace` | Suspend or restore a sub-account | `workspaces:write` |
+| `disable_workspace_saas` | Switch a sub-account back to agency billing | `workspaces:write` |
+| `delete_workspace` | Permanently delete a sub-account | `workspaces:write` |
+| `bulk_workspace_action` | Pause, resume or disable SaaS on many sub-accounts at once | `workspaces:bulk` |
+| `list_saas_plans` / `get_saas_plan` | SaaS plans (client packages) | `workspaces:read` |
+| `get_workspace_subscription` / `get_workspace_wallet` | A sub-account's subscription snapshot / wallet balance | `workspaces:read` |
+
+### Profiles
+
+| Tool | What it does | Scope |
+|------|--------------|-------|
+| `list_profiles` / `get_profile` | List profiles / one profile | `profiles:read` |
+| `create_profile` | Create a managed sub-account for one end-customer of your product | `profiles:write` |
+| `list_profile_accounts` | Social accounts connected to a profile | `profiles:read` |
+| `create_profile_connect_link` | Single-use hosted page where the customer connects accounts | `profiles:write` |
+| `pause_profile` / `resume_profile` / `delete_profile` | Profile lifecycle | `profiles:write` |
+| `get_account_billing` | Per-account profile billing summary | `profiles:read` |
 
 ## The full API catalog (operations facade)
 

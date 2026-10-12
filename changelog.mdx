@@ -6,6 +6,15 @@ icon: "clock-rotate-left"
 
 Product updates for the SmartlyQ Developer API, MCP server, and Developer Portal. All endpoints live at `https://api.smartlyq.com/v1`.
 
+<Update label="October 12, 2026" tags={["MCP", "New"]}>
+## MCP: per-post analytics, scheduling in your own time zone, and why an account needs reconnecting
+
+- **`get_post_analytics`** lists your posts, newest first, with their latest impressions, engagement and clicks (`GET /analytics/posts`; filter by platform and date). **`get_post_analytics_timeline`** returns one post's metric history per platform (`GET /analytics/posts/{post_id}/timeline`). Both need `analytics:read`.
+- **`schedule_social_post`** takes an optional **`timezone`** (IANA, e.g. `Europe/Athens`, default UTC), as `POST /social/posts/schedule` does. It applies to a `scheduled_time` without an offset; a time ending in `Z` or `+03:00` is taken as given.
+- The [MCP page](/mcp-server) now lists every tool the server offers, grouped by area, with the scope each one needs.
+- **Account health** (`GET /social/accounts/health`, `GET /social/accounts/{id}/health` and `get_account_health`) now returns **`needs_reconnect`** and **`reconnect_reason`**: whether the account must be reconnected before it can post again, and why when known (for example the Facebook password was changed, the role on the Page was removed, or a permission is missing).
+</Update>
+
 <Update label="October 9, 2026" tags={["API", "Improvement"]}>
 ## Failed posts say why
 
