@@ -49,8 +49,31 @@ A small minimum charge applies per operation type:
 | Video generation | varies |
 | Presentations | 1 |
 
-Read-only calls — listing posts, fetching analytics, managing accounts — **don't consume credits**. Generation and publishing actions do.
+Read-only calls - listing posts, fetching analytics, managing accounts - **don't consume credits**. Generation and publishing actions do. The exception is X (Twitter): X charges for every call, reads included, see below.
 
+## X (Twitter) calls
+
+X charges for every call to its API (pay per use), and these charges are passed on at X's own price. Calls you make through the API, and posts created through the API, are deducted from your Developer wallet; actions in the app are charged in the workspace's credits.
+
+| Action | Price | Charged per |
+|--------|-------|-------------|
+| Publish a post | $0.015 | post |
+| Publish a post whose text has a link | $0.20 | post |
+| Reply, repost | $0.015 | request |
+| Undo a repost | $0.010 | request |
+| Delete a post, hide a reply | $0.005 | request |
+| Send a DM | $0.015 | message |
+| Delete a DM | $0.010 | request |
+| Read posts, replies, mentions | $0.005 | item returned |
+| Read user profiles | $0.010 | item returned |
+| Read DMs | $0.010 | item returned |
+| Read media details | $0.005 | item returned |
+
+- Only calls X accepts are charged: a refused or failed call costs nothing.
+- A read is charged per item returned, and an item read again on the same day (UTC) is not charged twice, matching how X bills.
+- A link anywhere in the text (`https://...`, `www....` or a bare domain such as `example.com`) makes a post the link price.
+- Before each X call the wallet must hold its price. If it does not, the call is not sent and you get `402 INSUFFICIENT_BALANCE` with the price in the message.
+- Account-connection and token-refresh calls are free.
 ## Track your spend
 
 Check your wallet balance any time:

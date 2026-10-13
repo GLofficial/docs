@@ -6,6 +6,11 @@ icon: "clock-rotate-left"
 
 Product updates for the SmartlyQ Developer API, MCP server, and Developer Portal. All endpoints live at `https://api.smartlyq.com/v1`.
 
+<Update label="October 13, 2026" tags={["API", "Billing"]}>
+## X (Twitter) calls are charged at X's price
+
+X now charges for every call to its API, so these charges are passed on at X's own price, without markup: $0.015 per post, $0.20 for a post whose text has a link, $0.005 per post or reply read. Requests and posts made through the API pay from the Developer wallet. A call the wallet cannot cover is not sent and returns `402 INSUFFICIENT_BALANCE` with the price. Full table: [Pricing - X calls](/pricing#x-twitter-calls).
+</Update>
 <Update label="October 12, 2026" tags={["MCP", "New"]}>
 ## MCP: per-post analytics, scheduling in your own time zone, and why an account needs reconnecting
 
