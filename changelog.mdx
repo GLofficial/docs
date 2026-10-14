@@ -6,6 +6,13 @@ icon: "clock-rotate-left"
 
 Product updates for the SmartlyQ Developer API, MCP server, and Developer Portal. All endpoints live at `https://api.smartlyq.com/v1`.
 
+<Update label="October 14, 2026" tags={["API", "Improvement"]}>
+## Deleting a contact also pauses their client hub access
+
+- `DELETE /contacts/{id}` now also pauses the contact's client hub account: they leave every community group, are signed out and cannot sign in. Course access is kept, not removed. Restoring the contact from Deleted contacts in the app brings everything back, with nothing to pay again.
+- A contact who **owns a community group** cannot be deleted: the call returns `409 CONTACT_OWNS_GROUP` with the group's name. Hand the group to someone else first, then delete the contact.
+</Update>
+
 <Update label="October 13, 2026" tags={["API", "Billing"]}>
 ## X (Twitter) calls are charged at X's price
 
