@@ -13,6 +13,15 @@ Product updates for the SmartlyQ Developer API, MCP server, and Developer Portal
 - A contact who **owns a community group** cannot be deleted: the call returns `409 CONTACT_OWNS_GROUP` with the group's name. Hand the group to someone else first, then delete the contact.
 </Update>
 
+<Update label="October 14, 2026" tags={["API", "Billing"]}>
+## X (Twitter): agreement to charges, spam limits, real-time events
+
+- **Agreement before connecting X:** `POST /social/connect/twitter`, `POST /profiles/{id}/connect/twitter` and `POST /profiles/{id}/connect-link` take `accept_x_charges: true`. Without an agreement for the workspace, connecting X returns `422 X_CHARGES_NOT_ACCEPTED`, and X calls are not sent or charged.
+- **Spam limits:** up to 50 posts and 100 DMs per X account per day; past that the call returns an error until midnight UTC.
+- **Trials:** X is limited to 50 credits in all during a trial.
+- **Real-time:** new X DMs, replies and mentions now arrive within seconds; mentions appear among comments.
+</Update>
+
 <Update label="October 13, 2026" tags={["API", "Billing"]}>
 ## X (Twitter) calls are charged at X's price
 

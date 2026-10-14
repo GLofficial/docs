@@ -75,6 +75,9 @@ X charges for every call to its API (pay per use), and these charges are passed 
 - A link anywhere in the text (`https://...`, `www....` or a bare domain such as `example.com`) makes a post the link price.
 - Before each X call the wallet must hold its price. If it does not, the call is not sent and you get `402 INSUFFICIENT_BALANCE` with the price in the message.
 - Account-connection and token-refresh calls are free.
+- Connecting X needs the workspace's agreement that X is charged: send `accept_x_charges: true` on `POST /social/connect/twitter` (or the profile connect endpoints), or tick the box in the app. Until then X calls return an error and nothing is charged.
+- Each X account may publish up to 50 posts and send up to 100 DMs per day (spam guard); more returns an error until midnight UTC.
+- During a trial, X is limited to 50 credits in all; it unlocks when the plan starts.
 ## Track your spend
 
 Check your wallet balance any time:
