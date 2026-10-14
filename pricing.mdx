@@ -71,6 +71,7 @@ X charges for every call to its API (pay per use), and these charges are passed 
 
 - Only calls X accepts are charged: a refused or failed call costs nothing.
 - A read is charged per item returned, and an item read again on the same day (UTC) is not charged twice, matching how X bills.
+- Items X returns alongside a read are charged too: for example each reply comes with its author's profile (a profile read), and each direct message with its sender's profile.
 - A link anywhere in the text (`https://...`, `www....` or a bare domain such as `example.com`) makes a post the link price.
 - Before each X call the wallet must hold its price. If it does not, the call is not sent and you get `402 INSUFFICIENT_BALANCE` with the price in the message.
 - Account-connection and token-refresh calls are free.
