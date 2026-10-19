@@ -245,6 +245,7 @@
                 "pages": [
                   "GET /pipelines",
                   "POST /pipelines",
+                  "GET /pipelines/{id}/stages",
                   "GET /opportunities",
                   "POST /opportunities",
                   "GET /opportunities/{id}",
