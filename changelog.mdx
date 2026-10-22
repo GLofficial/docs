@@ -6,6 +6,14 @@ icon: "clock-rotate-left"
 
 Product updates for the SmartlyQ Developer API, MCP server, and Developer Portal. All endpoints live at `https://api.smartlyq.com/v1`.
 
+<Update label="October 22, 2026" tags={["API", "Improvement"]}>
+## Webhooks: separate limit for connected apps, 410 Gone stops a webhook
+
+- The limit is now counted per **workspace** (it was per person): up to 10 active webhooks you add yourself, plus up to 50 created by connected apps such as Zapier, Pabbly Connect and Make. `GET /webhooks` lists every webhook in the workspace.
+- A delivery answered with `410 Gone` is not retried. A webhook a connected app created is deleted; one you added is set to `failing`.
+- Disconnecting a connected app, or revoking its key, deletes the webhooks it created.
+</Update>
+
 <Update label="October 14, 2026" tags={["API", "Improvement"]}>
 ## Deleting a contact also pauses their client hub access
 
