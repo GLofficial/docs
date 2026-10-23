@@ -6,6 +6,15 @@ icon: "clock-rotate-left"
 
 Product updates for the SmartlyQ Developer API, MCP server, and Developer Portal. All endpoints live at `https://api.smartlyq.com/v1`.
 
+<Update label="October 23, 2026" tags={["API", "Improvement"]}>
+## Webhooks: faster delivery, real-time DMs, connected apps
+
+- Webhook deliveries go out within seconds of the event (the first attempt used to wait a minute). Retries keep their 2, 4, 8 and 16 minute spacing.
+- `message.received` now fires for Facebook and Instagram DMs that arrive in real time; before, only messages picked up by the periodic sync fired it.
+- `GET /social/accounts`: each account now carries `name`, as documented (`account_name` stays).
+- `POST /webhooks` from a connected app (Zapier, Pabbly Connect, Make): no signing `secret` in the answer, and subscribing an address the app already has updates that webhook instead of adding a second one.
+</Update>
+
 <Update label="October 22, 2026" tags={["API", "Improvement"]}>
 ## Webhooks: separate limit for connected apps, 410 Gone stops a webhook
 
