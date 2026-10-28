@@ -6,6 +6,14 @@ icon: "clock-rotate-left"
 
 Product updates for the SmartlyQ Developer API, MCP server, and Developer Portal. All endpoints live at `https://api.smartlyq.com/v1`.
 
+<Update label="October 29, 2026" tags={["API", "Improvement"]}>
+## Disabling SaaS always cancels the client's subscription
+
+- `POST /workspaces/{id}/disable-saas`, and `disable_saas` in `POST /workspaces/bulk`, now always cancel the client's subscription and close its wallet. `cancel_subscription` is ignored.
+- A balance your agency funded returns to your agency wallet. For a balance the client paid you, the agency owner and admins are emailed the amount to refund.
+- If the subscription cannot be cancelled, the call fails and nothing changes.
+</Update>
+
 <Update label="October 23, 2026" tags={["API", "Improvement"]}>
 ## Webhooks: faster delivery, real-time DMs, connected apps
 
