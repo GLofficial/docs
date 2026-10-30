@@ -1,0 +1,94 @@
+name: Sync MCP spec
+
+# When openapi.json changes on main, copy it into the MCP server's bundled
+# snapshot (GLofficial/smartlyq-mcp, spec/openapi.json) and push to its main
+# branch; Railway deploys the MCP from that push. This replaces the hand copy.
+#
+# Requires the MCP_DEPLOY_KEY secret: a write deploy key on smartlyq-mcp only.
+# Nothing is pushed when the MCP indexes no operations from the new spec,
+# loses more than 10% of them, or its build or tests fail; the live MCP then
+# keeps its current copy and the run shows red.
+
+on:
+  push:
+    branches: [main]
+    paths: [openapi.json]
+  schedule:
+    # Daily safety net in case a run failed
+    - cron: '45 4 * * *'
+  workflow_dispatch: {}
+
+concurrency:
+  group: sync-mcp-spec
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout docs
+        uses: actions/checkout@v4
+        with:
+          path: docs
+
+      - name: Checkout smartlyq-mcp
+        uses: actions/checkout@v4
+        with:
+          repository: GLofficial/smartlyq-mcp
+          ssh-key: ${{ secrets.MCP_DEPLOY_KEY }}
+          path: mcp
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24.22.1'
+          cache: npm
+          cache-dependency-path: mcp/package-lock.json
+
+      - name: Build the MCP
+        working-directory: mcp
+        run: npm ci --no-audit --no-fund && npm run build
+
+      - name: Copy the spec and check it
+        id: copy
+        run: |
+          OLD=$(node docs/.github/scripts/count-mcp-operations.mjs mcp)
+          cp docs/openapi.json mcp/spec/openapi.json
+          if git -C mcp diff --quiet -- spec/openapi.json; then
+            echo "Spec unchanged ($OLD operations) - nothing to push."
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          NEW=$(node docs/.github/scripts/count-mcp-operations.mjs mcp)
+          echo "Operations: $OLD -> $NEW"
+          if [ "$NEW" -lt 1 ] || [ $((NEW * 10)) -lt $((OLD * 9)) ]; then
+            echo "::error::The new spec gives $NEW operations (was $OLD) - refusing to push."
+            exit 1
+          fi
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+          echo "ops=$OLD -> $NEW" >> "$GITHUB_OUTPUT"
+
+      - name: Test the MCP
+        if: steps.copy.outputs.changed == 'true'
+        working-directory: mcp
+        run: npm test
+
+      - name: Commit and push
+        if: steps.copy.outputs.changed == 'true'
+        working-directory: mcp
+        env:
+          DOCS_SHA: ${{ github.sha }}
+          OPS: ${{ steps.copy.outputs.ops }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add spec/openapi.json
+          git commit -m "Spec snapshot: docs ${DOCS_SHA:0:7}" \
+            -m "Copied from GLofficial/docs openapi.json by the docs Sync MCP spec workflow. Operations: $OPS."
+          # Retry with rebase in case a hand push landed meanwhile
+          for attempt in 1 2 3; do
+            if git push origin HEAD:main; then exit 0; fi
+            git pull --rebase origin main
+            sleep $((attempt * 5))
+          done
+          exit 1
