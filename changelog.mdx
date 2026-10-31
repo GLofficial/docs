@@ -6,6 +6,16 @@ icon: "clock-rotate-left"
 
 Product updates for the SmartlyQ Developer API, MCP server, and Developer Portal. All endpoints live at `https://api.smartlyq.com/v1`.
 
+<Update label="October 31, 2026" tags={["API", "Contacts"]}>
+## Contacts: say where a list came from
+
+- `POST /contacts` and `POST /contacts/bulk` accept an optional `list_source`: `own_customers`, `events`, `bought`, `found_online` or `lead_finder`. `own_customers` and `events` also need `list_consent: true`. Leave it out and nothing changes.
+- Every email gets a free check (format, throwaway domains, domains that accept no mail, your suppression list). An invalid address is never emailed.
+- Bought, found online and Lead Finder contacts are outreach only: campaigns and automation emails sent through the built-in email service skip them. They can still be emailed through your own mail server.
+- On `POST /contacts/bulk` the whole call is checked as one list. With at least 20 checked emails, if risky and invalid ones are more than 10%, every new contact in it is outreach only. The answer carries the result in `list_check`.
+- Contacts now return `list_source`, `list_consent`, `email_check` and `email_send_block` (null when never marked).
+</Update>
+
 <Update label="October 29, 2026" tags={["API", "Improvement"]}>
 ## Disabling SaaS always cancels the client's subscription
 
