@@ -118,4 +118,4 @@ Every SDK ships the same batteries:
 - **Idempotency keys** for safely retrying writes.
 - **Profile scoping** - act on behalf of a managed [Profile](/guides/profiles) by setting the profile option (sent as `X-Profile-Id`).
 - **Typed errors** carrying the HTTP status, error `code`, message, and `request_id` for support.
-- **Sandbox keys** (`sqk_test_...`) work everywhere - simulated responses, no charges.
+- **Sandbox keys** (`sqk_test_...`) return simulated responses with no charges. Endpoints with no simulated response (for example images, audio and avatar videos) answer `403 TEST_KEY_NOT_SUPPORTED`.
