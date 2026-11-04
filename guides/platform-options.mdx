@@ -28,7 +28,7 @@ description: "Every per-platform option you can set on a post, per platform."
 ### Instagram
 | Key | Effect |
 |---|---|
-| `type` | `post`, `reel` or `story`. Omit it for a normal post. `feed`, `video`, `photo`, `image` are aliases of `post`; `reels` of `reel`; `stories` of `story`. Anything else is rejected with `POST_TYPE_UNSUPPORTED`. |
+| `type` | `post`, `reel` or `story`. Omit it for a normal post. `feed`, `video`, `photo`, `image` are aliases of `post`; `reels` of `reel`; `stories` of `story`. Anything else is rejected with `POST_TYPE_UNSUPPORTED`. A `reel` or `story` takes exactly one file; more is refused with `422 VALIDATION_ERROR` (use `post` for a carousel). |
 | `share_to_story` | Also publish the media as a story |
 | `share_to_feed` | Reels: whether the reel also appears in the main feed (Instagram's default when omitted) |
 | `first_comments` | Up to 5 comments posted right after publishing (`first_comment` legacy singular works) |
@@ -68,7 +68,7 @@ Posting a link instead of a self post is automatic when the post carries media s
 ### Facebook
 | Key | Effect |
 |---|---|
-| `type` | `post` (timeline, including video), `reel`, or `story`. Omit it for a normal post - text, image and video all publish to the timeline without it. `feed`, `video`, `photo`, `image`, `text` are accepted as aliases of `post`, `reels` of `reel`, and `stories` of `story`. Anything else is rejected with `POST_TYPE_UNSUPPORTED` and a list of the accepted values. |
+| `type` | `post` (timeline, including video), `reel`, or `story`. Omit it for a normal post - text, image and video all publish to the timeline without it. `feed`, `video`, `photo`, `image`, `text` are accepted as aliases of `post`, `reels` of `reel`, and `stories` of `story`. Anything else is rejected with `POST_TYPE_UNSUPPORTED` and a list of the accepted values. A `reel` or `story` takes exactly one file; more is refused with `422 VALIDATION_ERROR`. |
 | `first_comments` | Up to 5 comments posted right after publishing (an entry may carry a single image) |
 | `_thumbnail.url` | Video cover image |
 | `link` | Destination URL. On a text-only post Facebook renders it as a preview card. When the post carries media the attachment is the card and Graph has no link parameter, so the URL is appended to the post text instead. Setting this here overrides a request-level `link`. |

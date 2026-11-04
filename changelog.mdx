@@ -6,6 +6,15 @@ icon: "clock-rotate-left"
 
 Product updates for the SmartlyQ Developer API, MCP server, and Developer Portal. All endpoints live at `https://api.smartlyq.com/v1`.
 
+<Update label="November 4, 2026" tags={["API", "Improvement"]}>
+## A Reel or Story takes one file
+
+- **An Instagram or Facebook Reel or Story with more than one file is refused** with `422 VALIDATION_ERROR` and a message naming the rule ("Instagram Reel takes one file, this post has 4. Keep one, or choose Post to share them all."), on create, schedule, `PATCH /social/posts/{post_id}`, `POST /social/validate/post` and bulk. Before, an Instagram Reel or Story published only its first file and dropped the rest without a word; a Facebook one failed at publish. Use `type: "post"` for a carousel.
+- **A post scheduled before this change** that breaks the rule now fails at publish with the same message instead of going out with only its first file.
+- **LinkedIn posts published at once** (`POST /social/posts`, which also backs the MCP `create_social_post` tool) can no longer go out twice: when LinkedIn refuses or times out, the post is not re-sent as text only.
+- **X:** a video is sent once X has finished processing it (longer videos could fail), and a post whose media partly failed to upload is not published with fewer files - it fails, saying which file did not upload.
+</Update>
+
 <Update label="October 31, 2026" tags={["API", "Contacts"]}>
 ## Contacts: say where a list came from
 
