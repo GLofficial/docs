@@ -6,6 +6,14 @@ icon: "clock-rotate-left"
 
 Product updates for the SmartlyQ Developer API, MCP server, and Developer Portal. All endpoints live at `https://api.smartlyq.com/v1`.
 
+<Update label="November 5, 2026" tags={["API", "Improvement", "Fix"]}>
+## LinkedIn company pages: post stats, followers, external sync
+
+- **LinkedIn company page posts now carry real statistics** - impressions, unique impressions (as `reach`), likes, comments, shares and clicks - in `GET /analytics/posts` and `GET /analytics/posts/{post_id}/timeline`. Before, every company page post read as 0.
+- **LinkedIn company page follower counts are correct** in `GET /analytics/accounts/{account_id}` (they were stored as 0).
+- **`POST /social/posts/sync-external` accepts LinkedIn company pages**, importing posts published on the page outside SmartlyQ with status `external`. A personal LinkedIn profile returns `422 VALIDATION_ERROR`: LinkedIn does not let apps list a member's posts.
+</Update>
+
 <Update label="November 4, 2026" tags={["API", "Improvement"]}>
 ## A Reel or Story takes one file
 
