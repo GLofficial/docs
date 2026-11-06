@@ -6,6 +6,14 @@ icon: "clock-rotate-left"
 
 Product updates for the SmartlyQ Developer API, MCP server, and Developer Portal. All endpoints live at `https://api.smartlyq.com/v1`.
 
+<Update label="November 6, 2026" tags={["API", "Webhooks", "Calendar"]}>
+## Booking webhooks
+
+- **Eight booking events** for webhooks: `booking.created`, `booking.requested`, `booking.confirmed`, `booking.rescheduled`, `booking.cancelled`, `booking.rejected`, `booking.no_show` and `booking.completed`. Each fires once per real change and carries the whole booking - UTC start and end, the guest's time zone, the place and meeting link, event type, host, guests, the booker's answers and, on a cancellation or rejection, the reason - plus the contact. See [Webhooks](/guides/webhooks#calendar).
+- **Order, subscription and invoice events now follow the payments permission**: a webhook created by a team member without access to payments, or limited to the contacts assigned to them, no longer receives them (they carry contact details).
+- **The delivery log** (`GET /webhooks/logs`) shows a delivery's payload only to a caller who may receive that event today.
+</Update>
+
 <Update label="November 5, 2026" tags={["API", "Improvement", "Fix"]}>
 ## LinkedIn company pages: post stats, followers, external sync; Tumblr notes
 
