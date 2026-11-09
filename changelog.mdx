@@ -6,6 +6,18 @@ icon: "clock-rotate-left"
 
 Product updates for the SmartlyQ Developer API, MCP server, and Developer Portal. All endpoints live at `https://api.smartlyq.com/v1`.
 
+<Update label="November 9, 2026" tags={["API", "Calendar"]}>
+## Calendar: manage bookings and availability
+
+- **Bookings**: `GET /calendar/bookings` (by date, status, contact or booking page) and `GET /calendar/bookings/{id}` with attendees, form answers and payment.
+- **`POST /calendar/bookings/{id}/reschedule`** moves a booking to a new time; the calendar checks availability and tells the attendee.
+- **`POST /calendar/bookings/{id}/status`** records `completed` or `no_show`, or approves a pending booking.
+- **Internal notes** on a booking: list, add, delete.
+- **Blocked time**: `GET` and `POST /calendar/blocked-times`, `DELETE /calendar/blocked-times/{id}`.
+- **Availability schedules**: list, create, update and delete under `/calendar/availability`.
+- **`GET /calendar/busy-times`** for you and teammates who share their busy time.
+</Update>
+
 <Update label="November 7, 2026" tags={["API", "Webhooks", "Calendar"]}>
 ## Booking webhooks: paid, started, ended
 

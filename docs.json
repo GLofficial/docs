@@ -237,7 +237,22 @@
                   "GET /calendar/event-types",
                   "GET /calendar/slots",
                   "POST /calendar/bookings",
-                  "POST /calendar/bookings/{id}/cancel"
+                  "POST /calendar/bookings/{id}/cancel",
+                  "GET /calendar/bookings",
+                  "GET /calendar/bookings/{id}",
+                  "POST /calendar/bookings/{id}/status",
+                  "POST /calendar/bookings/{id}/reschedule",
+                  "GET /calendar/bookings/{id}/notes",
+                  "POST /calendar/bookings/{id}/notes",
+                  "DELETE /calendar/bookings/{id}/notes/{note_id}",
+                  "GET /calendar/blocked-times",
+                  "POST /calendar/blocked-times",
+                  "DELETE /calendar/blocked-times/{id}",
+                  "GET /calendar/availability",
+                  "POST /calendar/availability",
+                  "PATCH /calendar/availability/{id}",
+                  "DELETE /calendar/availability/{id}",
+                  "GET /calendar/busy-times"
                 ]
               },
               {
