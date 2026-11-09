@@ -14,6 +14,7 @@ Product updates for the SmartlyQ Developer API, MCP server, and Developer Portal
 - **Removed from the reference because the API never read them**: `period` on `GET /analytics/accounts/{account_id}`, `confirm_cooldown` on `PATCH /ads/campaigns/{id}`, and `timezone` and `allow_duplicates` on `POST /social/posts/bulk/validate` (the duplicate check always runs there).
 - **`POST /calendar/bookings/{id}/reschedule`** lists its real answers: 422 for a booking that cannot be moved as it stands (including one waiting for approval), 409 when the calendar refuses the time.
 - **Commerce webhooks** documented: `order.paid`, `order.payment_failed` and `subscription.canceled`. See [Webhooks](/guides/webhooks#commerce).
+- **`invoice.overdue`** now reaches every webhook subscribed to it, on the day an unpaid invoice falls due (once per invoice), whether or not the workspace has an Invoice overdue automation. Documented in the reference and the [Webhooks](/guides/webhooks#commerce) guide.
 </Update>
 
 <Update label="November 9, 2026" tags={["API", "Calendar"]}>
