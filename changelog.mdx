@@ -6,6 +6,16 @@ icon: "clock-rotate-left"
 
 Product updates for the SmartlyQ Developer API, MCP server, and Developer Portal. All endpoints live at `https://api.smartlyq.com/v1`.
 
+<Update label="November 9, 2026" tags={["MCP", "Calendar", "Docs"]}>
+## MCP: every calendar endpoint as a tool; reference corrections
+
+- **MCP calendar tools**: besides the four booking tools, `list_bookings`, `get_booking`, `set_booking_status`, `reschedule_booking`, `list_booking_notes`, `add_booking_note`, `delete_booking_note`, `list_blocked_times`, `create_blocked_time`, `delete_blocked_time`, `list_availability_schedules`, `create_availability_schedule`, `update_availability_schedule`, `delete_availability_schedule` and `list_busy_times`. `book_appointment` takes `guests`. See [MCP](/mcp-server#calendar).
+- **Documented inputs the API already accepted**: `guests` on `POST /calendar/bookings`, `date_from` and `date_to` on `GET /social/comments`, `from_addr` and `to_addr` on `POST /contacts/{id}/messages`, and `confirm_cooldown` on the pause and resume endpoints for campaigns, ad sets and ads.
+- **Removed from the reference because the API never read them**: `period` on `GET /analytics/accounts/{account_id}`, `confirm_cooldown` on `PATCH /ads/campaigns/{id}`, and `timezone` and `allow_duplicates` on `POST /social/posts/bulk/validate` (the duplicate check always runs there).
+- **`POST /calendar/bookings/{id}/reschedule`** lists its real answers: 422 for a booking that cannot be moved as it stands (including one waiting for approval), 409 when the calendar refuses the time.
+- **Commerce webhooks** documented: `order.paid`, `order.payment_failed` and `subscription.canceled`. See [Webhooks](/guides/webhooks#commerce).
+</Update>
+
 <Update label="November 9, 2026" tags={["API", "Calendar"]}>
 ## Calendar: manage bookings and availability
 

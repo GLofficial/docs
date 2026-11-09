@@ -191,8 +191,18 @@ Each tool needs the scope shown on your API key (or granted at OAuth sign-in). A
 |------|--------------|-------|
 | `list_event_types` | Booking pages this account can take bookings for | `calendar:read` |
 | `list_open_slots` | Times that are actually free for an event type | `calendar:read` |
-| `book_appointment` | Take a booking at a free time | `calendar:write` |
+| `book_appointment` | Take a booking at a free time, optionally copying `guests`; answers with `booking_uid` (find the numeric id with `list_bookings`) | `calendar:write` |
 | `cancel_booking` | Cancel a booking (releases the slot and tells the attendee) | `calendar:write` |
+| `list_bookings` / `get_booking` | List bookings (the next 30 days unless you pass `from`/`to`) / one booking with its attendees, form answers and payment | `calendar:read` |
+| `set_booking_status` | Record `confirmed`, `completed` or `no_show`; `confirmed` approves a booking that waits for approval | `calendar:write` |
+| `reschedule_booking` | Move a confirmed booking to a free time (tells the attendee) | `calendar:write` |
+| `list_booking_notes` | The team's private notes on a booking | `calendar:read` |
+| `add_booking_note` / `delete_booking_note` | Add or delete a private note | `calendar:write` |
+| `list_blocked_times` | Blocked-off time between two dates | `calendar:read` |
+| `create_blocked_time` / `delete_blocked_time` | Block off time (up to two weeks) or free it again | `calendar:write` |
+| `list_availability_schedules` | Availability schedules: working hours per weekday, date overrides, time zone | `calendar:read` |
+| `create_availability_schedule` / `update_availability_schedule` / `delete_availability_schedule` | Create, change or delete an availability schedule | `calendar:write` |
+| `list_busy_times` | Busy times from connected calendars, yours and teammates' who share them | `calendar:read` |
 
 ### Agency sub-accounts
 
@@ -220,7 +230,7 @@ Each tool needs the scope shown on your API key (or granted at OAuth sign-in). A
 
 ## The full API catalog (operations facade)
 
-Beyond the curated tools above, **three facade tools expose every operation in the SmartlyQ API** (100+ operations across Chatbot, Media, Short URLs, AI Captain, Account, and more) without flooding the model's context:
+Beyond the curated tools above, **three facade tools expose the full SmartlyQ API catalog** (100+ operations across Chatbot, Media, Short URLs, AI Captain, Account, and more) without flooding the model's context:
 
 | Tool | What it does |
 |------|--------------|
@@ -229,6 +239,8 @@ Beyond the curated tools above, **three facade tools expose every operation in t
 | `execute_operation` | Run it — write/delete operations require an explicit `confirm: true` |
 
 The agent discovers what it needs (`search_operations` → `describe_operation` → `execute_operation`); scopes, rate limits, and billing apply exactly as for direct API calls.
+
+The MCP server sends JSON only, so the one operation that takes a file upload, `uploadMediaDirect`, is refused by `execute_operation`. Upload through `getMediaUploadUrl`, a `PUT` of the file's bytes to the URL it returns, then `confirmMediaUpload`; or pass the file's public URL where a call takes one (for example `media_urls` on a social post).
 
 ## Tool scopes
 
