@@ -23,5 +23,14 @@ These are checked before a post is sent; a post that breaks one is refused with
   more), so a post with many emoji reaches the limit sooner.
 - **Up to 5 links** in the text.
 - **Up to 20 items** in a carousel.
+- **Images are JPEG or PNG**, the formats Threads supports. A GIF or WebP is
+  refused, also inside a carousel that mixes images and video - convert it
+  first.
+
+## Who can reply
+
+`platform_options.threads.reply_control` sets who can reply: `everyone` (the
+default), `accounts_you_follow`, `mentioned_only`, `followers_only`, or
+`parent_post_author_only` - on a new post that means only you.
 
 See [all platforms](/platforms) for the capability matrix and media rules.

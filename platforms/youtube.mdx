@@ -15,4 +15,10 @@ description: "YouTube support in the SmartlyQ API: limits, post types, capabilit
 
 **Requires a video** - a post without one is refused with `422 VALIDATION_ERROR` before anything is sent. YouTube's API has no community (text) posts.
 
+**Privacy is read back.** After the upload, the privacy YouTube actually applied
+is compared with `platform_options.youtube.privacy`. When YouTube set a
+different one (for example it forced the video private), the post still
+publishes and carries a `privacy_changed` entry in `publish_notes`, with the
+reason "You chose Public, YouTube set Private."
+
 See [all platforms](/platforms) for the capability matrix and media rules.

@@ -34,4 +34,19 @@ A **story carries no caption**: a story with text still publishes, and the
 response carries a warning that the text will not appear on it. Put any wording
 into the image or video.
 
+## Media links without a file ending
+
+Instagram must be told whether a file is a photo or a video. A link ending in
+`.mp4`, `.mov`, `.jpg` and the like decides it directly. For a link without a
+known ending (a share link, `.../file?id=123`), SmartlyQ reads the first bytes of
+the file to tell, so a video sent that way publishes as a video. Links that
+point at private or internal addresses are never fetched.
+
+## When an extra step fails
+
+A first comment or a share to story runs after the post is already live, so its
+failure never fails the post. It is reported on the post instead, in
+`publish_notes` (`first_comment` or `share_to_story`, with Instagram's reason),
+on `GET /social/posts` and `GET /social/posts/{post_id}`.
+
 See [all platforms](/platforms) for the capability matrix and media rules.

@@ -84,7 +84,7 @@ Each tool needs the scope shown on your API key (or granted at OAuth sign-in). A
 | `list_account_groups` | List account groups (named sets of accounts, e.g. one per client); pass a group id as `account_group_ids` to post to all of its accounts | `social:read` |
 | `create_social_post` | Publish a post immediately | `social:write` |
 | `schedule_social_post` | Schedule a post for later; optional IANA `timezone` for a `scheduled_time` without an offset (default UTC) | `social:write` |
-| `list_social_posts` | List posts (filter by status/platform) | `social:read` |
+| `list_social_posts` | List posts (filter by status/platform), each with its `publish_notes` | `social:read` |
 | `retry_social_post` | Re-attempt publishing on given platforms | `social:write` |
 | `disconnect_social_account` | Disconnect a connected account | `social:write` |
 | `get_account_health` | Token validity/status of an account, and whether and why it must be reconnected | `social:read` |

@@ -6,6 +6,16 @@ icon: "clock-rotate-left"
 
 Product updates for the SmartlyQ Developer API, MCP server, and Developer Portal. All endpoints live at `https://api.smartlyq.com/v1`.
 
+<Update label="November 11, 2026" tags={["API", "MCP"]}>
+## Publish notes on posts; Threads formats and reply settings; media links without an ending
+
+- **`publish_notes`** on every post from `GET /social/posts` and `GET /social/posts/{post_id}`, and in the MCP `list_social_posts`: things that did not go as asked on a post that did publish. `first_comment` (an Instagram first comment was refused), `share_to_story` (the Instagram share to story did not go out) and `privacy_changed` (YouTube applied a different privacy than requested, for example a forced private). Each entry has `platform`, `kind`, `account` and the platform's `reason`; an empty list means none.
+- **Threads images must be JPEG or PNG.** A GIF or WebP used to fail only when the post was published; it is now refused on create, schedule, bulk and `POST /social/validate/post` with `422 VALIDATION_ERROR`, also inside a carousel that mixes images and video. A post already scheduled with one is stopped at publish with the same message.
+- **Threads `reply_control`** accepts all five values: `followers_only` and `parent_post_author_only` join `everyone`, `accounts_you_follow` and `mentioned_only`. See [Threads](/platforms/threads#who-can-reply).
+- **Fix: `post_urls`, `post_ids` and `platform_options` are objects** on `GET` and `PATCH /social/posts/{post_id}`, as this reference and the SDK types have always described them. They used to arrive as JSON text (a string), so `post.post_urls.facebook` came back empty. If you parsed that text yourself, read the object instead.
+- **Instagram media links without a file ending** (a share link, `?id=123`) used to be sent as a photo, so a video sent that way failed. The file is now checked, and a video publishes as a video. See [Instagram](/platforms/instagram#media-links-without-a-file-ending).
+</Update>
+
 <Update label="November 9, 2026" tags={["MCP", "Calendar", "Docs"]}>
 ## MCP: every calendar endpoint as a tool; reference corrections
 

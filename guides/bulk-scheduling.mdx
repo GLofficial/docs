@@ -46,7 +46,7 @@ Any [platform option](/guides/platform-options) can be a column, named `<platfor
 | `pinterest.title`, `pinterest.description`, `pinterest.link`, `pinterest.alt_text` | text |
 | `linkedin.type` | `post` or `document` |
 | `gmb.post_type` | `STANDARD`, `EVENT`, `OFFER` (with the event and offer fields, e.g. `gmb.event_title`) |
-| `threads.reply_control` | `everyone`, `accounts_you_follow`, `mentioned_only` |
+| `threads.reply_control` | `everyone`, `accounts_you_follow`, `mentioned_only`, `followers_only`, `parent_post_author_only` |
 
 A value can be the option itself or its label: `private`, `Only Me` and `only_me` all mean the same for `tiktok.visibility`. An option column applies only to rows that post to that platform. A column name we do not know rejects the whole file with `VALIDATION_ERROR` and lists the unknown names in `details.unknown`.
 
