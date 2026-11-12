@@ -6,6 +6,20 @@ icon: "clock-rotate-left"
 
 Product updates for the SmartlyQ Developer API, MCP server, and Developer Portal. All endpoints live at `https://api.smartlyq.com/v1`.
 
+<Update label="November 12, 2026" tags={["API", "MCP", "Webhooks"]}>
+## Per-account `results` on every post answer and post webhook
+
+- **`results`: one entry per social account a post goes to**, with that account's own `status`, `url`, `platform_post_id`, `published_at` and worded `error`. Two pages on the same platform are now told apart. Returned by `GET /social/posts` (each row), `GET` and `PATCH /social/posts/{post_id}`, create, schedule (a staggered schedule also per `staggered` entry) and retry, test keys included, and the `post.published` / `post.partial` / `post.failed` webhooks. Every key is always present, `null` when empty. See `PostResult` in the API reference.
+- **Status words:** `success`, `failed`, `scheduled`, `pending`, `cancelled`, `removed`. `success` and `failed` are the words `POST /social/posts` already used in its `results`; existing entries keep their keys and gain the new fields.
+- **`post.published` / `post.partial` / `post.failed` are now also sent after a retry** (API, the app's Retry button, or the automatic retry) when the post's state changed, plus once when the automatic retry gives up, and when a post fails as a whole outside a publish run. They describe the post's new state and, after a retry, list `retried`. Deduplicate on the envelope `id`.
+- **`will_retry`** on `post.published`, `post.partial` and `post.failed`: `true` when the automatic retry will try the post again, so you can wait for the final outcome; always `false` on `post.published`.
+- In webhooks, `results[].error.fix` and `docs_url` are `null`; the API answers fill them in.
+- **Test keys (`sqk_test_`):** create answers with `post_id` and `results`; schedule now answers `scheduled` (it said `published`); retry answers in the retry shape instead of a post.
+- **Retry answer:** adds `post_id` and `status`; `platform_results` is documented as it really is (an object keyed by platform, with `error_code`).
+- **Create and schedule answers are documented as they really are:** `post_id`, `status`, `results`, `warnings` (they never returned the whole post).
+- **Facebook "Missing or invalid image file"** now has its own code, `MEDIA_FETCH_FAILED`, instead of `UNKNOWN_PLATFORM_ERROR`.
+</Update>
+
 <Update label="November 12, 2026" tags={["API"]}>
 ## Post links and IDs carry platforms only; new `errors` on a post
 
