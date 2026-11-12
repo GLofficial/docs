@@ -6,6 +6,16 @@ icon: "clock-rotate-left"
 
 Product updates for the SmartlyQ Developer API, MCP server, and Developer Portal. All endpoints live at `https://api.smartlyq.com/v1`.
 
+<Update label="November 12, 2026" tags={["API"]}>
+## Post links and IDs carry platforms only; new `errors` on a post
+
+- **`post_urls` and `post_ids` on `GET` and `PATCH /social/posts/{post_id}` now hold platform keys only.** They used to also carry internal keys starting with `_` (such as `_errors`, `_transcodes`, `_publish_notes`, `_permalink` and retry bookkeeping), which looked like platform names when you read the object.
+- **New `errors` field on the same answers:** why the post failed, as `[{platform, code, message, retryable, detail}]`, worded by our error catalog and never the platform's raw text. `platform` is `null` when the whole post failed. `detail` holds the reason in full when we wrote it ourselves (a validation rule, a post stopped mid-publish, a Google Business rejection after review), else `null`. It replaces `post_urls._errors`, including the whole-post reason promised on July 26, and has an entry for every failure, including retries.
+- **Both maps are always objects:** `{}` until something is published (never `null` or `[]`), and every value is an array (a single ID comes as a one-item array). An older synced post whose only link was in `post_ids._permalink` now shows it under its platform.
+- **`POST /social/posts/{post_id}/retry`:** `platform_results[*].error` is now our catalog wording instead of the platform's raw text. It is still a string, and the catalog code is added next to it as `error_code`.
+- **What auto-transcode fixed** is reported in the `transcoded` list of the post webhooks. Extra steps that did not go as asked stay in `publish_notes`. Per-account results on every post answer are coming next.
+</Update>
+
 <Update label="November 11, 2026" tags={["API", "MCP"]}>
 ## Publish notes on posts; Threads formats and reply settings; media links without an ending
 
