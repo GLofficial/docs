@@ -6,6 +6,17 @@ icon: "clock-rotate-left"
 
 Product updates for the SmartlyQ Developer API, MCP server, and Developer Portal. All endpoints live at `https://api.smartlyq.com/v1`.
 
+<Update label="November 13, 2026" tags={["API", "MCP"]}>
+## Unpublish tells you exactly what is still live
+
+- **`POST /social/posts/{post_id}/unpublish` no longer marks a post `unpublished` while copies are still up.** Instagram, TikTok and Snapchat let no app delete posts; a post that also went there now keeps its status, and the answer says per account what was removed and what is still live.
+- **New in the answer:** `results` (per account: `removed` or still `success`) and `still_live` - every copy still on a platform with its link and the reason (`no_delete_api`, `not_requested`, `delete_not_enabled`, `delete_failed`) and what to do.
+- **Unpublish what is left later:** a post that still has live copies can be unpublished again; copies already removed are not touched again.
+- **Nothing is lost on a failure:** when one delete fails, the copies that were removed are recorded anyway (their links leave `post_urls`). `PLATFORM_DELETE_FAILED` carries the same `status`, `results` and `still_live` in `details`.
+- **A copy already gone on the platform counts as removed** (Facebook, LinkedIn, YouTube, Google Business), so an unpublish that stopped halfway can be finished.
+- **Removed copies are never posted again:** retry and automatic retry skip a platform removed by an unpublish.
+</Update>
+
 <Update label="November 12, 2026" tags={["API", "MCP", "Webhooks"]}>
 ## Per-account `results` on every post answer and post webhook
 
