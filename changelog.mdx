@@ -7,6 +7,16 @@ icon: "clock-rotate-left"
 Product updates for the SmartlyQ Developer API, MCP server, and Developer Portal. All endpoints live at `https://api.smartlyq.com/v1`.
 
 <Update label="November 13, 2026" tags={["API", "MCP"]}>
+## Posts: one documented shape, and teammates' posts for owner, admin and approver keys
+
+- **One post shape everywhere.** `GET /social/posts` rows, `GET /social/posts/{post_id}` and the `PATCH` answer now return the same documented fields. New in all three: `account_ids`, `updated_at`, `media_urls`, `platform_options` (the top-level `link` lives here), `platform_overrides` (per-platform text set in the app), `queue_id`, `recycle`, `approval_status`, `rejection_reason`, `approved_at`, `created_via`, `author_name` and `can_manage`. Dates keep their format.
+- **Removed from the single-post answer** (it used to send the whole database row): internal ids (`user_id`, `workspace_id`, `actor_user_id`, `request_key`), `brand_id` and the brand-preset ids, `automation_chain`, `title`, `selected_accounts` (now `account_ids`), the raw `recycle_*` columns (now `recycle`), `approved_by`, `rejected_by`, `approval_note`, `approval_at`, `first_like`, `first_comments`, `recurrence_id`, `recycle_parent_id`, `content_type`, `engagement_data`, the `utm_*` columns and empty leftovers (`thumbnail_url`, `account_name`, `scheduled_time_formatted`, `platform_icon`, `status_icon`, `content_snippet`, `tags`). None of them was documented.
+- **Teammates' posts.** A key acts as the person who created it, with the same rule as the app: keys of the workspace owner, an admin or an approver (with "Approve posts") list, read and retry the whole team's posts; owner and admin keys can also change them (update, delete, unpublish, edit, YouTube metadata, stop recycling). Other keys keep working on their own posts. Changing a post you can see but not change answers `403 NOT_YOUR_POST`.
+- Editing a live post, updating YouTube metadata and stopping a recycling chain used to accept any post in the workspace; they now follow the same rule.
+- Webhooks are unchanged: post events still reach every webhook in the workspace.
+</Update>
+
+<Update label="November 13, 2026" tags={["API", "MCP"]}>
 ## Unpublish tells you exactly what is still live
 
 - **`POST /social/posts/{post_id}/unpublish` no longer marks a post `unpublished` while copies are still up.** Instagram, TikTok and Snapchat let no app delete posts; a post that also went there now keeps its status, and the answer says per account what was removed and what is still live.
