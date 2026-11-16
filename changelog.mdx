@@ -6,6 +6,17 @@ icon: "clock-rotate-left"
 
 Product updates for the SmartlyQ Developer API, MCP server, and Developer Portal. All endpoints live at `https://api.smartlyq.com/v1`.
 
+<Update label="November 16, 2026" tags={["API", "MCP", "Webhooks"]}>
+## The API needs an active subscription
+
+- **New error `SUBSCRIPTION_REQUIRED` (HTTP `403`, not retryable).** When the account behind a key has no active subscription (cancelled and its billing period is over, or never paid), every API call is refused, for API keys, the Playground and app connections (MCP, Zapier, Make, Pabbly). See [Errors](/guides/errors).
+- **`details.subscription_state`:** `ended`, `none`, or `agency_inactive` (a workspace managed by an agency whose own subscription is over).
+- **Nothing is charged:** the check runs before rate limiting and billing. The API wallet balance is kept and can be used again after renewing.
+- **Webhooks** of such an account stop: no new events are queued, and deliveries already queued are closed with the reason `subscription_inactive`. The webhooks themselves are kept and send again after renewing.
+- **App connections** already made stay, but their calls are refused; a new connection cannot be approved until the subscription is active.
+- A subscription cancelled for the end of its billing period keeps working until that day. An unpaid renewal still answers `423 BILLING_PAUSED`.
+</Update>
+
 <Update label="November 13, 2026" tags={["API", "MCP"]}>
 ## Posts: one documented shape, and teammates' posts for owner, admin and approver keys
 
