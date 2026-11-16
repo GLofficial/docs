@@ -6,6 +6,16 @@ icon: "clock-rotate-left"
 
 Product updates for the SmartlyQ Developer API, MCP server, and Developer Portal. All endpoints live at `https://api.smartlyq.com/v1`.
 
+<Update label="November 17, 2026" tags={["API", "MCP"]}>
+## Video edits: choose the format with `settings.aspect`
+
+- **New edit setting `aspect`:** `auto` (default), `9:16`, `16:9`, `1:1`, `4:5` or `source`. The video fills the chosen frame, centred, and what does not fit is cropped; captions, hook title, logo and b-roll are placed for that frame. Listed by `GET /edits/options`.
+- **`auto`** picks the nearest standard frame from the video's shape: portrait (height more than 5% over the width) becomes 9:16 (1080x1920), landscape 16:9 (1920x1080), anything in between 1:1 (1080x1080).
+- **What changes if you send nothing:** a 9:16 or 16:9 video gives the same frame as before. A video in any other shape (3:4 or 4:5 phone video, 4:3, 21:9) now comes out in the nearest standard frame instead of its own odd size. Send `"aspect": "source"` to keep the old behaviour (the video's own aspect ratio, short side 1080 px).
+- **Edits made before today keep their format:** they read back as `aspect: "source"`, so a `PATCH` rebuild does not reshape them.
+- The MCP tools `create_video_edit` and `update_video_edit` take `settings.aspect` too.
+</Update>
+
 <Update label="November 16, 2026" tags={["API", "MCP", "Webhooks"]}>
 ## The API needs an active subscription
 
