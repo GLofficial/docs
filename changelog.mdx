@@ -7,6 +7,15 @@ icon: "clock-rotate-left"
 Product updates for the SmartlyQ Developer API, MCP server, and Developer Portal. All endpoints live at `https://api.smartlyq.com/v1`.
 
 <Update label="November 17, 2026" tags={["API", "MCP"]}>
+## Analytics: the team's numbers, as in the app
+
+- **`GET /analytics/overview` and `GET /analytics/posts` now count the team's posts** for keys of the workspace owner, an admin or an approver (with "Approve posts") - the same rule as `GET /social/posts`. Before, they counted only the posts the key's own creator wrote, so an admin's key usually read zeros.
+- **`GET /analytics/daily-metrics` and `GET /analytics/accounts/{id}` read every connected account of the workspace,** whoever connected it - the same rule as `GET /social/accounts`. Before, an account connected by someone else answered `404` and its daily numbers were left out.
+- Best time, content decay, posting frequency, post timelines, inbox analytics and comments already covered the whole workspace; unchanged.
+- Data from other workspaces is never included.
+</Update>
+
+<Update label="November 17, 2026" tags={["API", "MCP"]}>
 ## Social accounts: every key sees the workspace's accounts, as in the app
 
 - **A key now lists and posts to every connected account of its workspace, whoever connected it.** Before, `GET /social/accounts` showed only the accounts its own creator had connected, and creating a post with a teammate's account answered `NO_ACCOUNTS`. In the app every teammate already sees and posts to them.
