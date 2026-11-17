@@ -6,6 +6,17 @@ icon: "clock-rotate-left"
 
 Product updates for the SmartlyQ Developer API, MCP server, and Developer Portal. All endpoints live at `https://api.smartlyq.com/v1`.
 
+<Update label="November 17, 2026" tags={["API", "MCP"]}>
+## Social accounts: every key sees the workspace's accounts, as in the app
+
+- **A key now lists and posts to every connected account of its workspace, whoever connected it.** Before, `GET /social/accounts` showed only the accounts its own creator had connected, and creating a post with a teammate's account answered `NO_ACCOUNTS`. In the app every teammate already sees and posts to them.
+- **The same for reading an account:** health, insights, follower stats, Pinterest boards, YouTube playlists, Instagram, X and Reddit lookups, Google Business details, messaging menus, WhatsApp templates and numbers, YouTube analytics and the Facebook Reel limit.
+- **Changes stay with the owner and admins, as in the app:** renaming, pausing, resuming, disconnecting or reconnecting an account, connect choices, external post sync, and every other change made through it (Page, messaging, Google Business and WhatsApp settings, WhatsApp messages and templates, retweets, mention replies, new Pinterest boards, YouTube playlist edits), plus reading the Facebook Page settings, need a key of the workspace owner, an admin or the person who connected the account. Other keys get the new `403 NOT_YOUR_ACCOUNT` (see [Errors](/guides/errors)).
+- **A key made by an invited admin now works.** The Developer page lets the workspace owner and admins create keys when the workspace's plan includes API access, but the API then checked the plan of the person who made the key, and an invited admin usually has none: every call answered `403 PLAN_NO_API_ACCESS`. API access now also follows the workspace's plan, as the app does.
+- **No key loses access:** a key keeps every action it had on the accounts its creator connected.
+- Accounts of other workspaces are never reachable; a removed or paused teammate's key is refused as before.
+</Update>
+
 <Update label="November 17, 2026" tags={["API", "MCP", "Webhooks"]}>
 ## Calendar: decline, who did not come, add guests
 
