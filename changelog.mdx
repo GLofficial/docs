@@ -6,6 +6,18 @@ icon: "clock-rotate-left"
 
 Product updates for the SmartlyQ Developer API, MCP server, and Developer Portal. All endpoints live at `https://api.smartlyq.com/v1`.
 
+<Update label="November 17, 2026" tags={["API", "MCP", "Webhooks"]}>
+## Calendar: decline, who did not come, add guests
+
+- **`POST /calendar/bookings/{id}/decline`** turns down a booking waiting for approval (optional `reason`); the guest is told and `booking.rejected` fires.
+- **`POST /calendar/bookings/{id}/no-show`** ticks or unticks each guest who did not come, in the calendar itself: `{"attendees": [{"email": "...", "no_show": true}]}`. Opens once the meeting has started.
+- **`POST /calendar/bookings/{id}/guests`** adds up to 10 guests to a confirmed booking; they get the invite and the meeting link.
+- **New webhook event `booking.no_show_updated`:** who did not come changed - a guest marked or unmarked, or a no-show undone. `booking.no_show` keeps its meaning (the booking became a no-show).
+- **Every booking event now carries `booking.no_show_guests`:** the emails of the guests marked as not coming, empty when nobody.
+- All three act as the key's user, like cancel and reschedule: only on bookings that person hosts or whose team they are on. Scope `calendar:write`. The MCP reaches them through its operations tools.
+- Docs fix: failed webhook deliveries are retried at once, then about 2, 4, 8 and 16 minutes later (5 attempts in all).
+</Update>
+
 <Update label="November 17, 2026" tags={["API", "MCP"]}>
 ## Video edits: choose the format with `settings.aspect`
 
