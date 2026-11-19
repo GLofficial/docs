@@ -6,6 +6,15 @@ icon: "clock-rotate-left"
 
 Product updates for the SmartlyQ Developer API, MCP server, and Developer Portal. All endpoints live at `https://api.smartlyq.com/v1`.
 
+<Update label="November 19, 2026" tags={["API", "MCP"]}>
+## Analytics counts published posts only; edits reach every Facebook Page
+
+- **`GET /analytics/overview` and `GET /analytics/posts` count published posts only** (published, partly published, or made on the platform and synced). Drafts, scheduled and failed posts used to be counted too.
+- **A copy removed by an unpublish no longer counts as a published post.** Its views, likes and clicks stay in the totals - they happened while it was live. This applies to `total_posts` on `GET /analytics/accounts/{id}`, to `top_platform`, and to the weekly `posts` of `GET /analytics/posting-frequency`. A post with a copy still live elsewhere still counts once.
+- **`GET /analytics/daily-metrics` counts partly published posts.** They were left out of the daily `posts` figure.
+- **`POST /social/posts/{post_id}/edit` edits every Facebook Page's copy.** On a post sent to several Pages, only the first Page's copy changed and the others answered with an error. Each copy is now edited by its own Page, and each entry in `results` carries `account_id`.
+</Update>
+
 <Update label="November 17, 2026" tags={["API", "MCP"]}>
 ## Analytics: the team's numbers, as in the app
 
