@@ -35,7 +35,7 @@ All errors follow a consistent JSON structure:
 | `422` | Unprocessable Entity - validation error, or a connected platform or provider refused the request (`error.message` carries its reason) |
 | `429` | Too Many Requests — rate limited |
 | `500` | Internal Server Error |
-| `502` | Bad Gateway - a connected platform could not be reached at all. Sent without a JSON body. Retry after a short delay. |
+| `503` | Service Unavailable - a connected platform or one of our services could not be reached, or did not answer in time. The JSON body carries the reason. Retry after a short delay. |
 
 ## Common error codes
 
@@ -61,7 +61,7 @@ All errors follow a consistent JSON structure:
 | `POST_TYPE_UNSUPPORTED` | `platform_options.<platform>.type` names a post format this platform cannot publish. The message lists the accepted values; see [Platform options](/guides/platform-options). |
 | `PLATFORM_DAILY_LIMIT_REACHED` | HTTP `422`, not retryable. The platform's daily limit for this post type is used up for a selected account - today, Facebook's 30 Reels per Page in a moving 24-hour window. Nothing is created. Publish after `details.next_available_at`, or send the post as a different type. `details` also carries `account_id`, `limit` and `used`. |
 | `PLATFORM_ERROR` | HTTP `422`. The connected platform refused the request, for example an expired token or a value it does not accept. `error.message` includes the platform's own reason. Fix the request or reconnect the account; retrying the same request will fail the same way. |
-| `PLATFORM_UPSTREAM_ERROR` | HTTP `422` from the WhatsApp endpoints: WhatsApp refused the request, with its reason in `error.message`. HTTP `502` only when WhatsApp could not be reached. |
+| `PLATFORM_UPSTREAM_ERROR` | HTTP `422` from the WhatsApp endpoints: WhatsApp refused the request, with its reason in `error.message`. HTTP `503` only when WhatsApp could not be reached. |
 | `PROVIDER_ERROR` | HTTP `422`. An AI or media provider could not produce a result. When `retryable` is `true`, the same request can succeed on a second try. |
 
 ## Idempotency

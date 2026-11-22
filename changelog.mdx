@@ -6,6 +6,15 @@ icon: "clock-rotate-left"
 
 Product updates for the SmartlyQ Developer API, MCP server, and Developer Portal. All endpoints live at `https://api.smartlyq.com/v1`.
 
+<Update label="November 23, 2026" tags={["API"]}>
+## "Could not be reached" is now 503 with a JSON body, instead of an empty 502
+
+- **A platform or service we could not reach now answers `503` with the usual JSON error body**, including `error.code` and `error.message`. It answered `502`, and our edge network replaces the body of a `502` or `504` with its own page, so the reason never arrived.
+- **Calendar booking actions** (reschedule, decline, no-show, guests) answer `503` `UPSTREAM_UNAVAILABLE` when the calendar did not answer in time; read the booking before trying again, as before.
+- **`PLATFORM_UPSTREAM_ERROR`** from the WhatsApp endpoints is `503` when WhatsApp could not be reached (a refusal stays `422`).
+- **If your integration retries on `502`, retry on `503` too.** Nothing else changes.
+</Update>
+
 <Update label="November 23, 2026" tags={["API", "MCP"]}>
 ## Refused accounts get their own error code; the Inbox switch
 
