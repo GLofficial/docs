@@ -823,5 +823,11 @@
       "youtube": "https://youtube.com/@SmartlyQ",
       "github": "https://github.com/GLofficial"
     }
-  }
+  },
+  "redirects": [
+    {
+      "source": "/api-reference/social/rename-account",
+      "destination": "/api-reference/social/update-account"
+    }
+  ]
 }

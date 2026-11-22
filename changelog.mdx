@@ -6,6 +6,16 @@ icon: "clock-rotate-left"
 
 Product updates for the SmartlyQ Developer API, MCP server, and Developer Portal. All endpoints live at `https://api.smartlyq.com/v1`.
 
+<Update label="November 23, 2026" tags={["API", "MCP"]}>
+## Refused accounts get their own error code; the Inbox switch
+
+- **New error code `ACCOUNT_PERMISSION_MISSING`** in a post's per-account `results`. Meta's "(#10) Application does not have permission for this action" - for example an Instagram account that was not ticked when Facebook asked which accounts to share - came back as `UNKNOWN_PLATFORM_ERROR`. Its fix says to reconnect, choose **Edit settings** and tick the account. See [Errors](/guides/errors).
+- **Inbox switch.** A Facebook, Instagram, X or Bluesky account's messages now come into the inbox (`GET /social/conversations`) only while its Inbox switch is on. Accounts connected from now on start off; accounts connected before were turned on, so nothing you read today goes missing.
+- **`GET /social/accounts` returns `inbox_enabled`** - `true` or `false`, or `null` for networks without the switch.
+- **[`PATCH /social/accounts/{account_id}`](/api-reference/social/update-account) takes `inbox_enabled`** as well as `account_name`. Send either or both; `account_name` is no longer required. Turning it on brings the account's messages in with the next inbox sync, within about 10 minutes.
+- **MCP:** `create_social_post` and `schedule_social_post` take `platform_options`, so a TikTok post can carry its required `visibility` (who can view).
+</Update>
+
 <Update label="November 19, 2026" tags={["API", "MCP"]}>
 ## Analytics counts published posts only; edits reach every Facebook Page
 
