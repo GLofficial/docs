@@ -140,6 +140,16 @@ Posting a link instead of a self post is automatic when the post carries media s
 ### Bluesky / Discord
 `content` override only - links, mentions and previews are handled automatically.
 
+### Community
+| Key | Effect |
+|---|---|
+| `title` | The post's title, up to 200 characters (default: its first line) |
+| `notify_all` | `true` tells every member of the channel (bell, push, and email when the workspace has its own sending domain) |
+| `comments_on` | `false` closes comments (default `true`) |
+| `post_as_user_id` | Who the post appears from - only the workspace owner and admins may name someone else; `GET /social/accounts/{account_id}/community/authors` lists who can |
+
+Details, limits and errors: [Community](/platforms/community).
+
 ## First comments summary
 
 `first_comments` (array, max 5) is supported on **Facebook, Instagram, X, LinkedIn, Threads, and Reddit**. Other platforms ignore it. On **X** they post as a chained reply thread and each entry may carry media (`{ text, media_urls }`); on **Facebook** an entry may carry a single image. Elsewhere they are text only.

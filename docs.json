@@ -118,7 +118,8 @@
           "platforms/tumblr",
           "platforms/google-business",
           "platforms/telegram",
-          "platforms/discord"
+          "platforms/discord",
+          "platforms/community"
         ]
       },
       {

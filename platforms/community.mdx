@@ -1,0 +1,77 @@
+---
+title: "Community"
+icon: "users"
+description: "Post into your workspace's own community groups through the SmartlyQ API: options, who a post appears from, limits and errors."
+---
+
+| | |
+|---|---|
+| **Text limit** | 10,000 characters, plus a title of up to 200 |
+| **Media** | Up to 4 images (JPG, PNG, GIF or WebP, 10 MB each) and 1 video (MP4, MOV or WebM, 100 MB); images and video may be mixed |
+| **Capabilities** | Publish, unpublish (`POST /v1/social/posts/{post_id}/unpublish` removes it from the community) |
+| **Connect** | In the app only: Social accounts > Community. Each channel of a group is one connected account with platform `community` |
+| **Tokens** | None - the channel belongs to your workspace, so it never needs reconnecting |
+
+Community channels are your workspace's own community groups (Memberships > Communities). A post goes out exactly like one written in the community: members see it in the channel, and the community's points, tags and "New community post" automations run as usual.
+
+## Posting
+
+Use the normal post endpoints with `platforms: ["community"]` and the channel's account id from `GET /v1/social/accounts`:
+
+```json
+{
+  "content": "Live Q&A on Thursday\nBring your questions about the new course.",
+  "platforms": ["community"],
+  "account_ids": [787],
+  "platform_options": {
+    "community": { "title": "Live Q&A on Thursday", "notify_all": true }
+  }
+}
+```
+
+| Key in `platform_options.community` | Effect |
+|---|---|
+| `title` | The post's title, up to 200 characters. Default: the post's first line, which is then not repeated in the text |
+| `notify_all` | `true` tells every member of the channel: a bell notice and a push, plus an email when the workspace has its own sending domain. Default `false` |
+| `comments_on` | `false` closes comments. Default `true` |
+| `post_as_user_id` | Who the post appears from. Default: the person who created the API key |
+| `content`, `media_urls` | Text or media for the community only |
+
+## Who a post appears from
+
+A community post always appears from a person on your workspace's team who is the group's **owner, an admin or a moderator** - never from a customer.
+
+- Only the **workspace owner and admins** may set `post_as_user_id` to someone else. Everyone else posts as themselves.
+- `GET /v1/social/accounts/{account_id}/community/authors` lists who a post into that channel may appear from (`user_id`, `name`, `role`). For a key whose creator is not the owner or an admin it lists only the creator, and `me.allowed` says whether they may post in the group at all.
+- Anything else is refused with `422 COMMUNITY_AUTHOR_NOT_ALLOWED` when the post is created or edited, and checked again when it goes out.
+
+## Limits
+
+Community channels do not count toward your social account limit, but planner and API posts into them have their own limits so members are not flooded:
+
+| Limit | Default | Highest |
+|---|---|---|
+| Posts per channel in 24 hours | 5 | 20 |
+| Posts per group (all its channels) in 24 hours | 10 | 30 |
+| Posts with `notify_all` per group in 24 hours | 1 | 2 |
+| Minutes between two posts in one channel | 15 | - |
+| Same title and text in one channel | refused for 7 days | - |
+
+A workspace in its first 14 days gets half. The workspace owner and admins change the numbers in the app (Social accounts > Community > Limits for planner posts). Read them with `GET /v1/social/accounts/{account_id}/community/limits`.
+
+The limits are checked when the post goes out. An account over one fails with `COMMUNITY_LIMIT_REACHED` or `COMMUNITY_DUPLICATE_POST`, `error.detail` says which limit and when it frees, and the post is **not** retried automatically - schedule it for later instead.
+
+## Errors
+
+| Code | When |
+|---|---|
+| `COMMUNITY_POSTING_OFF` | `403` at create: Communities is not in the plan, the Community app is off in Client hub > Apps, or the platform team switched planner posting off for the workspace. `error.message` says which |
+| `COMMUNITY_AUTHOR_NOT_ALLOWED` | `422` at create or edit, or a failed result: the post may not appear from that person (see above) |
+| `COMMUNITY_CHANNEL_UNAVAILABLE` | `422` at create or edit, or a failed result: the channel or its group was deleted, or the group is inactive. `details.account_id` names it |
+| `COMMUNITY_LIMIT_REACHED` | A failed result: a limit above was reached |
+| `COMMUNITY_DUPLICATE_POST` | A failed result: the same title and text went to this channel in the last 7 days |
+| `COMMUNITY_TEMPORARY_ERROR` | A failed result: the author's seat, a file or the save did not go through. Retry in a few minutes (usually retried automatically) |
+
+A failed community result always carries our own reason in `error.detail`. See [Errors](/guides/errors) for the full list.
+
+See [all platforms](/platforms) for the capability matrix and media rules.

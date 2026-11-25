@@ -24,15 +24,17 @@ SmartlyQ publishes to and manages every platform below through a single API. One
 | <Icon icon="google" iconType="brands" /> **Google Business** | <Icon icon="check" color="#16a34a" /> | <Icon icon="minus" color="#cbd5e1" /> ² | <Icon icon="minus" color="#cbd5e1" /> | <Icon icon="minus" color="#cbd5e1" /> | <Icon icon="check" color="#16a34a" /> |
 | <Icon icon="telegram" iconType="brands" /> **Telegram** | <Icon icon="check" color="#16a34a" /> | <Icon icon="minus" color="#cbd5e1" /> | <Icon icon="minus" color="#cbd5e1" /> | <Icon icon="minus" color="#cbd5e1" /> | <Icon icon="check" color="#16a34a" /> ³ |
 | <Icon icon="discord" iconType="brands" /> **Discord** | <Icon icon="check" color="#16a34a" /> | <Icon icon="minus" color="#cbd5e1" /> | <Icon icon="minus" color="#cbd5e1" /> | <Icon icon="minus" color="#cbd5e1" /> | <Icon icon="check" color="#16a34a" /> |
+| <Icon icon="users" /> **Community** | <Icon icon="check" color="#16a34a" /> | <Icon icon="minus" color="#cbd5e1" /> | <Icon icon="minus" color="#cbd5e1" /> | <Icon icon="minus" color="#cbd5e1" /> | <Icon icon="minus" color="#cbd5e1" /> ⁴ |
 
 <Info>
 <Icon icon="check" color="#16a34a" /> supported &nbsp;·&nbsp; <Icon icon="minus" color="#cbd5e1" /> not available through the API.<br />
 ¹ Pinterest comments support fetch + reply, but **not** hide or delete. <br />
 ² Google Business per-post analytics were deprecated by Google; location-level metrics aren't exposed here.<br />
-³ Telegram is a credential connect, not OAuth: `POST /v1/social/connect/telegram` with `bot_token` + `chat` in the body connects immediately (no authorize URL) - or do it once from the dashboard's Social Accounts page.
+³ Telegram is a credential connect, not OAuth: `POST /v1/social/connect/telegram` with `bot_token` + `chat` in the body connects immediately (no authorize URL) - or do it once from the dashboard's Social Accounts page.<br />
+⁴ Community channels are your workspace's own community groups, connected in the app (Social accounts > Community). They have their own posting limits and do not count toward your account limit - see [Community](/platforms/community).
 </Info>
 
-- **Headless connect** lets you connect a *new* account from your own UI via `POST /v1/social/connect/{platform}` — supported on **every platform above** - 14 via OAuth `connect_url` (Discord included: its server-webhook authorize flow works headlessly), and Telegram via credential connect (`bot_token` + `chat` in the body, connects immediately). Poll `GET /v1/social/connect/{state_token}` to learn when the user finished. You can still connect from the [Developer Dashboard](https://app.smartlyq.com/next/developer). See [Connecting accounts](/guides/connecting-accounts).
+- **Headless connect** lets you connect a *new* account from your own UI via `POST /v1/social/connect/{platform}` — supported on **every social network above** - 14 via OAuth `connect_url` (Discord included: its server-webhook authorize flow works headlessly), and Telegram via credential connect (`bot_token` + `chat` in the body, connects immediately). Poll `GET /v1/social/connect/{state_token}` to learn when the user finished. You can still connect from the [Developer Dashboard](https://app.smartlyq.com/next/developer). See [Connecting accounts](/guides/connecting-accounts).
 - **Direct messages** are actively synced for Facebook, Instagram, and X. Meta platforms enforce a **24-hour reply window** — you can only message a user within 24 hours of their last message.
 
 ## Platform details
@@ -63,6 +65,7 @@ Each platform enforces its own limits on how many items you can attach, whether 
 | Telegram | up to 10 (album) | up to 10 | Yes | Image ≤ 5 MB · video ≤ 20 MB (sent by URL) |
 | Discord | up to 10 (embeds) | 1 | — | Text ≤ 2000 chars · images as embeds |
 | Threads | up to 20 (carousel) | up to 20 (carousel) | Yes | Images **JPEG / PNG only**, also inside a mixed carousel |
+| Community | up to 4 | 1 | Yes | Image ≤ 10 MB · video ≤ 100 MB (MP4, MOV, WebM) · text ≤ 10,000 chars |
 | Pinterest · Reddit · Tumblr | per post | per post | — | Standard platform limits |
 
 <Info>

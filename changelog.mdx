@@ -6,6 +6,17 @@ icon: "clock-rotate-left"
 
 Product updates for the SmartlyQ Developer API, MCP server, and Developer Portal. All endpoints live at `https://api.smartlyq.com/v1`.
 
+<Update label="November 25, 2026" tags={["API", "MCP"]}>
+## Post into your own community groups
+
+- **New platform `community`**: your workspace's own community channels (connected in the app under Social accounts > Community) can be targeted like any other account by `POST /social/posts`, `POST /social/posts/schedule`, `PATCH /social/posts/{post_id}` and the bulk endpoints. See [Community](/platforms/community).
+- **`platform_options.community`** takes `title`, `notify_all`, `comments_on` and `post_as_user_id`.
+- **Who a post appears from**: only the workspace owner and admins may name someone else, and only the group's owner, admins and moderators. New lookup [`GET /social/accounts/{account_id}/community/authors`](/api-reference/social/community-authors).
+- **Limits**: posts per channel and per group a day, 15 minutes between posts in a channel, notify-all posts a day, no repeat of the same post within 7 days. New lookup [`GET /social/accounts/{account_id}/community/limits`](/api-reference/social/community-planner-limits).
+- **New error codes** `COMMUNITY_POSTING_OFF`, `COMMUNITY_AUTHOR_NOT_ALLOWED`, `COMMUNITY_CHANNEL_UNAVAILABLE` (refused at create, nothing is created) and `COMMUNITY_LIMIT_REACHED`, `COMMUNITY_DUPLICATE_POST`, `COMMUNITY_TEMPORARY_ERROR` (in a post's `results`, with our reason in `error.detail`). See [Errors](/guides/errors).
+- **MCP:** `create_social_post` and `schedule_social_post` accept `community` (and `telegram` and `discord`, which the API already took); new tools `list_community_authors` and `get_community_limits`.
+</Update>
+
 <Update label="November 23, 2026" tags={["API"]}>
 ## "Could not be reached" is now 503 with a JSON body, instead of an empty 502
 
